@@ -7,16 +7,28 @@
 #   all-features: false
 #   with-sources: false
 #   generate-hashes: false
+#   universal: false
 
 -e file:.
 joblib==1.4.2
     # via scikit-learn
 numpy==2.1.2
+    # via pandas
     # via scikit-learn
     # via scipy
+pandas==2.2.3
+    # via explainable-malware-classifier
+python-dateutil==2.9.0.post0
+    # via pandas
+pytz==2024.2
+    # via pandas
 scikit-learn==1.5.2
     # via explainable-malware-classifier
 scipy==1.14.1
     # via scikit-learn
+six==1.16.0
+    # via python-dateutil
 threadpoolctl==3.5.0
     # via scikit-learn
+tzdata==2024.2
+    # via pandas
