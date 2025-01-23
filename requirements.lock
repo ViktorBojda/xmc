@@ -20,7 +20,11 @@ cycler==0.12.1
     # via matplotlib
 fonttools==4.55.0
     # via matplotlib
+imbalanced-learn==0.12.4
+    # via explainable-malware-classifier
 joblib==1.4.2
+    # via explainable-malware-classifier
+    # via imbalanced-learn
     # via scikit-learn
 kiwisolver==1.4.7
     # via matplotlib
@@ -30,6 +34,7 @@ mypy-extensions==1.0.0
     # via black
 numpy==2.1.3
     # via contourpy
+    # via imbalanced-learn
     # via matplotlib
     # via pandas
     # via scikit-learn
@@ -54,11 +59,14 @@ pytz==2024.2
     # via pandas
 scikit-learn==1.5.2
     # via explainable-malware-classifier
+    # via imbalanced-learn
 scipy==1.14.1
+    # via imbalanced-learn
     # via scikit-learn
 six==1.16.0
     # via python-dateutil
 threadpoolctl==3.5.0
+    # via imbalanced-learn
     # via scikit-learn
 tzdata==2024.2
     # via pandas
