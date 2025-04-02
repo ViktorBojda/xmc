@@ -33,6 +33,8 @@ cupy-cuda12x==13.3.0
     # via explainable-malware-classifier
 cycler==0.12.1
     # via matplotlib
+cython==3.0.12
+    # via explainable-malware-classifier
 fastrlock==0.8.3
     # via cupy-cuda12x
 filelock==3.17.0
@@ -60,7 +62,7 @@ libcudf-cu12==24.12.0
     # via pylibcudf-cu12
 libkvikio-cu12==24.12.1
     # via libcudf-cu12
-llvmlite==0.44.0
+llvmlite==0.42.0
     # via numba
 mako==1.3.9
     # via alembic
@@ -79,12 +81,12 @@ mypy-extensions==1.0.0
     # via black
 networkx==3.4.2
     # via torch
-numba==0.61.0
+numba==0.59.1
     # via numba-cuda
     # via rmm-cu12
 numba-cuda==0.0.17.1
     # via cudf-cu12
-numpy==2.1.3
+numpy==1.26.4
     # via contourpy
     # via cudf-cu12
     # via cupy-cuda12x
@@ -146,7 +148,7 @@ pandas==2.2.3
     # via explainable-malware-classifier
 pathspec==0.12.1
     # via black
-pillow==11.0.0
+pillow==10.4.0
     # via matplotlib
     # via torchvision
 platformdirs==4.3.6
@@ -181,6 +183,8 @@ scipy==1.14.1
     # via imbalanced-learn
     # via scikit-learn
     # via xgboost
+setuptools==78.1.0
+    # via explainable-malware-classifier
 six==1.16.0
     # via python-dateutil
 sqlalchemy==2.0.38
@@ -211,5 +215,5 @@ typing-extensions==4.12.2
     # via torch
 tzdata==2024.2
     # via pandas
-xgboost==2.1.3
+xgboost==3.0.0
     # via explainable-malware-classifier
