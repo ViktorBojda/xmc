@@ -93,7 +93,7 @@ class BaseMalwareClassifier(ABC):
         artifacts.update(
             {"X_train": X_train, "X_test": X_test, "y_train": y_train, "y_test": y_test}
         )
-        joblib.dump(artifacts, filename=model_path, protocol=5)
+        joblib.dump(artifacts, filename=model_path, protocol=5, compress=3)
         print(f"Model artifacts have been saved to: {model_path}")
 
     @classmethod
