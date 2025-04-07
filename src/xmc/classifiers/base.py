@@ -12,10 +12,10 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 from sklearn.preprocessing import LabelEncoder
 
-from explainable_malware_classifier.classifiers.utils import load_dataset, save_plot
-from explainable_malware_classifier.explainers.base import BaseMalwareExplainer
-from explainable_malware_classifier.settings import MODELS_DIR_PATH
-from explainable_malware_classifier.utils import prompt_overwrite, timer, prompt_options
+from xmc.classifiers.utils import load_dataset, save_plot
+from xmc.explainers.base import BaseMalwareExplainer
+from xmc.settings import MODELS_DIR_PATH
+from xmc.utils import prompt_overwrite, timer, prompt_options
 
 
 class BaseMalwareClassifier(ABC):

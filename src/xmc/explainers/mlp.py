@@ -2,14 +2,15 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 import numpy as np
-import shap
 import torch
 
-from explainable_malware_classifier.explainers.base import BaseMalwareExplainer
-from explainable_malware_classifier.utils import timer, stratified_sample
+from xmc.explainers.base import BaseMalwareExplainer
+from xmc.utils import timer, stratified_sample, try_import_shap
 
 if TYPE_CHECKING:
-    from explainable_malware_classifier.classifiers import MalwareClassifierMLP
+    from xmc.classifiers import MalwareClassifierMLP
+
+shap = try_import_shap()
 
 
 class MalwareExplainerMLP(BaseMalwareExplainer):

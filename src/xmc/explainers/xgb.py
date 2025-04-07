@@ -1,8 +1,9 @@
-import shap
 from xgboost import XGBClassifier
 
-from explainable_malware_classifier.explainers.base import BaseMalwareExplainer
-from explainable_malware_classifier.utils import timer
+from xmc.explainers.base import BaseMalwareExplainer
+from xmc.utils import timer, try_import_shap
+
+shap = try_import_shap()
 
 
 class MalwareExplainerXGB(BaseMalwareExplainer):

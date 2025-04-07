@@ -14,9 +14,9 @@ from sklearn.preprocessing import LabelEncoder
 from xgboost import XGBClassifier
 from xgboost.callback import EarlyStopping
 
-from explainable_malware_classifier.classifiers.base import BaseMalwareClassifier
-from explainable_malware_classifier.explainers.xgb import MalwareExplainerXGB
-from explainable_malware_classifier.utils import timer
+from xmc.classifiers.base import BaseMalwareClassifier
+from xmc.explainers.xgb import MalwareExplainerXGB
+from xmc.utils import timer
 
 # Cross-Validation f1_macro scores: [0.7746, 0.7636, 0.8018, 0.7774, 0.7668, 0.782, 0.7709, 0.7815, 0.7851, 0.7566]
 # Cross-Validation f1_macro mean:   0.7760
@@ -201,5 +201,6 @@ class MalwareClassifierXGB(BaseMalwareClassifier):
 
     def get_model_artifacts(self) -> dict[str, Any]:
         artifacts = super().get_model_artifacts()
+        self.classifier.set_params(verbosity=1)
         artifacts["model"] = self.classifier
         return artifacts

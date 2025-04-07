@@ -8,18 +8,19 @@ from enum import StrEnum
 from typing import TYPE_CHECKING
 
 import numpy as np
-import shap
 from alibi.explainers import AnchorTabular
 from matplotlib import pyplot as plt
 from sklearn.preprocessing import LabelEncoder
 from sklearn.utils import compute_class_weight
 
-from explainable_malware_classifier.classifiers.utils import save_plot
-from explainable_malware_classifier.settings import EXPLANATIONS_DIR_PATH
-from explainable_malware_classifier.utils import prompt_options
+from xmc.classifiers.utils import save_plot
+from xmc.settings import EXPLANATIONS_DIR_PATH
+from xmc.utils import prompt_options, try_import_shap
 
 if TYPE_CHECKING:
-    from explainable_malware_classifier.classifiers.base import BaseMalwareClassifier
+    from xmc.classifiers.base import BaseMalwareClassifier
+
+shap = try_import_shap()
 
 
 class BaseMalwareExplainer(ABC):

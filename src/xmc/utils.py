@@ -1,7 +1,8 @@
 import functools
+import sys
 import time
 from pathlib import Path
-from typing import Callable, Any
+from typing import Callable, Any, NoReturn
 
 import numpy as np
 from sklearn.model_selection import StratifiedShuffleSplit
@@ -78,3 +79,23 @@ def stratified_sample(
 ) -> np.ndarray:
     sss = StratifiedShuffleSplit(n_splits=1, train_size=size, random_state=random_state)
     return X[next(sss.split(X, y))[0]]
+
+
+class ShapUnavailable:
+    def __getattr__(self, name: str) -> NoReturn:
+        print(
+            f"ERROR: SHAP is not installed. Attempted to access 'shap.{name}'.\n"
+            "Please build it locally or install it with:\n"
+            "pip install .[shap]\n"
+        )
+        sys.exit(1)
+
+
+def try_import_shap():
+    try:
+        import shap
+
+        return shap
+    except ImportError:
+        print("WARNING: SHAP is not installed. Some features may not work.")
+        return ShapUnavailable()

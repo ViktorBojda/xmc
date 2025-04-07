@@ -1,7 +1,7 @@
 import pandas as pd
 from matplotlib import pyplot as plt
 
-from explainable_malware_classifier.settings import DATASETS_DIR_PATH, PLOTS_DIR_PATH
+from xmc.settings import DATASETS_DIR_PATH, PLOTS_DIR_PATH
 
 
 def load_dataset(name: str) -> pd.DataFrame:

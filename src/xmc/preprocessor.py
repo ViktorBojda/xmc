@@ -1,8 +1,8 @@
 import numpy as np
 import pandas as pd
 
-from explainable_malware_classifier.settings import DATASETS_DIR_PATH
-from explainable_malware_classifier.utils import prompt_overwrite, timer
+from xmc.settings import DATASETS_DIR_PATH
+from xmc.utils import prompt_overwrite, timer
 
 
 class Preprocessor:

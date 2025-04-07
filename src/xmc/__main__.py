@@ -1,11 +1,11 @@
 from enum import StrEnum
 
-from explainable_malware_classifier.classifiers import (
+from xmc.classifiers import (
     MalwareClassifierBRF,
     MalwareClassifierMLP,
     MalwareClassifierXGB,
 )
-from explainable_malware_classifier.utils import prompt_options
+from xmc.utils import prompt_options
 
 
 class ClassifierType(StrEnum):

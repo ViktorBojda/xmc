@@ -1,8 +1,9 @@
-import shap
 from imblearn.ensemble import BalancedRandomForestClassifier
 
-from explainable_malware_classifier.explainers.base import BaseMalwareExplainer
-from explainable_malware_classifier.utils import timer
+from xmc.explainers.base import BaseMalwareExplainer
+from xmc.utils import timer, try_import_shap
+
+shap = try_import_shap()
 
 
 class MalwareExplainerBRF(BaseMalwareExplainer):
@@ -15,7 +16,10 @@ class MalwareExplainerBRF(BaseMalwareExplainer):
         label_encoder = artifacts["label_encoder"]
         X_test, y_test = artifacts["X_test"], artifacts["y_test"]
 
-        explainer = shap.GPUTreeExplainer(model, feature_names=feature_names)
+        if shap.__version__ == "0.0.0-not-built":  # local gpu build
+            explainer = shap.GPUTreeExplainer(model, feature_names=feature_names)
+        else:
+            explainer = shap.TreeExplainer(model, feature_names=feature_names)
         explanation = explainer(X_test)
         y_pred = model.predict(X_test)
 

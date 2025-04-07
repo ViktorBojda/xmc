@@ -14,9 +14,9 @@ from sklearn.model_selection import StratifiedKFold, train_test_split
 from sklearn.metrics import classification_report, f1_score
 from sklearn.preprocessing import LabelEncoder
 
-from explainable_malware_classifier.classifiers.base import BaseMalwareClassifier
-from explainable_malware_classifier.explainers.mlp import MalwareExplainerMLP
-from explainable_malware_classifier.utils import timer
+from xmc.classifiers.base import BaseMalwareClassifier
+from xmc.explainers.mlp import MalwareExplainerMLP
+from xmc.utils import timer
 
 
 # Cross-Validation f1_macro scores: [0.7835, 0.7594, 0.7895, 0.7731, 0.7671, 0.7623, 0.7567, 0.7922, 0.7674, 0.7639]

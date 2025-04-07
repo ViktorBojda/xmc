@@ -1,1 +1,1 @@
-# explainable-malware-classifier
+# XMC - eXplainable Malware Classifier

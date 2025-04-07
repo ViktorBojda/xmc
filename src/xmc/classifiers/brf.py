@@ -8,9 +8,9 @@ from sklearn.metrics import classification_report
 from sklearn.model_selection import train_test_split, StratifiedKFold, cross_val_score
 from sklearn.preprocessing import LabelEncoder
 
-from explainable_malware_classifier.classifiers.base import BaseMalwareClassifier
-from explainable_malware_classifier.explainers.brf import MalwareExplainerBRF
-from explainable_malware_classifier.utils import timer
+from xmc.classifiers.base import BaseMalwareClassifier
+from xmc.explainers.brf import MalwareExplainerBRF
+from xmc.utils import timer
 
 # Cross-Validation f1_macro scores: [0.7514, 0.7385, 0.7673, 0.7587, 0.7392, 0.7598, 0.7435, 0.7624, 0.7411, 0.7175]
 # Cross-Validation f1_macro mean:   0.7479
@@ -53,7 +53,7 @@ class MalwareClassifierBRF(BaseMalwareClassifier):
         min_samples_leaf: int = 1,
         rf_max_features: str | None = None,
         random_state: int = 69,
-        verbose: int = 3,
+        verbose: int = 2,
         n_jobs: int = -1,
     ):
         """
@@ -125,5 +125,6 @@ class MalwareClassifierBRF(BaseMalwareClassifier):
 
     def get_model_artifacts(self) -> dict[str, Any]:
         artifacts = super().get_model_artifacts()
+        self.classifier.set_params(verbose=0)
         artifacts["model"] = self.classifier
         return artifacts
