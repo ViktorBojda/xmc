@@ -98,7 +98,14 @@ class BaseMalwareClassifier(ABC):
 
     @classmethod
     def load_model_artifacts(cls) -> dict[str, Any]:
-        return joblib.load(cls.model_path())
+        try:
+            return joblib.load(cls.model_path())
+        except FileNotFoundError:
+            print(
+                f"ERROR: No model artifacts found for '{cls.model_name}' model, "
+                f"make sure you run 'Train & Evaluate' first."
+            )
+            exit(1)
 
     @classmethod
     def run_explainer(cls) -> None:
