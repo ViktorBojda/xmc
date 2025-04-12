@@ -1,5 +1,6 @@
 from __future__ import annotations
 import datetime as dt
+import gc
 import random
 import traceback
 from abc import ABC, abstractmethod
@@ -122,6 +123,9 @@ class BaseMalwareExplainer(ABC):
             print(f"SHAP plots created for class {class_name}.")
         plt.close("all")
 
+    def join_anchor_rules(self, anchor: list[str]) -> str:
+        return "\nAND ".join(anchor)
+
     def create_anchors_explanations(
         self,
         predictor: Callable[[np.ndarray], np.ndarray],
@@ -131,11 +135,10 @@ class BaseMalwareExplainer(ABC):
         y_test: np.ndarray,
         feature_names: list[str],
         label_encoder: LabelEncoder,
+        anchor_formatter: Callable[[list[str]], str] | None = None,
     ):
-        explainer = AnchorTabular(
-            predictor=predictor, feature_names=feature_names, seed=self.random_state
-        )
-        explainer.fit(X_train)
+        if not anchor_formatter:
+            anchor_formatter = self.join_anchor_rules
         y_pred = predictor(X_test)
         class_weights = compute_class_weight(
             class_weight="balanced", classes=np.unique(y_train), y=y_train
@@ -144,7 +147,9 @@ class BaseMalwareExplainer(ABC):
         thresholds = {"strict": 0.9, "general": 0.8}
         base_dir = EXPLANATIONS_DIR_PATH / f"{self.classifier_class.model_name}/anchors"
         random.seed(self.random_state)
+        total_count = y_test.shape[0]
         for class_idx, class_name in enumerate(label_encoder.classes_):
+            total_class_count = np.sum(y_test == class_idx)
             correct_idxs = np.where((y_test == class_idx) & (y_pred == class_idx))[0]
             if not correct_idxs.size:
                 print(
@@ -170,30 +175,45 @@ class BaseMalwareExplainer(ABC):
                     instance_descriptor = (
                         f"instance of class '{class_name}', index {idx}, mode '{mode}'"
                     )
+                    explanation_json_file = instance_dir / f"explanation_{mode}.json"
+                    if explanation_json_file.exists():
+                        print(
+                            f"Explanation already exists for {instance_descriptor}, skipping."
+                        )
+                        continue
                     try:
+                        # reinit the explainer to free up memory, as it doesn't release it properly otherwise
+                        explainer = AnchorTabular(
+                            predictor=predictor,
+                            feature_names=feature_names,
+                            seed=self.random_state,
+                        )
+                        explainer.fit(X_train)
                         explanation = explainer.explain(
                             instance,
                             threshold=threshold,
-                            beam_size=4,
-                            verbose_every=10,
+                            beam_size=3,
+                            max_anchor_size=20,
+                            verbose_every=5,
                             verbose=True,
                         )
-                        (instance_dir / f"explanation_{mode}.json").write_text(
-                            explanation.to_json()
-                        )
+                        explanation_json_file.write_text(explanation.to_json())
                         if explanation.anchor:
-                            rules = "\nAND ".join(explanation.anchor)
+                            coverage: float = explanation.coverage
                             result = (
                                 f"Anchors explanation for {instance_descriptor}:\n"
                                 f"Precision: {round(explanation.precision, 4)}\n"
-                                f"Coverage: {explanation.coverage}\n"
-                                f"Weighted coverage: {round(class_weights[class_idx] * explanation.coverage, 4)}\n"
-                                f"Anchor:\nIF {rules}\nTHEN PREDICT {class_name}\n"
+                                f"Coverage: {coverage}\n"
+                                f"Weighted coverage: {round(class_weights[class_idx] * coverage, 4)}\n"
+                                f"Class coverage: {round(total_count * coverage / total_class_count, 4)}\n"
+                                f"Anchor:\nIF {anchor_formatter(explanation.anchor)}\nTHEN PREDICT {class_name}\n"
                             )
                         else:
                             result = f"No anchor found for {instance_descriptor}.\n"
                         print(result)
                         (instance_dir / f"explanation_{mode}.txt").write_text(result)
+                        del explainer, explanation
+                        gc.collect()
                     except Exception as e:
                         timestamp = dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                         error_msg = (
@@ -206,4 +226,5 @@ class BaseMalwareExplainer(ABC):
                             f.write(f"Traceback:\n{traceback.format_exc()}\n")
                             f.write("-" * 50 + "\n")
                     print("-" * 50)
-            print(f"Anchors created for class {class_name}.")
+            print(f"Anchors created for class {class_name}.\n")
+            print("-" * 50)
