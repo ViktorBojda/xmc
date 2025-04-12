@@ -2,12 +2,13 @@ from typing import Any
 
 import numpy as np
 import optuna
+import torch
 from optuna import Trial, TrialPruned
 from optuna.pruners import MedianPruner
 from optuna.study import StudyDirection
 from scipy.sparse import csc_matrix
 from sklearn import clone
-from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics import classification_report, f1_score
 from sklearn.model_selection import train_test_split, StratifiedKFold
 from sklearn.preprocessing import LabelEncoder
@@ -18,29 +19,29 @@ from xmc.classifiers.base import BaseMalwareClassifier
 from xmc.explainers.xgb import MalwareExplainerXGB
 from xmc.utils import timer
 
-# Cross-Validation f1_macro scores: [0.7746, 0.7636, 0.8018, 0.7774, 0.7668, 0.782, 0.7709, 0.7815, 0.7851, 0.7566]
-# Cross-Validation f1_macro mean:   0.7760
-# Cross-Validation f1_macro std:    0.0127
+# Cross-Validation f1_macro scores: [0.7763, 0.772, 0.7914, 0.7917, 0.7762, 0.7826, 0.7781, 0.7804, 0.7922, 0.7565]
+# Cross-Validation f1_macro mean:   0.7797
+# Cross-Validation f1_macro std:    0.0109
 # --------------------------------------------------
-# Finished MalwareClassifierXGB.cross_validate() in 1014.37 secs
+# Finished MalwareClassifierXGB.cross_validate() in 272.61 secs
 # Classification Report:
 #                precision    recall  f1-score   support
 #
-#       adware       0.86      0.70      0.77       279
-#     backdoor       0.84      0.81      0.82       366
-#   downloader       0.73      0.80      0.77       225
-#      dropper       0.62      0.66      0.64       169
-#      spyware       0.59      0.46      0.52       160
-#       trojan       0.93      0.96      0.95      2913
-#        virus       0.95      0.94      0.94      1097
-#        worms       0.73      0.71      0.72       359
+#       adware       0.83      0.67      0.74       279
+#     backdoor       0.86      0.80      0.83       366
+#   downloader       0.72      0.79      0.75       225
+#      dropper       0.66      0.69      0.68       169
+#      spyware       0.66      0.53      0.58       160
+#       trojan       0.93      0.96      0.94      2913
+#        virus       0.94      0.94      0.94      1097
+#        worms       0.75      0.70      0.72       359
 #
 #     accuracy                           0.89      5568
-#    macro avg       0.78      0.76      0.77      5568
-# weighted avg       0.89      0.89      0.89      5568
+#    macro avg       0.79      0.76      0.77      5568
+# weighted avg       0.88      0.89      0.88      5568
 #
 # --------------------------------------------------
-# Finished MalwareClassifierXGB.train_and_evaluate() in 95.15 secs
+# Finished MalwareClassifierXGB.train_and_evaluate() in 31.82 secs
 
 
 class MalwareClassifierXGB(BaseMalwareClassifier):
@@ -49,7 +50,7 @@ class MalwareClassifierXGB(BaseMalwareClassifier):
 
     def __init__(
         self,
-        max_features: int = 2_000,
+        max_features: int = 1_000,
         ngram_range: tuple[int, int] = (1, 2),
         patience: int | None = 50,
         max_depth: int = 20,
@@ -59,20 +60,23 @@ class MalwareClassifierXGB(BaseMalwareClassifier):
         colsample_bytree: float = 0.6295,
         min_child_weight: float = 3,
         gamma: float = 0.00003,
-        tree_method="hist",
-        random_state=69,
-        verbosity=2,
-        device="cuda",
+        tree_method: str = "hist",
+        random_state: int = 69,
+        verbosity: int = 2,
+        device: str | None = None,
         n_jobs=None,
     ):
         self.random_state = random_state
+        # perform dirty check, if torch can use cuda so should xgboost
+        self.device = (
+            device if device else ("cuda" if torch.cuda.is_available() else "cpu")
+        )
         self.patience = patience
-        self.vectorizer = TfidfVectorizer(
+        self.vectorizer = CountVectorizer(
             tokenizer=self.comma_tokenizer,
             token_pattern=None,
             max_features=max_features,
             ngram_range=ngram_range,
-            sublinear_tf=False,
         )
         self.label_encoder = LabelEncoder()
         callbacks = []
@@ -134,8 +138,8 @@ class MalwareClassifierXGB(BaseMalwareClassifier):
             )
             scores = []
             for fold_idx, (train_idx, val_idx) in enumerate(kfold.split(X, y)):
-                X_train, X_val = X[train_idx], X[val_idx]
-                y_train, y_val = y[train_idx], y[val_idx]
+                X_train, y_train = X[train_idx], y[train_idx]
+                X_val, y_val = X[val_idx], y[val_idx]
                 model: XGBClassifier = clone(self.classifier)
                 model.set_params(**params)
                 model.fit(X_train, y_train, eval_set=[(X_val, y_val)], verbose=False)
@@ -172,8 +176,8 @@ class MalwareClassifierXGB(BaseMalwareClassifier):
         )
         scores = []
         for fold_idx, (train_idx, val_idx) in enumerate(kfold.split(X, y), 1):
-            X_train, X_val = X[train_idx], X[val_idx]
-            y_train, y_val = y[train_idx], y[val_idx]
+            X_train, y_train = X[train_idx], y[train_idx]
+            X_val, y_val = X[val_idx], y[val_idx]
             fold_model: XGBClassifier = clone(self.classifier)
             fold_model.fit(X_train, y_train, eval_set=[(X_val, y_val)])
             y_pred = fold_model.predict(X_val)

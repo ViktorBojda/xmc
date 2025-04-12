@@ -8,7 +8,7 @@ import numpy as np
 import pandas as pd
 from matplotlib import pyplot as plt
 from scipy.sparse import csc_matrix
-from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 from sklearn.preprocessing import LabelEncoder
 
@@ -21,7 +21,7 @@ from xmc.utils import prompt_overwrite, timer, prompt_options
 class BaseMalwareClassifier(ABC):
     DATASET_NAME = "preprocessed_merged_seq.csv"
     label_encoder: LabelEncoder
-    vectorizer: TfidfVectorizer
+    vectorizer: CountVectorizer
 
     @property
     @abstractmethod
