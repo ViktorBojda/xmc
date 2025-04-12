@@ -18,30 +18,29 @@ from xmc.classifiers.base import BaseMalwareClassifier
 from xmc.explainers.mlp import MalwareExplainerMLP
 from xmc.utils import timer
 
-
-# Cross-Validation f1_macro scores: [0.7835, 0.7594, 0.7895, 0.7731, 0.7671, 0.7623, 0.7567, 0.7922, 0.7674, 0.7639]
-# Cross-Validation f1_macro mean:   0.7715
-# Cross-Validation f1_macro std:    0.0127
+# Cross-Validation f1_macro scores: [0.7727, 0.7537, 0.7755, 0.7793, 0.7587, 0.7548, 0.7648, 0.782, 0.7619, 0.7528]
+# Cross-Validation f1_macro mean:   0.7656
+# Cross-Validation f1_macro std:    0.0110
 # --------------------------------------------------
-# Finished MalwareClassifierMLP.cross_validate() in 877.74 secs
+# Finished MalwareClassifierMLP.cross_validate() in 826.51 secs
 # Classification Report:
 #                precision    recall  f1-score   support
 #
-#       adware       0.81      0.69      0.75       279
-#     backdoor       0.81      0.78      0.79       366
-#   downloader       0.70      0.79      0.74       225
-#      dropper       0.62      0.69      0.66       169
-#      spyware       0.58      0.49      0.53       160
-#       trojan       0.94      0.96      0.95      2913
-#        virus       0.94      0.93      0.94      1097
-#        worms       0.74      0.68      0.71       359
+#       adware       0.82      0.68      0.74       279
+#     backdoor       0.82      0.78      0.80       366
+#   downloader       0.75      0.80      0.77       225
+#      dropper       0.59      0.62      0.60       169
+#      spyware       0.52      0.54      0.53       160
+#       trojan       0.93      0.95      0.94      2913
+#        virus       0.94      0.94      0.94      1097
+#        worms       0.76      0.72      0.74       359
 #
 #     accuracy                           0.88      5568
 #    macro avg       0.77      0.75      0.76      5568
 # weighted avg       0.88      0.88      0.88      5568
 #
 # --------------------------------------------------
-# Finished MalwareClassifierMLP.train_and_evaluate() in 64.13 secs
+# Finished MalwareClassifierMLP.train_and_evaluate() in 98.20 secs
 
 
 class MalwareClassifierMLP(BaseMalwareClassifier):
@@ -68,14 +67,14 @@ class MalwareClassifierMLP(BaseMalwareClassifier):
 
     def __init__(
         self,
-        max_features: int = 2_000,
+        max_features: int = 1_000,
         ngram_range: tuple[int, int] = (1, 2),
         epochs: int = 200,
         patience: int | None = 30,
         batch_size: int = 256,
         hidden_dim: int = 256,
         learning_rate: float = 0.001,
-        device: str = None,
+        device: str | None = None,
         num_workers: int = -1,
         random_state: int = 69,
     ):
@@ -95,6 +94,7 @@ class MalwareClassifierMLP(BaseMalwareClassifier):
             max_features=max_features,
             ngram_range=ngram_range,
             sublinear_tf=True,
+            norm=None,
         )
         self.label_encoder = LabelEncoder()
         # set after fit_transform
