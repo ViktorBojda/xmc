@@ -1,11 +1,14 @@
 from __future__ import annotations
+
+import re
 from typing import TYPE_CHECKING
 
 import numpy as np
 import torch
+from sklearn.feature_extraction.text import TfidfVectorizer
 
 from xmc.explainers.base import BaseMalwareExplainer
-from xmc.utils import timer, stratified_sample, try_import_shap
+from xmc.utils import timer, stratified_sample, try_import_shap, inverse_tfidf
 
 if TYPE_CHECKING:
     from xmc.classifiers import MalwareClassifierMLP
@@ -52,10 +55,15 @@ class MalwareExplainerMLP(BaseMalwareExplainer):
     def explain_anchors(self):
         artifacts = self.classifier_class.load_model_artifacts()
         model: MalwareClassifierMLP.MalwareNet = artifacts["model"]
+        vectorizer: TfidfVectorizer = artifacts["vectorizer"]
         feature_names = artifacts["feature_names"]
         label_encoder = artifacts["label_encoder"]
         X_train, y_train = artifacts["X_train"], artifacts["y_train"]
         X_test, y_test = artifacts["X_test"], artifacts["y_test"]
+
+        vocabulary = vectorizer.vocabulary_
+        idf = vectorizer.idf_
+        sublinear_tf = vectorizer.sublinear_tf
 
         def predictor(X: np.ndarray) -> np.ndarray:
             with torch.no_grad():
@@ -63,6 +71,31 @@ class MalwareExplainerMLP(BaseMalwareExplainer):
                 outputs = model(X_tensor)
                 return torch.argmax(outputs, dim=1).cpu().numpy()
 
+        def anchor_formatter(anchor: list[str]) -> str:
+            new_anchor = []
+            for rule in anchor:
+                match = re.search(r"^(.*?)\s*([<>=]=?)\s*([\d.]+)$", rule)
+                if not match:
+                    raise ValueError(
+                        f"Anchor rule is not in expected format, expected: 'FEATURE OPERATOR VALUE'\nactual: '{rule}'."
+                    )
+                feature = match.group(1)
+                operator = match.group(2)
+                value = float(match.group(3))
+                feature_idx = vocabulary[feature]
+                new_value = inverse_tfidf(
+                    value, idf[feature_idx], sublinear_tf=sublinear_tf
+                )
+                new_anchor.append(f"{feature} {operator} {new_value}")
+            return self.join_anchor_rules(new_anchor)
+
         self.create_anchors_explanations(
-            predictor, X_train, y_train, X_test, y_test, feature_names, label_encoder
+            predictor,
+            X_train,
+            y_train,
+            X_test,
+            y_test,
+            feature_names,
+            label_encoder,
+            anchor_formatter,
         )
