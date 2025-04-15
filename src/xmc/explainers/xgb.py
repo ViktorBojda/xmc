@@ -1,31 +1,17 @@
-from xgboost import XGBClassifier
+from typing import Any
 
-from xmc.explainers.base import BaseMalwareExplainer
-from xmc.utils import timer, try_import_shap
+from xmc.explainers.base import TreeMalwareExplainer
+from xmc.utils import try_import_shap
 
 shap = try_import_shap()
 
 
-class MalwareExplainerXGB(BaseMalwareExplainer):
-    @timer
-    def explain_shap(self) -> None:
-        # Finished MalwareExplainerXGB.explain_shap() in 58.88 secs
-        artifacts = self.classifier_class.load_model_artifacts()
-        model = artifacts["model"]
-        feature_names = artifacts["feature_names"]
-        label_encoder = artifacts["label_encoder"]
-        X_test, y_test = artifacts["X_test"], artifacts["y_test"]
-
-        explainer = shap.TreeExplainer(model, feature_names=feature_names)
-        explanation = explainer(X_test)
-        y_pred = model.predict(X_test)
-
-        def explanation_getter(class_idx: int) -> shap.Explanation:
-            return explanation[:, :, class_idx]
-
-        self.plot_shap_explanations(
-            explanation_getter, X_test, y_test, y_pred, feature_names, label_encoder
-        )
+class MalwareExplainerXGB(TreeMalwareExplainer):
+    # Finished MalwareExplainerXGB.explain_shap() in 58.88 secs
+    def get_shap_explainer(
+        self, model: Any, feature_names: list[str]
+    ) -> shap.TreeExplainer:
+        return shap.TreeExplainer(model, feature_names=feature_names)
 
     @timer
     def explain_anchors(self) -> None:
