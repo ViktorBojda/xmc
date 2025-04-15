@@ -1,12 +1,11 @@
 from __future__ import annotations
 import datetime as dt
-import gc
 import random
 import traceback
 from abc import ABC, abstractmethod
 from collections.abc import Callable
 from enum import StrEnum
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 import numpy as np
 from alibi.explainers import AnchorTabular
@@ -15,8 +14,9 @@ from sklearn.preprocessing import LabelEncoder
 from sklearn.utils import compute_class_weight
 
 from xmc.classifiers.utils import save_plot
+from xmc.exceptions import CounterfactualNotFound, AnchorNotFound
 from xmc.settings import EXPLANATIONS_DIR_PATH
-from xmc.utils import prompt_options, try_import_shap
+from xmc.utils import prompt_options, try_import_shap, round_values, timer
 
 if TYPE_CHECKING:
     from xmc.classifiers.base import BaseMalwareClassifier
@@ -136,6 +136,7 @@ class BaseMalwareExplainer(ABC):
         feature_names: list[str],
         label_encoder: LabelEncoder,
         anchor_formatter: Callable[[list[str]], str] | None = None,
+        samples_per_class: int = 5,
     ):
         if not anchor_formatter:
             anchor_formatter = self.join_anchor_rules
@@ -143,10 +144,8 @@ class BaseMalwareExplainer(ABC):
         class_weights = compute_class_weight(
             class_weight="balanced", classes=np.unique(y_train), y=y_train
         )
-        SAMPLES_PER_CLASS = 5
         thresholds = {"strict": 0.9, "general": 0.8}
         base_dir = EXPLANATIONS_DIR_PATH / f"{self.classifier_class.model_name}/anchors"
-        random.seed(self.random_state)
         total_count = y_test.shape[0]
         for class_idx, class_name in enumerate(label_encoder.classes_):
             total_class_count = np.sum(y_test == class_idx)
@@ -157,12 +156,13 @@ class BaseMalwareExplainer(ABC):
                 )
                 continue
 
+            random.seed(self.random_state)
             sampled_idxs = random.sample(
-                correct_idxs.tolist(), k=min(SAMPLES_PER_CLASS, len(correct_idxs))
+                correct_idxs.tolist(), k=min(samples_per_class, len(correct_idxs))
             )
-            if (sample_length := len(sampled_idxs)) != SAMPLES_PER_CLASS:
+            if (sample_length := len(sampled_idxs)) != samples_per_class:
                 print(
-                    f"Failed to find {SAMPLES_PER_CLASS} correct predictions for class '{class_name}', "
+                    f"Failed to find {samples_per_class} correct predictions for class '{class_name}', "
                     f"generating anchors for the {sample_length} samples found."
                 )
 
@@ -198,7 +198,7 @@ class BaseMalwareExplainer(ABC):
                             verbose=True,
                         )
                         explanation_json_file.write_text(explanation.to_json())
-                        if explanation.anchor:
+                        if anchor := getattr(explanation, "anchor", None):
                             coverage: float = explanation.coverage
                             result = (
                                 f"Anchors explanation for {instance_descriptor}:\n"
@@ -206,14 +206,16 @@ class BaseMalwareExplainer(ABC):
                                 f"Coverage: {coverage}\n"
                                 f"Weighted coverage: {round(class_weights[class_idx] * coverage, 4)}\n"
                                 f"Class coverage: {round(total_count * coverage / total_class_count, 4)}\n"
-                                f"Anchor:\nIF {anchor_formatter(explanation.anchor)}\nTHEN PREDICT {class_name}\n"
+                                f"Anchor:\nIF {anchor_formatter(anchor)}\nTHEN PREDICT {class_name}\n"
+                            )
+                            print(result)
+                            (instance_dir / f"explanation_{mode}.txt").write_text(
+                                result
                             )
                         else:
-                            result = f"No anchor found for {instance_descriptor}.\n"
-                        print(result)
-                        (instance_dir / f"explanation_{mode}.txt").write_text(result)
-                        del explainer, explanation
-                        gc.collect()
+                            raise AnchorNotFound(
+                                f"No anchor found for {instance_descriptor}."
+                            )
                     except Exception as e:
                         timestamp = dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                         error_msg = (

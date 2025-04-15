@@ -5,10 +5,11 @@ from typing import TYPE_CHECKING
 
 import numpy as np
 import torch
-from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.preprocessing import MinMaxScaler
 
 from xmc.explainers.base import BaseMalwareExplainer
-from xmc.utils import timer, stratified_sample, try_import_shap, inverse_tfidf
+from xmc.utils import timer, stratified_sample, try_import_shap
 
 if TYPE_CHECKING:
     from xmc.classifiers import MalwareClassifierMLP
@@ -55,15 +56,15 @@ class MalwareExplainerMLP(BaseMalwareExplainer):
     def explain_anchors(self):
         artifacts = self.classifier_class.load_model_artifacts()
         model: MalwareClassifierMLP.MalwareNet = artifacts["model"]
-        vectorizer: TfidfVectorizer = artifacts["vectorizer"]
+        vectorizer: CountVectorizer = artifacts["vectorizer"]
         feature_names = artifacts["feature_names"]
         label_encoder = artifacts["label_encoder"]
+        scaler: MinMaxScaler = artifacts["scaler"]
         X_train, y_train = artifacts["X_train"], artifacts["y_train"]
         X_test, y_test = artifacts["X_test"], artifacts["y_test"]
 
         vocabulary = vectorizer.vocabulary_
-        idf = vectorizer.idf_
-        sublinear_tf = vectorizer.sublinear_tf
+        n_features = len(feature_names)
 
         def predictor(X: np.ndarray) -> np.ndarray:
             with torch.no_grad():
@@ -82,11 +83,11 @@ class MalwareExplainerMLP(BaseMalwareExplainer):
                 feature = match.group(1)
                 operator = match.group(2)
                 value = float(match.group(3))
-                feature_idx = vocabulary[feature]
-                new_value = inverse_tfidf(
-                    value, idf[feature_idx], sublinear_tf=sublinear_tf
-                )
-                new_anchor.append(f"{feature} {operator} {new_value}")
+                feature_idx = 0, vocabulary[feature]
+                dummy_row = np.zeros((1, n_features))
+                dummy_row[feature_idx] = value
+                rescaled_value = scaler.inverse_transform(dummy_row)[feature_idx]
+                new_anchor.append(f"{feature} {operator} {rescaled_value}")
             return self.join_anchor_rules(new_anchor)
 
         self.create_anchors_explanations(

@@ -9,38 +9,38 @@ import torch.optim as optim
 from torch.optim import Optimizer
 from torch.utils.data import DataLoader, TensorDataset
 
-from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.model_selection import StratifiedKFold, train_test_split
 from sklearn.metrics import classification_report, f1_score
-from sklearn.preprocessing import LabelEncoder
+from sklearn.preprocessing import LabelEncoder, MinMaxScaler
 
 from xmc.classifiers.base import BaseMalwareClassifier
 from xmc.explainers.mlp import MalwareExplainerMLP
 from xmc.utils import timer
 
-# Cross-Validation f1_macro scores: [0.7727, 0.7537, 0.7755, 0.7793, 0.7587, 0.7548, 0.7648, 0.782, 0.7619, 0.7528]
-# Cross-Validation f1_macro mean:   0.7656
-# Cross-Validation f1_macro std:    0.0110
+# Cross-Validation f1_macro scores: [0.738, 0.7376, 0.7482, 0.7501, 0.7404, 0.7417, 0.742, 0.7612, 0.7519, 0.7439]
+# Cross-Validation f1_macro mean:   0.7455
+# Cross-Validation f1_macro std:    0.0074
 # --------------------------------------------------
-# Finished MalwareClassifierMLP.cross_validate() in 826.51 secs
+# Finished MalwareClassifierMLP.cross_validate() in 2362.65 secs
 # Classification Report:
 #                precision    recall  f1-score   support
 #
-#       adware       0.82      0.68      0.74       279
-#     backdoor       0.82      0.78      0.80       366
-#   downloader       0.75      0.80      0.77       225
-#      dropper       0.59      0.62      0.60       169
-#      spyware       0.52      0.54      0.53       160
-#       trojan       0.93      0.95      0.94      2913
-#        virus       0.94      0.94      0.94      1097
-#        worms       0.76      0.72      0.74       359
+#       adware       0.78      0.67      0.72       279
+#     backdoor       0.85      0.75      0.80       366
+#   downloader       0.70      0.78      0.74       225
+#      dropper       0.50      0.66      0.56       169
+#      spyware       0.55      0.50      0.52       160
+#       trojan       0.94      0.95      0.95      2913
+#        virus       0.91      0.93      0.92      1097
+#        worms       0.77      0.65      0.70       359
 #
-#     accuracy                           0.88      5568
-#    macro avg       0.77      0.75      0.76      5568
-# weighted avg       0.88      0.88      0.88      5568
+#     accuracy                           0.87      5568
+#    macro avg       0.75      0.74      0.74      5568
+# weighted avg       0.87      0.87      0.87      5568
 #
 # --------------------------------------------------
-# Finished MalwareClassifierMLP.train_and_evaluate() in 98.20 secs
+# Finished MalwareClassifierMLP.train_and_evaluate() in 242.65 secs
 
 
 class MalwareClassifierMLP(BaseMalwareClassifier):
@@ -69,12 +69,12 @@ class MalwareClassifierMLP(BaseMalwareClassifier):
         self,
         max_features: int = 1_000,
         ngram_range: tuple[int, int] = (1, 2),
-        epochs: int = 200,
-        patience: int | None = 30,
+        epochs: int = 300,
+        patience: int | None = 50,
         batch_size: int = 256,
         hidden_dim: int = 256,
         learning_rate: float = 0.001,
-        device: str | None = None,
+        device: str | None = "cpu",
         num_workers: int = -1,
         random_state: int = 69,
     ):
@@ -88,14 +88,13 @@ class MalwareClassifierMLP(BaseMalwareClassifier):
         self.batch_size = batch_size
         self.learning_rate = learning_rate
         self.hidden_dim = hidden_dim
-        self.vectorizer = TfidfVectorizer(
+        self.vectorizer = CountVectorizer(
             tokenizer=self.comma_tokenizer,
             token_pattern=None,
             max_features=max_features,
             ngram_range=ngram_range,
-            sublinear_tf=True,
-            norm=None,
         )
+        self.scaler = MinMaxScaler()
         self.label_encoder = LabelEncoder()
         # set after fit_transform
         self.model = None
@@ -129,6 +128,8 @@ class MalwareClassifierMLP(BaseMalwareClassifier):
         X_test: np.ndarray,
         y_test: np.ndarray,
     ) -> tuple[DataLoader, DataLoader, nn.Module, Optimizer]:
+        X_train = self.scaler.fit_transform(X_train)
+        X_test = self.scaler.transform(X_test)
         # convert train and test folds to DataLoaders for batching, shuffle and performance
         train_ds = TensorDataset(
             torch.tensor(X_train, dtype=torch.float32),
@@ -153,9 +154,7 @@ class MalwareClassifierMLP(BaseMalwareClassifier):
             pin_memory=True,
         )
         criterion = nn.CrossEntropyLoss()
-        optimizer = optim.AdamW(
-            model.parameters(), lr=self.learning_rate, weight_decay=0.01
-        )
+        optimizer = optim.Adam(model.parameters(), lr=self.learning_rate)
         return train_loader, test_loader, criterion, optimizer
 
     def _train_one_epoch(
@@ -288,6 +287,7 @@ class MalwareClassifierMLP(BaseMalwareClassifier):
         artifacts = super().get_model_artifacts()
         artifacts.update(
             {
+                "scaler": self.scaler,
                 "model_state_dict": self.model.state_dict(),
                 "input_dim": next(self.model.parameters()).shape[1],
                 "hidden_dim": self.hidden_dim,
