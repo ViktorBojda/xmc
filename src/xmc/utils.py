@@ -101,24 +101,5 @@ def try_import_shap():
         return ShapUnavailable()
 
 
-def inverse_tfidf(x: float, idf: float, *, sublinear_tf: bool = True) -> int:
-    """
-    Invert the tf-idf transformation to recover the original term frequency.
-
-    This function estimates the raw term frequency (tf) from a given tf-idf value
-    and the corresponding inverse document frequency (idf). The transformation
-    depends on whether sublinear tf scaling was applied.
-
-    :param x: The tf-idf value (i.e., the product of the tf and idf, with an
-        optional sublinear transformation).
-    :param idf: The inverse document frequency component for the term.
-    :param sublinear_tf: Indicates whether sublinear scaling was applied.
-        If True, the tf component was transformed as (1 + ln(tf)).
-        If False, no logarithmic transformation was applied. Defaults to True.
-    :return: The original term frequency. If x is zero, the function returns 0.
-    """
-    if x == 0:
-        return 0
-    if sublinear_tf:
-        return round(np.exp(x / idf - 1))
-    return round(x / idf)
+def round_values(values: list[float], decimals: int = 4) -> list[float]:
+    return [round(value, decimals) for value in values]
