@@ -15,7 +15,7 @@ from sklearn.preprocessing import LabelEncoder
 from xmc.classifiers.utils import load_dataset, save_plot
 from xmc.explainers.base import BaseMalwareExplainer
 from xmc.settings import MODELS_DIR_PATH
-from xmc.utils import prompt_overwrite, timer, prompt_options
+from xmc.utils import prompt_overwrite, timer, prompt_options, round_values
 
 
 class BaseMalwareClassifier(ABC):
@@ -49,7 +49,7 @@ class BaseMalwareClassifier(ABC):
 
     @staticmethod
     def display_cv_results(scoring: str, scores: list[float]) -> None:
-        print(f"Cross-Validation {scoring} scores:", [round(s, 4) for s in scores])
+        print(f"Cross-Validation {scoring} scores:", round_values(scores, 4))
         print(f"Cross-Validation {scoring} mean:   {np.mean(scores):.4f}")
         print(f"Cross-Validation {scoring} std:    {np.std(scores, ddof=1):.4f}")
         print("-" * 50)
