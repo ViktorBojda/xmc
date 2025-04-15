@@ -192,8 +192,8 @@ class BaseMalwareExplainer(ABC):
                         explanation = explainer.explain(
                             instance,
                             threshold=threshold,
-                            beam_size=3,
-                            max_anchor_size=20,
+                            beam_size=1,
+                            max_anchor_size=15,
                             verbose_every=5,
                             verbose=True,
                         )

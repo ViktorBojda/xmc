@@ -86,7 +86,7 @@ class MalwareExplainerMLP(BaseMalwareExplainer):
                 feature_idx = 0, vocabulary[feature]
                 dummy_row = np.zeros((1, n_features))
                 dummy_row[feature_idx] = value
-                rescaled_value = scaler.inverse_transform(dummy_row)[feature_idx]
+                rescaled_value = int(scaler.inverse_transform(dummy_row)[feature_idx])
                 new_anchor.append(f"{feature} {operator} {rescaled_value}")
             return self.join_anchor_rules(new_anchor)
 
