@@ -20,29 +20,33 @@ class MalwareExplainerMLP(BaseMalwareExplainer):
 
     @timer
     def explain_shap(self):
-        # Finished MalwareExplainerMLP.run() in 2545.36 secs
-        X_test_tensor = torch.from_numpy(self.X_test).float()
-        path = self.explanations_path / "shap/explanation.json"
-        if not (explanation := self.load_explanation(path)):
+        # Finished MalwareExplainerMLP.explain_shap() in 51.87 secs
+        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        self.model.to(device)
+        self.model.eval()
+        X_test_tensor = torch.from_numpy(self.X_test).float().to(device)
+        if not (explanation := self.load_shap_explanation()):
             X_train_sample = stratified_sample(
                 self.X_train, self.y_train, size=1000, random_state=self.random_state
             )
-            X_train_tensor = torch.from_numpy(X_train_sample).float()
+            X_train_tensor = torch.from_numpy(X_train_sample).float().to(device)
             explainer = shap.DeepExplainer(self.model, X_train_tensor)
             base_values = explainer.expected_value
-            shap_values = explainer.shap_values(X_test_tensor)
+            # can take more than 1 hour
+            shap_values = explainer.shap_values(X_test_tensor, check_additivity=False)
             explanation = shap.Explanation(
                 base_values=base_values,
                 values=shap_values,
                 data=X_test_tensor,
                 feature_names=self.feature_names,
             )
-            path.write_text(explanation.to_json())
+            self.save_shap_explanation(explanation)
 
         with torch.no_grad():
             outputs = self.model(X_test_tensor)
             y_pred = torch.argmax(outputs, dim=1).cpu().numpy()
 
+        explanation.data = self.scaler.inverse_transform(self.X_test)
         self.plot_shap_explanations(explanation, y_pred)
 
     @timer

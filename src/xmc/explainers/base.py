@@ -8,9 +8,9 @@ from enum import StrEnum
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
+import joblib
 import numpy as np
 import tensorflow as tf
-from alibi.api.interfaces import Explanation
 from alibi.explainers import AnchorTabular
 
 from alibi.explainers.cfproto import CounterfactualProto
@@ -78,10 +78,17 @@ class BaseMalwareExplainer(ABC):
         print(f"Running {explanation_name} explanation...")
         explanation_method()
 
-    def load_explanation(self, path: Path) -> Explanation | None:
+    def save_shap_explanation(self, explanation: shap.Explanation) -> None:
+        path = self.explanations_path / "shap/explanation.joblib"
         path.parent.mkdir(parents=True, exist_ok=True)
+        joblib.dump(explanation, filename=path, protocol=5, compress=3)
+        print(f"SHAP explanation has been saved to '{path}'.")
+
+    def load_shap_explanation(self) -> shap.Explanation | None:
+        path = self.explanations_path / "shap/explanation.joblib"
         if path.exists():
-            return Explanation.from_json(path.open().read())
+            print(f"Loading SHAP explanation from '{path}'...")
+            return joblib.load(path)
         return None
 
     def plot_shap_explanations(
@@ -128,12 +135,19 @@ class BaseMalwareExplainer(ABC):
                         f"Failed to create decision plot, no correct prediction found for class {class_name}."
                     )
                 instance_idx = instance_idxs[0]
-                instance_explanation = class_explanation[instance_idx]
                 instance_features = self.X_test[instance_idx]
+                if self.scaler:
+                    instance_features = self.scaler.inverse_transform(
+                        instance_features.reshape(1, -1)
+                    )
                 plt.clf()
+                if explanation.base_values.ndim == 2:
+                    base_value = explanation.base_values[instance_idx, class_idx]
+                else:
+                    base_value = explanation.base_values[class_idx]
                 shap.plots.decision(
-                    instance_explanation.base_values,
-                    instance_explanation.values,
+                    base_value,
+                    explanation.values[instance_idx, :, class_idx],
                     instance_features,
                     self.feature_names,
                     show=False,
@@ -441,10 +455,9 @@ class TreeMalwareExplainer(BaseMalwareExplainer):
 
     @timer
     def explain_shap(self) -> None:
-        path = self.explanations_path / "shap/explanation.json"
-        if not (explanation := self.load_explanation(path)):
+        if not (explanation := self.load_shap_explanation()):
             explanation = self.get_shap_explainer()(self.X_test)
-            path.write_text(explanation.to_json())
+            self.save_shap_explanation(explanation)
 
         y_pred = self.model.predict(self.X_test)
         self.plot_shap_explanations(explanation, y_pred)
