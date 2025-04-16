@@ -3,10 +3,8 @@ from typing import Any
 import numpy as np
 from imblearn.ensemble import BalancedRandomForestClassifier
 from scipy.sparse import csc_matrix
-from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics import classification_report
 from sklearn.model_selection import train_test_split, StratifiedKFold, cross_val_score
-from sklearn.preprocessing import LabelEncoder
 
 from xmc.classifiers.base import BaseMalwareClassifier
 from xmc.explainers.brf import MalwareExplainerBRF
@@ -45,6 +43,7 @@ class MalwareClassifierBRF(BaseMalwareClassifier):
         self,
         max_features: int = 1_000,
         ngram_range: tuple[int, int] = (1, 2),
+        use_scaler: bool = False,  # counterfactuals work better with scaler
         n_estimators: int = 250,
         max_depth: int = 31,
         replacement: bool = True,
@@ -57,14 +56,12 @@ class MalwareClassifierBRF(BaseMalwareClassifier):
         verbose: int = 2,
         n_jobs: int = -1,
     ):
-        self.random_state = random_state
-        self.vectorizer = CountVectorizer(
-            tokenizer=self.comma_tokenizer,
-            token_pattern=None,
+        super().__init__(
             max_features=max_features,
             ngram_range=ngram_range,
+            use_scaler=use_scaler,
+            random_state=random_state,
         )
-        self.label_encoder = LabelEncoder()
         self.classifier = BalancedRandomForestClassifier(
             n_estimators=n_estimators,
             max_depth=max_depth,
@@ -110,6 +107,9 @@ class MalwareClassifierBRF(BaseMalwareClassifier):
         X_train, X_test, y_train, y_test = train_test_split(
             X, y, test_size=test_size, random_state=self.random_state, stratify=y
         )
+        if self.scaler:
+            X_train = self.scaler.fit_transform(X_train)
+            X_test = self.scaler.transform(X_test)
         self.classifier.fit(X_train, y_train)
         y_pred_encoded = self.classifier.predict(X_test)
         y_pred = self.label_encoder.inverse_transform(y_pred_encoded)
