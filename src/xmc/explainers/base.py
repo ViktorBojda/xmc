@@ -44,6 +44,10 @@ class BaseMalwareExplainer(ABC):
         self.y_test: np.ndarray = artifacts["y_test"]
         self.run()
 
+    @property
+    def explanations_path(self) -> Path:
+        return EXPLANATIONS_DIR_PATH / f"{self.classifier_class.model_name}"
+
     @abstractmethod
     def explain_shap(self) -> None: ...
 
@@ -63,6 +67,12 @@ class BaseMalwareExplainer(ABC):
         explanation_method, explanation_name = prompt_options(explanation_methods)
         print(f"Running {explanation_name} explanation...")
         explanation_method()
+
+    def load_explanation(self, path: Path) -> Explanation | None:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        if path.exists():
+            return Explanation.from_json(path.open().read())
+        return None
 
     def plot_shap_explanations(
         self,
