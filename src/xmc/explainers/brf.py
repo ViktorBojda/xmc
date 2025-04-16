@@ -1,25 +1,19 @@
-from typing import Any
-
-import numpy as np
+from imblearn.ensemble import BalancedRandomForestClassifier
 
 from xmc.explainers.base import TreeMalwareExplainer
-from xmc.utils import try_import_shap
+from xmc.utils import try_import_shap, timer
 
 shap = try_import_shap()
 
 
 class MalwareExplainerBRF(TreeMalwareExplainer):
-    # Finished MalwareExplainerBRF.explain_shap() in 114.74 secs
-    def get_shap_explainer(
-        self, model: Any, feature_names: list[str]
-    ) -> shap.TreeExplainer:
-        if shap.__version__ == "0.0.0-not-built":  # local gpu build
-            return shap.GPUTreeExplainer(model, feature_names=feature_names)
-        return shap.TreeExplainer(model, feature_names=feature_names)
+    model: BalancedRandomForestClassifier
 
-        self.plot_shap_explanations(
-            explanation_getter, X_test, y_test, y_pred, feature_names, label_encoder
-        )
+    # Finished MalwareExplainerBRF.explain_shap() in 114.74 secs
+    def get_shap_explainer(self) -> shap.GPUTreeExplainer | shap.TreeExplainer:
+        if shap.__version__ == "0.0.0-not-built":  # local gpu build
+            return shap.GPUTreeExplainer(self.model, feature_names=self.feature_names)
+        return shap.TreeExplainer(self.model, feature_names=self.feature_names)
 
     @timer
     def explain_anchors(self):

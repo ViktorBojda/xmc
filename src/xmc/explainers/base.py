@@ -11,6 +11,8 @@ import numpy as np
 from alibi.explainers import AnchorTabular
 from matplotlib import pyplot as plt
 from sklearn.preprocessing import LabelEncoder
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.preprocessing import LabelEncoder, MinMaxScaler
 from sklearn.utils import compute_class_weight
 
 from xmc.classifiers.utils import save_plot
@@ -30,6 +32,16 @@ class BaseMalwareExplainer(ABC):
     ) -> None:
         self.classifier_class = classifier_class
         self.random_state = random_state
+        artifacts = self.classifier_class.load_model_artifacts()
+        self.model = artifacts["model"]
+        self.vectorizer: CountVectorizer = artifacts["vectorizer"]
+        self.feature_names: list[str] = artifacts["feature_names"]
+        self.label_encoder: LabelEncoder = artifacts["label_encoder"]
+        self.scaler: MinMaxScaler | None = artifacts.get("scaler")
+        self.X_train: np.ndarray = artifacts["X_train"]
+        self.y_train: np.ndarray = artifacts["y_train"]
+        self.X_test: np.ndarray = artifacts["X_test"]
+        self.y_test: np.ndarray = artifacts["y_test"]
         self.run()
 
     @abstractmethod
@@ -55,15 +67,11 @@ class BaseMalwareExplainer(ABC):
     def plot_shap_explanations(
         self,
         explanation_getter: Callable[[int], shap.Explanation],
-        X_test: np.ndarray,
-        y_test: np.ndarray,
         y_pred: np.ndarray,
-        feature_names: list[str],
-        label_encoder: LabelEncoder,
         beeswarm_max_display: int = 30,
     ):
         plt.figure(clear=True)
-        for class_idx, class_name in enumerate(label_encoder.classes_):
+        for class_idx, class_name in enumerate(self.label_encoder.classes_):
             class_explanation = explanation_getter(class_idx)
             plt.clf()
             shap.plots.beeswarm(
@@ -101,13 +109,13 @@ class BaseMalwareExplainer(ABC):
                     )
                 instance_idx = instance_idxs[0]
                 instance_explanation = class_explanation[instance_idx]
-                instance_features = X_test[instance_idx]
+                instance_features = self.X_test[instance_idx]
                 plt.clf()
                 shap.plots.decision(
                     instance_explanation.base_values,
                     instance_explanation.values,
                     instance_features,
-                    feature_names,
+                    self.feature_names,
                     show=False,
                 )
                 save_plot(
@@ -115,10 +123,12 @@ class BaseMalwareExplainer(ABC):
                     f"{self.classifier_class.model_name}/decision/{identifier.lower()}/{class_name}",
                 )
 
-            correct_idxs = np.where((y_test == class_idx) & (y_pred == class_idx))[0]
-            create_decision_plot(correct_idxs, "correct")
-            incorrect_idxs = np.where((y_test == class_idx) & (y_pred != class_idx))[0]
-            create_decision_plot(incorrect_idxs, "misclassified")
+            correct_idxs = np.where((self.y_test == class_idx) & (y_pred == class_idx))
+            create_decision_plot(correct_idxs[0], "correct")
+            incorrect_idxs = np.where(
+                (self.y_test == class_idx) & (y_pred != class_idx)
+            )
+            create_decision_plot(incorrect_idxs[0], "misclassified")
 
             print(f"SHAP plots created for class {class_name}.")
         plt.close("all")
@@ -126,30 +136,26 @@ class BaseMalwareExplainer(ABC):
     def join_anchor_rules(self, anchor: list[str]) -> str:
         return "\nAND ".join(anchor)
 
-    def create_anchors_explanations(
+    def create_anchor_explanations(
         self,
         predictor: Callable[[np.ndarray], np.ndarray],
-        X_train: np.ndarray,
-        y_train: np.ndarray,
-        X_test: np.ndarray,
-        y_test: np.ndarray,
-        feature_names: list[str],
-        label_encoder: LabelEncoder,
         anchor_formatter: Callable[[list[str]], str] | None = None,
         samples_per_class: int = 5,
     ):
         if not anchor_formatter:
             anchor_formatter = self.join_anchor_rules
-        y_pred = predictor(X_test)
+        y_pred = predictor(self.X_test)
         class_weights = compute_class_weight(
-            class_weight="balanced", classes=np.unique(y_train), y=y_train
+            class_weight="balanced", classes=np.unique(self.y_train), y=self.y_train
         )
         thresholds = {"strict": 0.9, "general": 0.8}
         base_dir = EXPLANATIONS_DIR_PATH / f"{self.classifier_class.model_name}/anchors"
-        total_count = y_test.shape[0]
-        for class_idx, class_name in enumerate(label_encoder.classes_):
-            total_class_count = np.sum(y_test == class_idx)
-            correct_idxs = np.where((y_test == class_idx) & (y_pred == class_idx))[0]
+        total_count = self.y_test.shape[0]
+        for class_idx, class_name in enumerate(self.label_encoder.classes_):
+            total_class_count = np.sum(self.y_test == class_idx)
+            correct_idxs = np.where((self.y_test == class_idx) & (y_pred == class_idx))[
+                0
+            ]
             if not correct_idxs.size:
                 print(
                     f"Failed to create anchors, no correct prediction found for class '{class_name}'."
@@ -167,7 +173,7 @@ class BaseMalwareExplainer(ABC):
                 )
 
             for idx in sampled_idxs:
-                instance = X_test[idx]
+                instance = self.X_test[idx]
                 instance_dir = base_dir / f"{class_name}/instance_{idx}"
                 instance_dir.mkdir(parents=True, exist_ok=True)
 
@@ -185,10 +191,10 @@ class BaseMalwareExplainer(ABC):
                         # reinit the explainer to free up memory, as it doesn't release it properly otherwise
                         explainer = AnchorTabular(
                             predictor=predictor,
-                            feature_names=feature_names,
+                            feature_names=self.feature_names,
                             seed=self.random_state,
                         )
-                        explainer.fit(X_train)
+                        explainer.fit(self.X_train)
                         explanation = explainer.explain(
                             instance,
                             threshold=threshold,
@@ -229,49 +235,27 @@ class BaseMalwareExplainer(ABC):
                             f.write("-" * 50 + "\n")
                     print("-" * 50)
             print(f"Anchors created for class {class_name}.\n")
+            print(f"Anchors creation finished for class {class_name}.\n")
+            print("-" * 50)
+
             print("-" * 50)
 
 
 class TreeMalwareExplainer(BaseMalwareExplainer):
     @abstractmethod
-    def get_shap_explainer(
-        self, model: Any, feature_names: list[str]
-    ) -> shap.TreeExplainer: ...
+    def get_shap_explainer(self) -> shap.TreeExplainer: ...
 
     @timer
     def explain_shap(self):
-        artifacts = self.classifier_class.load_model_artifacts()
-        model = artifacts["model"]
-        feature_names = artifacts["feature_names"]
-        label_encoder = artifacts["label_encoder"]
-        X_test, y_test = artifacts["X_test"], artifacts["y_test"]
-
-        explainer = self.get_shap_explainer(model, feature_names)
-        explanation = explainer(X_test)
-        y_pred = model.predict(X_test)
+        explainer = self.get_shap_explainer()
+        explanation = explainer(self.X_test)
+        y_pred = self.model.predict(self.X_test)
 
         def explanation_getter(class_idx: int) -> shap.Explanation:
             return explanation[:, :, class_idx]
 
-        self.plot_shap_explanations(
-            explanation_getter, X_test, y_test, y_pred, feature_names, label_encoder
-        )
+        self.plot_shap_explanations(explanation_getter, y_pred)
 
     @timer
     def explain_anchors(self) -> None:
-        artifacts = self.classifier_class.load_model_artifacts()
-        model = artifacts["model"]
-        feature_names = artifacts["feature_names"]
-        label_encoder = artifacts["label_encoder"]
-        X_train, y_train = artifacts["X_train"], artifacts["y_train"]
-        X_test, y_test = artifacts["X_test"], artifacts["y_test"]
-
-        self.create_anchors_explanations(
-            model.predict,
-            X_train,
-            y_train,
-            X_test,
-            y_test,
-            feature_names,
-            label_encoder,
-        )
+        self.create_anchor_explanations(self.model.predict)
