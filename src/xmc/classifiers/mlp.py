@@ -38,7 +38,7 @@ from xmc.utils import timer
 # weighted avg       0.87      0.87      0.87      5568
 #
 # --------------------------------------------------
-# Finished MalwareClassifierMLP.train_and_evaluate() in 242.65 secs
+# Finished MalwareClassifierMLP.train_and_evaluate() in 238.10 secs
 
 
 class MalwareClassifierMLP(BaseMalwareClassifier):
@@ -72,7 +72,7 @@ class MalwareClassifierMLP(BaseMalwareClassifier):
         batch_size: int = 256,
         hidden_dim: int = 256,
         learning_rate: float = 0.001,
-        device: str | None = "cpu",
+        device: str | None = None,
         num_workers: int = -1,
         random_state: int = 69,
     ) -> None:
@@ -123,8 +123,6 @@ class MalwareClassifierMLP(BaseMalwareClassifier):
         X_test: np.ndarray,
         y_test: np.ndarray,
     ) -> tuple[DataLoader, DataLoader, nn.Module, Optimizer]:
-        X_train = self.scaler.fit_transform(X_train)
-        X_test = self.scaler.transform(X_test)
         # convert train and test folds to DataLoaders for batching, shuffle and performance
         train_ds = TensorDataset(
             torch.tensor(X_train, dtype=torch.float32),
@@ -243,9 +241,11 @@ class MalwareClassifierMLP(BaseMalwareClassifier):
             fold_model = self.MalwareNet(
                 self.input_dim, self.hidden_dim, self.num_classes
             ).to(self.device)
+            X_train = self.scaler.fit_transform(X[train_idx])
+            X_val = self.scaler.transform(X[val_idx])
             train_loader, val_loader, criterion, optimizer = (
                 self._prepare_train_test_data(
-                    fold_model, X[train_idx], y[train_idx], X[val_idx], y[val_idx]
+                    fold_model, X_train, y[train_idx], X_val, y[val_idx]
                 )
             )
             self._train(fold_model, train_loader, val_loader, criterion, optimizer)
@@ -266,6 +266,8 @@ class MalwareClassifierMLP(BaseMalwareClassifier):
         X_train, X_test, y_train, y_test = train_test_split(
             X, y, test_size=test_size, random_state=self.random_state, stratify=y
         )
+        X_train = self.scaler.fit_transform(X_train)
+        X_test = self.scaler.transform(X_test)
         train_loader, test_loader, criterion, optimizer = self._prepare_train_test_data(
             self.model, X_train, y_train, X_test, y_test
         )
