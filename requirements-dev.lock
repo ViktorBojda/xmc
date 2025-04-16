@@ -10,12 +10,20 @@
 #   universal: false
 
 -e file:.
+absl-py==2.2.2
+    # via keras
+    # via tensorboard
+    # via tensorflow
+    # via tensorflow-cpu
 alembic==1.15.1
     # via optuna
 alibi==0.9.6
     # via xmc
 annotated-types==0.7.0
     # via pydantic
+astunparse==1.6.3
+    # via tensorflow
+    # via tensorflow-cpu
 attrs==23.2.0
     # via alibi
 black==24.10.0
@@ -71,15 +79,32 @@ filelock==3.17.0
     # via torch
     # via transformers
     # via triton
+flatbuffers==25.2.10
+    # via tensorflow
+    # via tensorflow-cpu
 fonttools==4.55.0
     # via matplotlib
 fsspec==2024.12.0
     # via cudf-cu12
     # via huggingface-hub
     # via torch
+gast==0.6.0
+    # via tensorflow
+    # via tensorflow-cpu
+google-pasta==0.2.0
+    # via tensorflow
+    # via tensorflow-cpu
 greenlet==3.1.1
     # via sqlalchemy
-huggingface-hub==0.30.1
+grpcio==1.71.0
+    # via tensorboard
+    # via tensorflow
+    # via tensorflow-cpu
+h5py==3.13.0
+    # via keras
+    # via tensorflow
+    # via tensorflow-cpu
+huggingface-hub==0.30.2
     # via tokenizers
     # via transformers
 idna==3.10
@@ -95,6 +120,9 @@ joblib==1.4.2
     # via imbalanced-learn
     # via scikit-learn
     # via xmc
+keras==3.9.2
+    # via tensorflow
+    # via tensorflow-cpu
 kiwisolver==1.4.7
     # via matplotlib
 langcodes==3.5.0
@@ -103,6 +131,9 @@ language-data==1.3.0
     # via langcodes
 lazy-loader==0.4
     # via scikit-image
+libclang==18.1.1
+    # via tensorflow
+    # via tensorflow-cpu
 libcudf-cu12==24.12.0
     # via cudf-cu12
     # via pylibcudf-cu12
@@ -114,16 +145,23 @@ mako==1.3.9
     # via alembic
 marisa-trie==1.2.1
     # via language-data
+markdown==3.7
+    # via tensorboard
 markdown-it-py==3.0.0
     # via rich
 markupsafe==3.0.2
     # via jinja2
     # via mako
+    # via werkzeug
 matplotlib==3.9.2
     # via alibi
     # via xmc
 mdurl==0.1.2
     # via markdown-it-py
+ml-dtypes==0.5.1
+    # via keras
+    # via tensorflow
+    # via tensorflow-cpu
 mpmath==1.3.0
     # via sympy
 murmurhash==1.0.12
@@ -132,6 +170,8 @@ murmurhash==1.0.12
     # via thinc
 mypy-extensions==1.0.0
     # via black
+namex==0.0.8
+    # via keras
 networkx==3.4.2
     # via scikit-image
     # via torch
@@ -146,9 +186,12 @@ numpy==1.26.4
     # via contourpy
     # via cudf-cu12
     # via cupy-cuda12x
+    # via h5py
     # via imageio
     # via imbalanced-learn
+    # via keras
     # via matplotlib
+    # via ml-dtypes
     # via numba
     # via optuna
     # via pandas
@@ -157,6 +200,9 @@ numpy==1.26.4
     # via scikit-learn
     # via scipy
     # via spacy
+    # via tensorboard
+    # via tensorflow
+    # via tensorflow-cpu
     # via thinc
     # via tifffile
     # via torchvision
@@ -197,18 +243,27 @@ nvidia-nvtx-cu12==12.4.127
 nvtx==0.2.10
     # via cudf-cu12
     # via pylibcudf-cu12
+opt-einsum==3.4.0
+    # via tensorflow
+    # via tensorflow-cpu
+optree==0.15.0
+    # via keras
 optuna==4.2.1
     # via xmc
 packaging==24.2
     # via black
     # via cudf-cu12
     # via huggingface-hub
+    # via keras
     # via lazy-loader
     # via matplotlib
     # via optuna
     # via pylibcudf-cu12
     # via scikit-image
     # via spacy
+    # via tensorboard
+    # via tensorflow
+    # via tensorflow-cpu
     # via thinc
     # via transformers
     # via weasel
@@ -229,15 +284,19 @@ platformdirs==4.3.6
 preshed==3.0.9
     # via spacy
     # via thinc
+protobuf==5.29.4
+    # via tensorboard
+    # via tensorflow
+    # via tensorflow-cpu
 pyarrow==18.1.0
     # via cudf-cu12
     # via pylibcudf-cu12
-pydantic==2.11.1
+pydantic==2.11.3
     # via confection
     # via spacy
     # via thinc
     # via weasel
-pydantic-core==2.33.0
+pydantic-core==2.33.1
     # via pydantic
 pygments==2.19.1
     # via rich
@@ -262,10 +321,13 @@ requests==2.32.3
     # via alibi
     # via huggingface-hub
     # via spacy
+    # via tensorflow
+    # via tensorflow-cpu
     # via transformers
     # via weasel
 rich==13.9.4
     # via cudf-cu12
+    # via keras
     # via typer
 rmm-cu12==24.12.1
     # via cudf-cu12
@@ -288,12 +350,20 @@ setuptools==78.1.0
     # via marisa-trie
     # via spacy
     # via spacy-lookups-data
+    # via tensorboard
+    # via tensorflow
+    # via tensorflow-cpu
     # via thinc
     # via xmc
 shellingham==1.5.4
     # via typer
 six==1.16.0
+    # via astunparse
+    # via google-pasta
     # via python-dateutil
+    # via tensorboard
+    # via tensorflow
+    # via tensorflow-cpu
 smart-open==7.1.0
     # via weasel
 spacy==3.7.5
@@ -314,6 +384,23 @@ srsly==2.5.1
     # via weasel
 sympy==1.13.1
     # via torch
+tensorboard==2.18.0
+    # via tensorflow
+    # via tensorflow-cpu
+tensorboard-data-server==0.7.2
+    # via tensorboard
+# tensorflow==2.18.1 (excluded)
+    # via tf-keras
+tensorflow-cpu==2.18.1
+    # via xmc
+tensorflow-io-gcs-filesystem==0.37.1
+    # via tensorflow
+    # via tensorflow-cpu
+termcolor==3.0.1
+    # via tensorflow
+    # via tensorflow-cpu
+tf-keras==2.18.0
+    # via xmc
 thinc==8.2.5
     # via spacy
 threadpoolctl==3.5.0
@@ -337,7 +424,7 @@ tqdm==4.67.1
     # via optuna
     # via spacy
     # via transformers
-transformers==4.50.3
+transformers==4.51.1
     # via alibi
 triton==3.1.0
     # via torch
@@ -349,10 +436,13 @@ typing-extensions==4.12.2
     # via alibi
     # via cudf-cu12
     # via huggingface-hub
+    # via optree
     # via pydantic
     # via pydantic-core
     # via pylibcudf-cu12
     # via sqlalchemy
+    # via tensorflow
+    # via tensorflow-cpu
     # via torch
     # via typer
     # via typing-inspection
@@ -368,7 +458,13 @@ wasabi==1.1.3
     # via weasel
 weasel==0.4.1
     # via spacy
-wrapt==1.17.2
+werkzeug==3.1.3
+    # via tensorboard
+wheel==0.45.1
+    # via astunparse
+wrapt==1.14.1
     # via smart-open
+    # via tensorflow
+    # via tensorflow-cpu
 xgboost==3.0.0
     # via xmc

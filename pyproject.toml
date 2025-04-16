@@ -22,9 +22,11 @@ dependencies = [
     "setuptools>=78.1.0",
     "cython>=3.0.12",
     "alibi>=0.9.6",
+    "tensorflow-cpu>=2.16.0, <2.19.0",
+    "tf-keras>=2.16.0, <2.19.0",
 ]
 readme = "README.md"
-requires-python = ">= 3.8"
+requires-python = ">= 3.11"
 
 [project.optional-dependencies]
 shap = ["shap~=0.47"]
@@ -36,6 +38,7 @@ build-backend = "hatchling.build"
 [tool.rye]
 managed = true
 dev-dependencies = []
+excluded-dependencies = ["tensorflow"]
 
 [tool.rye.dependencies]
 cudf-cu12 = { version = "*", index = "https://pypi.nvidia.com" }
