@@ -23,27 +23,29 @@ class MalwareExplainerMLP(BaseMalwareExplainer):
     @timer
     def explain_shap(self):
         # Finished MalwareExplainerMLP.run() in 2545.36 secs
-        X_train_sample = stratified_sample(
-            self.X_train, self.y_train, size=1000, random_state=self.random_state
-        )
-        X_train_tensor = torch.from_numpy(X_train_sample)
-        X_test_tensor = torch.from_numpy(self.X_test)
-        explainer = shap.DeepExplainer(self.model, X_train_tensor)
-        base_values = explainer.expected_value
-        shap_values = explainer.shap_values(X_test_tensor)
+        X_test_tensor = torch.from_numpy(self.X_test).float()
+        path = self.explanations_path / "shap/explanation.json"
+        if not (explanation := self.load_explanation(path)):
+            X_train_sample = stratified_sample(
+                self.X_train, self.y_train, size=1000, random_state=self.random_state
+            )
+            X_train_tensor = torch.from_numpy(X_train_sample).float()
+            explainer = shap.DeepExplainer(self.model, X_train_tensor)
+            base_values = explainer.expected_value
+            shap_values = explainer.shap_values(X_test_tensor)
+            explanation = shap.Explanation(
+                base_values=base_values,
+                values=shap_values,
+                data=X_test_tensor,
+                feature_names=self.feature_names,
+            )
+            path.write_text(explanation.to_json())
+
         with torch.no_grad():
             outputs = self.model(X_test_tensor)
             y_pred = torch.argmax(outputs, dim=1).cpu().numpy()
 
-        def explanation_getter(class_idx: int) -> shap.Explanation:
-            return shap.Explanation(
-                base_values=base_values[class_idx],
-                values=shap_values[:, :, class_idx],
-                data=X_test_tensor,
-                feature_names=self.feature_names,
-            )
-
-        self.plot_shap_explanations(explanation_getter, y_pred)
+        self.plot_shap_explanations(explanation, y_pred)
 
     @timer
     def explain_anchors(self):
@@ -70,23 +72,12 @@ class MalwareExplainerMLP(BaseMalwareExplainer):
                 feature_idx = 0, vocabulary[feature]
                 dummy_row = np.zeros((1, n_features))
                 dummy_row[feature_idx] = value
-                rescaled_value = int(scaler.inverse_transform(dummy_row)[feature_idx])
-                new_anchor.append(f"{feature} {operator} {rescaled_value}")
                 inverse_value = int(
                     self.scaler.inverse_transform(dummy_row)[feature_idx]
                 )
                 new_anchor.append(f"{feature} {operator} {inverse_value}")
             return self.join_anchor_rules(new_anchor)
 
-        self.create_anchors_explanations(
-            predictor,
-            X_train,
-            y_train,
-            X_test,
-            y_test,
-            feature_names,
-            label_encoder,
-            anchor_formatter,
         self.create_anchor_explanations(predictor, anchor_formatter)
 
         )

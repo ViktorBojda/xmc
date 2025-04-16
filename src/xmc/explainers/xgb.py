@@ -10,10 +10,6 @@ class MalwareExplainerXGB(TreeMalwareExplainer):
     model: XGBClassifier
 
     # Finished MalwareExplainerXGB.explain_shap() in 58.88 secs
-    def get_shap_explainer(
-        self, model: Any, feature_names: list[str]
-    ) -> shap.TreeExplainer:
-        return shap.TreeExplainer(model, feature_names=feature_names)
     def get_shap_explainer(self) -> shap.TreeExplainer:
         return shap.TreeExplainer(self.model, feature_names=self.feature_names)
 

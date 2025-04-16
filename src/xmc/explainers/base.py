@@ -5,9 +5,11 @@ import traceback
 from abc import ABC, abstractmethod
 from collections.abc import Callable
 from enum import StrEnum
+from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
 import numpy as np
+from alibi.api.interfaces import Explanation
 from alibi.explainers import AnchorTabular
 from matplotlib import pyplot as plt
 from sklearn.preprocessing import LabelEncoder
@@ -76,13 +78,13 @@ class BaseMalwareExplainer(ABC):
 
     def plot_shap_explanations(
         self,
-        explanation_getter: Callable[[int], shap.Explanation],
+        explanation: shap.Explanation,
         y_pred: np.ndarray,
         beeswarm_max_display: int = 30,
     ):
         plt.figure(clear=True)
         for class_idx, class_name in enumerate(self.label_encoder.classes_):
-            class_explanation = explanation_getter(class_idx)
+            class_explanation = explanation[:, :, class_idx]
             plt.clf()
             shap.plots.beeswarm(
                 class_explanation,
@@ -244,7 +246,6 @@ class BaseMalwareExplainer(ABC):
                             f.write(f"Traceback:\n{traceback.format_exc()}\n")
                             f.write("-" * 50 + "\n")
                     print("-" * 50)
-            print(f"Anchors created for class {class_name}.\n")
             print(f"Anchors creation finished for class {class_name}.\n")
             print("-" * 50)
 
@@ -256,15 +257,14 @@ class TreeMalwareExplainer(BaseMalwareExplainer):
     def get_shap_explainer(self) -> shap.TreeExplainer: ...
 
     @timer
-    def explain_shap(self):
-        explainer = self.get_shap_explainer()
-        explanation = explainer(self.X_test)
+    def explain_shap(self) -> None:
+        path = self.explanations_path / "shap/explanation.json"
+        if not (explanation := self.load_explanation(path)):
+            explanation = self.get_shap_explainer()(self.X_test)
+            path.write_text(explanation.to_json())
+
         y_pred = self.model.predict(self.X_test)
-
-        def explanation_getter(class_idx: int) -> shap.Explanation:
-            return explanation[:, :, class_idx]
-
-        self.plot_shap_explanations(explanation_getter, y_pred)
+        self.plot_shap_explanations(explanation, y_pred)
 
     @timer
     def explain_anchors(self) -> None:
