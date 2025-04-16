@@ -5,8 +5,6 @@ from typing import TYPE_CHECKING
 
 import numpy as np
 import torch
-from sklearn.feature_extraction.text import CountVectorizer
-from sklearn.preprocessing import MinMaxScaler
 
 from xmc.explainers.base import BaseMalwareExplainer
 from xmc.utils import timer, stratified_sample, try_import_shap
@@ -80,4 +78,15 @@ class MalwareExplainerMLP(BaseMalwareExplainer):
 
         self.create_anchor_explanations(predictor, anchor_formatter)
 
+    @timer
+    def explain_counterfactuals(self) -> None:
+        # Finished MalwareExplainerMLP.explain_counterfactuals() in 2180.01 secs
+        def predictor(X: np.ndarray) -> np.ndarray:
+            with torch.no_grad():
+                X_tensor = torch.tensor(X, dtype=torch.float32)
+                outputs = self.model(X_tensor)
+                return outputs.cpu().numpy()
+
+        self.create_counterfactual_explanations(
+            predictor, explainer_params={"kappa": 1.0}
         )

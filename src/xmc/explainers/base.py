@@ -9,10 +9,12 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
 import numpy as np
+import tensorflow as tf
 from alibi.api.interfaces import Explanation
 from alibi.explainers import AnchorTabular
+
+from alibi.explainers.cfproto import CounterfactualProto
 from matplotlib import pyplot as plt
-from sklearn.preprocessing import LabelEncoder
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.preprocessing import LabelEncoder, MinMaxScaler
 from sklearn.utils import compute_class_weight
@@ -56,14 +58,20 @@ class BaseMalwareExplainer(ABC):
     @abstractmethod
     def explain_anchors(self) -> None: ...
 
+    @abstractmethod
+    def explain_counterfactuals(self) -> None: ...
+
+    @timer
     def run(self) -> None:
         class ExplanationMethod(StrEnum):
             SHAP = "SHAP"
             ANCHORS = "Anchors"
+            COUNTERFACTUALS = "Counterfactuals"
 
         explanation_methods = {
             ExplanationMethod.SHAP: self.explain_shap,
             ExplanationMethod.ANCHORS: self.explain_anchors,
+            ExplanationMethod.COUNTERFACTUALS: self.explain_counterfactuals,
         }
         print("Choose which explanation method to run, options are:")
         explanation_method, explanation_name = prompt_options(explanation_methods)
@@ -161,7 +169,7 @@ class BaseMalwareExplainer(ABC):
             class_weight="balanced", classes=np.unique(self.y_train), y=self.y_train
         )
         thresholds = {"strict": 0.9, "general": 0.8}
-        base_dir = EXPLANATIONS_DIR_PATH / f"{self.classifier_class.model_name}/anchors"
+        base_dir = self.explanations_path / "anchors"
         total_count = self.y_test.shape[0]
         for class_idx, class_name in enumerate(self.label_encoder.classes_):
             total_class_count = np.sum(self.y_test == class_idx)
@@ -249,6 +257,181 @@ class BaseMalwareExplainer(ABC):
             print(f"Anchors creation finished for class {class_name}.\n")
             print("-" * 50)
 
+    def assert_cf_valid(
+        self,
+        cf_class: int,
+        cf_proba: list[float],
+        control_class: int,
+        control_proba: np.ndarray,
+        *,
+        rtol: float = 1e-05,
+        atol: float = 1e-08,
+    ) -> None:
+        if cf_class != control_class:
+            raise ValueError(
+                f"Classes of counterfactual do not match.\nExpected: {cf_class}\nActual: {control_class}"
+            )
+        if not np.allclose(cf_proba, control_proba, rtol=rtol, atol=atol):
+            raise ValueError(
+                f"Probabilities of counterfactual and control instance do not match.\n"
+                f"Expected: {cf_proba}\nActual: {control_proba}"
+            )
+
+    def cf_feature_formatter(
+        self,
+        predictor: Callable[[np.ndarray], np.ndarray],
+        cf_instance: list[float],
+        orig_instance: np.ndarray,
+        diff_features: np.ndarray,
+        cf_class: int,
+        cf_proba: list[float],
+        rtol: float = 1e-05,
+        atol: float = 1e-08,
+    ) -> str:
+        if self.scaler:
+            cf_instance = np.rint(
+                self.scaler.inverse_transform(np.array(cf_instance).reshape(1, -1))
+            ).astype(int)[0]
+            orig_instance = np.rint(
+                self.scaler.inverse_transform(orig_instance.reshape(1, -1))
+            ).astype(int)[0]
+            rtol, atol = 2e-3, 0.2
+        result = ""
+        for idx in diff_features:
+            cf_value = int(cf_instance[idx])
+            orig_value = orig_instance[idx]
+            if cf_value == orig_value:
+                continue
+            orig_instance[idx] = cf_value
+            result += (
+                f"\nFeature: {self.feature_names[idx]} (index {idx})\n"
+                f"Value: {cf_value}\nOriginal value: {orig_value}\n"
+            )
+        orig_instance = orig_instance.reshape(1, -1)
+        if self.scaler:
+            orig_instance = self.scaler.transform(orig_instance)
+        control_proba = predictor(orig_instance)[0]
+        control_class = int(np.argmax(control_proba))
+        self.assert_cf_valid(
+            cf_class, cf_proba, control_class, control_proba, rtol=rtol, atol=atol
+        )
+        if not result:
+            raise ValueError("Something went wrong. No feature changes detected.")
+        return result
+
+    def create_counterfactual_explanations(
+        self,
+        predictor: Callable[[np.ndarray], np.ndarray],
+        *,
+        explainer_params: dict[str, Any] | None = None,
+        samples_per_class: int = 5,
+    ):
+        explainer_kwargs = {
+            "kappa": 0.1,
+            "max_iterations": 500,
+            "c_steps": 5,
+            "eps": (0.001, 0.001),
+        }
+        if explainer_params:
+            explainer_kwargs.update(explainer_params)
+        tf.keras.backend.clear_session()
+        explainer = CounterfactualProto(
+            predictor,
+            shape=(1, self.X_train.shape[1]),
+            feature_range=(self.X_train.min(axis=0), self.X_train.max(axis=0)),
+            use_kdtree=True,
+            **explainer_kwargs,
+        )
+        explainer.fit(self.X_train)
+        y_pred = np.argmax(predictor(self.X_test), axis=1)
+        base_dir = self.explanations_path / "counterfactuals"
+        for class_idx, class_name in enumerate(self.label_encoder.classes_):
+            correct_idxs = np.where((self.y_test == class_idx) & (y_pred == class_idx))[
+                0
+            ]
+            if not correct_idxs.size:
+                print(
+                    f"Failed to create counterfactual, no correct prediction found for class '{class_name}'."
+                )
+                continue
+
+            random.seed(self.random_state)
+            sampled_idxs = random.sample(
+                correct_idxs.tolist(), min(samples_per_class, len(correct_idxs))
+            )
+            if (sample_length := len(sampled_idxs)) != samples_per_class:
+                print(
+                    f"Failed to find {samples_per_class} correct predictions for class '{class_name}', "
+                    f"generating counterfactuals for the {sample_length} samples found."
+                )
+
+            for idx in sampled_idxs:
+                instance = self.X_test[idx]
+                instance_dir = base_dir / f"{class_name}/instance_{idx}"
+                instance_dir.mkdir(parents=True, exist_ok=True)
+                instance_descriptor = f"instance of class '{class_name}' (index {idx})"
+                explanation_json_file = instance_dir / f"explanation.json"
+                if explanation_json_file.exists():
+                    print(
+                        f"Explanation already exists for {instance_descriptor}, skipping."
+                    )
+                    continue
+                try:
+                    print(
+                        f"Searching for counterfactual for {instance_descriptor}...\n"
+                    )
+                    # reshape instance to (1, 10_000)
+                    explanation = explainer.explain(
+                        instance.reshape(1, -1), k=5, verbose=True
+                    )
+                    explanation_json_file.write_text(explanation.to_json())
+                    if cf := getattr(explanation, "cf", None):
+                        if len(cf["X"]) != 1:
+                            raise ValueError(
+                                f"Expected single counterfactual instance, found {len(cf['X'])}"
+                            )
+                        cf_instance, cf_class, cf_proba = (
+                            cf["X"][0],
+                            cf["class"],
+                            cf["proba"][0],
+                        )
+                        differences = instance - cf_instance
+                        diff_features = np.where(np.abs(differences) > 1e-6)[0]
+                        cf_features = self.cf_feature_formatter(
+                            predictor,
+                            cf_instance,
+                            instance,
+                            diff_features,
+                            cf_class,
+                            cf_proba,
+                        )
+                        result = (
+                            f"Counterfactual explanation for {instance_descriptor}:\n"
+                            f"Class: {self.label_encoder.classes_[cf_class]}\n"
+                            f"Class probabilities: {round_values(cf_proba, 4)}\n\n"
+                            f"Original class: {self.label_encoder.classes_[explanation.orig_class]}\n"
+                            f"Original class probabilities: {round_values(explanation.orig_proba[0], 4)}\n"
+                            f"{cf_features}"
+                        )
+                        print(result)
+                        (instance_dir / f"explanation.txt").write_text(result)
+                    else:
+                        raise CounterfactualNotFound(
+                            f"No counterfactual found for {instance_descriptor}."
+                        )
+                except Exception as e:
+                    timestamp = dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                    error_msg = (
+                        f"[{timestamp}] Error while generating counterfactual for {instance_descriptor}:\n"
+                        f"{str(e)}\n"
+                    )
+                    print(error_msg)
+                    with (base_dir / f"error_logs.txt").open("a") as f:
+                        f.write(error_msg)
+                        f.write(f"Traceback:\n{traceback.format_exc()}\n")
+                        f.write("-" * 50 + "\n")
+                print("-" * 50)
+            print(f"Counterfactuals creation finished for class '{class_name}'.\n")
             print("-" * 50)
 
 
