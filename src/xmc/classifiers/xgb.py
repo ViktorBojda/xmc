@@ -8,10 +8,8 @@ from optuna.pruners import MedianPruner
 from optuna.study import StudyDirection
 from scipy.sparse import csc_matrix
 from sklearn import clone
-from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics import classification_report, f1_score
 from sklearn.model_selection import train_test_split, StratifiedKFold
-from sklearn.preprocessing import LabelEncoder
 from xgboost import XGBClassifier
 from xgboost.callback import EarlyStopping
 
@@ -65,20 +63,18 @@ class MalwareClassifierXGB(BaseMalwareClassifier):
         verbosity: int = 2,
         device: str | None = None,
         n_jobs=None,
-    ):
-        self.random_state = random_state
+    ) -> None:
+        super().__init__(
+            max_features=max_features,
+            ngram_range=ngram_range,
+            use_scaler=False,
+            random_state=random_state,
+        )
         # perform dirty check, if torch can use cuda so should xgboost
         self.device = (
             device if device else ("cuda" if torch.cuda.is_available() else "cpu")
         )
         self.patience = patience
-        self.vectorizer = CountVectorizer(
-            tokenizer=self.comma_tokenizer,
-            token_pattern=None,
-            max_features=max_features,
-            ngram_range=ngram_range,
-        )
-        self.label_encoder = LabelEncoder()
         callbacks = []
         if patience:
             callbacks.append(

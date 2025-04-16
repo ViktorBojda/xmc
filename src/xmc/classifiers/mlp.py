@@ -9,10 +9,8 @@ import torch.optim as optim
 from torch.optim import Optimizer
 from torch.utils.data import DataLoader, TensorDataset
 
-from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.model_selection import StratifiedKFold, train_test_split
 from sklearn.metrics import classification_report, f1_score
-from sklearn.preprocessing import LabelEncoder, MinMaxScaler
 
 from xmc.classifiers.base import BaseMalwareClassifier
 from xmc.explainers.mlp import MalwareExplainerMLP
@@ -48,7 +46,7 @@ class MalwareClassifierMLP(BaseMalwareClassifier):
     explainer_class = MalwareExplainerMLP
 
     class MalwareNet(nn.Module):
-        def __init__(self, input_dim: int, hidden_dim: int, num_classes: int):
+        def __init__(self, input_dim: int, hidden_dim: int, num_classes: int) -> None:
             super().__init__()
             self.net = nn.Sequential(
                 nn.Linear(input_dim, hidden_dim),
@@ -77,8 +75,13 @@ class MalwareClassifierMLP(BaseMalwareClassifier):
         device: str | None = "cpu",
         num_workers: int = -1,
         random_state: int = 69,
-    ):
-        self.random_state = random_state
+    ) -> None:
+        super().__init__(
+            max_features=max_features,
+            ngram_range=ngram_range,
+            use_scaler=True,
+            random_state=random_state,
+        )
         self.device = (
             device if device else ("cuda" if torch.cuda.is_available() else "cpu")
         )
@@ -88,21 +91,13 @@ class MalwareClassifierMLP(BaseMalwareClassifier):
         self.batch_size = batch_size
         self.learning_rate = learning_rate
         self.hidden_dim = hidden_dim
-        self.vectorizer = CountVectorizer(
-            tokenizer=self.comma_tokenizer,
-            token_pattern=None,
-            max_features=max_features,
-            ngram_range=ngram_range,
-        )
-        self.scaler = MinMaxScaler()
-        self.label_encoder = LabelEncoder()
         # set after fit_transform
         self.model = None
         self.input_dim = None
         self.num_classes = None
         self.set_random_seed()
 
-    def set_random_seed(self):
+    def set_random_seed(self) -> None:
         import random
 
         torch.manual_seed(self.random_state)
@@ -287,7 +282,6 @@ class MalwareClassifierMLP(BaseMalwareClassifier):
         artifacts = super().get_model_artifacts()
         artifacts.update(
             {
-                "scaler": self.scaler,
                 "model_state_dict": self.model.state_dict(),
                 "input_dim": next(self.model.parameters()).shape[1],
                 "hidden_dim": self.hidden_dim,

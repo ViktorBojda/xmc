@@ -10,7 +10,7 @@ from matplotlib import pyplot as plt
 from scipy.sparse import csc_matrix
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
-from sklearn.preprocessing import LabelEncoder
+from sklearn.preprocessing import LabelEncoder, MinMaxScaler
 
 from xmc.classifiers.utils import load_dataset, save_plot
 from xmc.explainers.base import BaseMalwareExplainer
@@ -20,8 +20,23 @@ from xmc.utils import prompt_overwrite, timer, prompt_options, round_values
 
 class BaseMalwareClassifier(ABC):
     DATASET_NAME = "preprocessed_merged_seq.csv"
-    label_encoder: LabelEncoder
-    vectorizer: CountVectorizer
+
+    def __init__(
+        self,
+        max_features: int = 1_000,
+        ngram_range: tuple[int, int] = (1, 2),
+        use_scaler: bool = False,
+        random_state: int = 69,
+    ) -> None:
+        self.vectorizer = CountVectorizer(
+            tokenizer=self.comma_tokenizer,
+            token_pattern=None,
+            max_features=max_features,
+            ngram_range=ngram_range,
+        )
+        self.label_encoder = LabelEncoder()
+        self.scaler = MinMaxScaler() if use_scaler else None
+        self.random_state = random_state
 
     @property
     @abstractmethod
@@ -77,6 +92,8 @@ class BaseMalwareClassifier(ABC):
             "label_encoder": self.label_encoder,
             "feature_names": feature_names,
         }
+        if self.scaler:
+            artifacts["scaler"] = self.scaler
         return artifacts
 
     def save_model_artifacts(
@@ -98,6 +115,7 @@ class BaseMalwareClassifier(ABC):
 
     @classmethod
     def load_model_artifacts(cls) -> dict[str, Any]:
+        print(f"Loading artifacts for model '{cls.model_name}'...")
         try:
             return joblib.load(cls.model_path())
         except FileNotFoundError:
