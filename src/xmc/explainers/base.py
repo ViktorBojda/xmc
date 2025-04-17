@@ -91,13 +91,25 @@ class BaseMalwareExplainer(ABC):
             return joblib.load(path)
         return None
 
+    def get_correct_pred_idxs(
+        self, class_idx: int, y_pred: np.ndarray, raise_if_empty: bool = True
+    ) -> np.ndarray:
+        idxs = np.where((self.y_test == class_idx) & (y_pred == class_idx))[0]
+        if raise_if_empty and idxs.size == 0:
+            raise ValueError(
+                f"No correct predictions found for class index {class_idx}."
+            )
+        return idxs
+
     def plot_shap_explanations(
         self,
         explanation: shap.Explanation,
         y_pred: np.ndarray,
         beeswarm_max_display: int = 30,
+        samples_per_class: int = 5,
     ):
         plt.figure(clear=True)
+        base_dir = f"{self.classifier_class.model_name}/shap/"
         for class_idx, class_name in enumerate(self.label_encoder.classes_):
             class_explanation = explanation[:, :, class_idx]
             plt.clf()
@@ -109,7 +121,7 @@ class BaseMalwareExplainer(ABC):
             )
             save_plot(
                 f"SHAP Beeswarm Plot for Class: {class_name} (Mean Avg)",
-                f"{self.classifier_class.model_name}/beeswarm/mean_avg/{class_name}",
+                f"{base_dir}/beeswarm/mean_avg/{class_name}",
             )
             max_positive_shap = np.max(
                 np.where(class_explanation.values > 0, class_explanation.values, 0),
@@ -126,43 +138,57 @@ class BaseMalwareExplainer(ABC):
             )
             save_plot(
                 f"SHAP Beeswarm Plot for Class: {class_name} (Max Positive)",
-                f"{self.classifier_class.model_name}/beeswarm/max_positive/{class_name}",
+                f"{base_dir}/beeswarm/max_positive/{class_name}",
             )
 
             def create_decision_plot(instance_idxs: np.ndarray, identifier: str):
                 if instance_idxs.size == 0:
-                    return print(
-                        f"Failed to create decision plot, no correct prediction found for class {class_name}."
+                    print(
+                        f"Failed to create decision plot, no {identifier} prediction "
+                        f"found for class '{class_name}'."
                     )
-                instance_idx = instance_idxs[0]
-                instance_features = self.X_test[instance_idx]
-                if self.scaler:
-                    instance_features = self.scaler.inverse_transform(
-                        instance_features.reshape(1, -1)
+                    return
+                random.seed(self.random_state)
+                sampled_idxs = random.sample(
+                    instance_idxs.tolist(), min(samples_per_class, len(correct_idxs))
+                )
+                if (sample_length := len(sampled_idxs)) != samples_per_class:
+                    print(
+                        f"Failed to find {samples_per_class} {identifier} predictions for class '{class_name}', "
+                        f"generating decision plots for the {sample_length} samples found."
                     )
-                plt.clf()
-                if explanation.base_values.ndim == 2:
-                    base_value = explanation.base_values[instance_idx, class_idx]
-                else:
-                    base_value = explanation.base_values[class_idx]
-                shap.plots.decision(
-                    base_value,
-                    explanation.values[instance_idx, :, class_idx],
-                    instance_features,
-                    self.feature_names,
-                    show=False,
-                )
-                save_plot(
-                    f"SHAP Decision Plot for Class: {class_name} ({identifier.capitalize()})",
-                    f"{self.classifier_class.model_name}/decision/{identifier.lower()}/{class_name}",
-                )
 
-            correct_idxs = np.where((self.y_test == class_idx) & (y_pred == class_idx))
-            create_decision_plot(correct_idxs[0], "correct")
+                for idx in sampled_idxs:
+                    instance_features = self.X_test[idx]
+                    if self.scaler:
+                        instance_features = self.scaler.inverse_transform(
+                            instance_features.reshape(1, -1)
+                        )
+                    plt.clf()
+                    if explanation.base_values.ndim == 2:
+                        base_value = explanation.base_values[idx, class_idx]
+                    else:
+                        base_value = explanation.base_values[class_idx]
+                    shap.plots.decision(
+                        base_value,
+                        explanation.values[idx, :, class_idx],
+                        instance_features,
+                        self.feature_names,
+                        show=False,
+                    )
+                    save_plot(
+                        f"SHAP Decision Plot for Class: {class_name} ({identifier.capitalize()})",
+                        f"{base_dir}/decision/{identifier.lower()}/{class_name}/instance_{idx}",
+                    )
+
+            correct_idxs = self.get_correct_pred_idxs(
+                class_idx, y_pred, raise_if_empty=False
+            )
+            create_decision_plot(correct_idxs, "correct")
             incorrect_idxs = np.where(
                 (self.y_test == class_idx) & (y_pred != class_idx)
-            )
-            create_decision_plot(incorrect_idxs[0], "misclassified")
+            )[0]
+            create_decision_plot(incorrect_idxs, "misclassified")
 
             print(f"SHAP plots created for class {class_name}.")
         plt.close("all")
@@ -187,13 +213,10 @@ class BaseMalwareExplainer(ABC):
         total_count = self.y_test.shape[0]
         for class_idx, class_name in enumerate(self.label_encoder.classes_):
             total_class_count = np.sum(self.y_test == class_idx)
-            correct_idxs = np.where((self.y_test == class_idx) & (y_pred == class_idx))[
-                0
-            ]
-            if not correct_idxs.size:
-                print(
-                    f"Failed to create anchors, no correct prediction found for class '{class_name}'."
-                )
+            try:
+                correct_idxs = self.get_correct_pred_idxs(class_idx, y_pred)
+            except ValueError as e:
+                print(e)
                 continue
 
             random.seed(self.random_state)
@@ -360,13 +383,10 @@ class BaseMalwareExplainer(ABC):
         y_pred = np.argmax(predictor(self.X_test), axis=1)
         base_dir = self.explanations_path / "counterfactuals"
         for class_idx, class_name in enumerate(self.label_encoder.classes_):
-            correct_idxs = np.where((self.y_test == class_idx) & (y_pred == class_idx))[
-                0
-            ]
-            if not correct_idxs.size:
-                print(
-                    f"Failed to create counterfactual, no correct prediction found for class '{class_name}'."
-                )
+            try:
+                correct_idxs = self.get_correct_pred_idxs(class_idx, y_pred)
+            except ValueError as e:
+                print(e)
                 continue
 
             random.seed(self.random_state)
