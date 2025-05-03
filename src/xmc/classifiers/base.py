@@ -96,6 +96,9 @@ class BaseMalwareClassifier(ABC):
             artifacts["scaler"] = self.scaler
         return artifacts
 
+    def _save_model_artifacts(self, artifacts: dict[str, Any], path: Path) -> None:
+        joblib.dump(artifacts, filename=path, protocol=5, compress=3)
+
     def save_model_artifacts(
         self,
         X_train: np.ndarray,
@@ -110,14 +113,18 @@ class BaseMalwareClassifier(ABC):
         artifacts.update(
             {"X_train": X_train, "X_test": X_test, "y_train": y_train, "y_test": y_test}
         )
-        joblib.dump(artifacts, filename=model_path, protocol=5, compress=3)
+        self._save_model_artifacts(artifacts, model_path)
         print(f"Model artifacts have been saved to: {model_path}")
+
+    @classmethod
+    def _load_model_artifacts(cls) -> dict[str, Any]:
+        return joblib.load(cls.model_path())
 
     @classmethod
     def load_model_artifacts(cls) -> dict[str, Any]:
         print(f"Loading artifacts for model '{cls.model_name}'...")
         try:
-            return joblib.load(cls.model_path())
+            return cls._load_model_artifacts()
         except FileNotFoundError:
             print(
                 f"ERROR: No model artifacts found for '{cls.model_name}' model, "

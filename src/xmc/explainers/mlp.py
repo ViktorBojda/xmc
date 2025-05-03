@@ -18,18 +18,19 @@ shap = try_import_shap()
 class MalwareExplainerMLP(BaseMalwareExplainer):
     model: MalwareClassifierMLP.MalwareNet
 
+    def __init__(self, *args, **kwargs):
+        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        super().__init__(*args, **kwargs)
+
     @timer
     def explain_shap(self):
         # Finished MalwareExplainerMLP.explain_shap() in 51.87 secs
-        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-        self.model.to(device)
-        self.model.eval()
-        X_test_tensor = torch.from_numpy(self.X_test).float().to(device)
+        X_test_tensor = torch.from_numpy(self.X_test).float().to(self.device)
         if not (explanation := self.load_shap_explanation()):
             X_train_sample = stratified_sample(
                 self.X_train, self.y_train, size=1000, random_state=self.random_state
             )
-            X_train_tensor = torch.from_numpy(X_train_sample).float().to(device)
+            X_train_tensor = torch.from_numpy(X_train_sample).float().to(self.device)
             explainer = shap.DeepExplainer(self.model, X_train_tensor)
             base_values = explainer.expected_value
             # can take more than 1 hour
@@ -56,7 +57,7 @@ class MalwareExplainerMLP(BaseMalwareExplainer):
 
         def predictor(X: np.ndarray) -> np.ndarray:
             with torch.no_grad():
-                X_tensor = torch.tensor(X, dtype=torch.float32)
+                X_tensor = torch.tensor(X, dtype=torch.float32).to(self.device)
                 outputs = self.model(X_tensor)
                 return torch.argmax(outputs, dim=1).cpu().numpy()
 
@@ -87,7 +88,7 @@ class MalwareExplainerMLP(BaseMalwareExplainer):
         # Finished MalwareExplainerMLP.explain_counterfactuals() in 2180.01 secs
         def predictor(X: np.ndarray) -> np.ndarray:
             with torch.no_grad():
-                X_tensor = torch.tensor(X, dtype=torch.float32)
+                X_tensor = torch.tensor(X, dtype=torch.float32).to(self.device)
                 outputs = self.model(X_tensor)
                 return outputs.cpu().numpy()
 

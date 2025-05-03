@@ -1,5 +1,7 @@
+import gzip
 import os
 from copy import deepcopy
+from pathlib import Path
 from typing import Any
 
 import numpy as np
@@ -14,6 +16,7 @@ from sklearn.metrics import classification_report, f1_score
 
 from xmc.classifiers.base import BaseMalwareClassifier
 from xmc.explainers.mlp import MalwareExplainerMLP
+from xmc.settings import MODELS_DIR_PATH
 from xmc.utils import timer
 
 # Cross-Validation f1_macro scores: [0.738, 0.7376, 0.7482, 0.7501, 0.7404, 0.7417, 0.742, 0.7612, 0.7519, 0.7439]
@@ -38,12 +41,16 @@ from xmc.utils import timer
 # weighted avg       0.87      0.87      0.87      5568
 #
 # --------------------------------------------------
-# Finished MalwareClassifierMLP.train_and_evaluate() in 238.10 secs
+# Finished MalwareClassifierMLP.train_and_evaluate() in 155.96 secs
 
 
 class MalwareClassifierMLP(BaseMalwareClassifier):
     model_name = "mlp"
     explainer_class = MalwareExplainerMLP
+
+    @classmethod
+    def model_path(cls) -> Path:
+        return MODELS_DIR_PATH / f"{cls.model_name}.pt.gz"
 
     class MalwareNet(nn.Module):
         def __init__(self, input_dim: int, hidden_dim: int, num_classes: int) -> None:
@@ -291,6 +298,16 @@ class MalwareClassifierMLP(BaseMalwareClassifier):
         )
         return artifacts
 
+    def _save_model_artifacts(self, artifacts: dict[str, Any], path: Path) -> None:
+        with gzip.open(path, "wb", compresslevel=6) as f:
+            torch.save(artifacts, f)
+
+    @classmethod
+    def _load_model_artifacts(cls) -> dict[str, Any]:
+        with gzip.open(cls.model_path(), "rb") as f:
+            device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+            return torch.load(f, map_location=device, weights_only=False)
+
     @classmethod
     def load_model_artifacts(cls) -> dict[str, Any]:
         artifacts = super().load_model_artifacts()
@@ -300,6 +317,7 @@ class MalwareClassifierMLP(BaseMalwareClassifier):
             artifacts["input_dim"], artifacts["hidden_dim"], num_classes
         )
         model.load_state_dict(artifacts["model_state_dict"])
+        model.to(torch.device("cuda" if torch.cuda.is_available() else "cpu"))
         model.eval()
         artifacts["model"] = model
         return artifacts
