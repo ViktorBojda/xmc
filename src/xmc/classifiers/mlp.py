@@ -19,29 +19,53 @@ from xmc.explainers.mlp import MalwareExplainerMLP
 from xmc.settings import MODELS_DIR_PATH
 from xmc.utils import timer
 
-# Cross-Validation f1_macro scores: [0.738, 0.7376, 0.7482, 0.7501, 0.7404, 0.7417, 0.742, 0.7612, 0.7519, 0.7439]
-# Cross-Validation f1_macro mean:   0.7455
-# Cross-Validation f1_macro std:    0.0074
+# For max_features = 10_000:
+# Cross-Validation f1_macro scores: [0.7262, 0.7171, 0.7276, 0.7207, 0.7267, 0.7524, 0.7375, 0.7511, 0.731, 0.724]
+# Cross-Validation f1_macro mean:   0.7314
+# Cross-Validation f1_macro std:    0.0120
 # --------------------------------------------------
-# Finished MalwareClassifierMLP.cross_validate() in 2362.65 secs
+# Finished MalwareClassifierMLP.cross_validate() in 1118.30 secs
 # Classification Report:
 #                precision    recall  f1-score   support
 #
-#       adware       0.78      0.67      0.72       279
-#     backdoor       0.85      0.75      0.80       366
-#   downloader       0.70      0.78      0.74       225
-#      dropper       0.50      0.66      0.56       169
-#      spyware       0.55      0.50      0.52       160
-#       trojan       0.94      0.95      0.95      2913
-#        virus       0.91      0.93      0.92      1097
-#        worms       0.77      0.65      0.70       359
+#       adware       0.76      0.71      0.73       232
+#     backdoor       0.73      0.66      0.69       282
+#   downloader       0.78      0.69      0.73       220
+#      dropper       0.57      0.65      0.61       168
+#      spyware       0.56      0.53      0.54       158
+#       trojan       0.89      0.93      0.91      1788
+#        virus       0.91      0.90      0.90       655
+#         worm       0.69      0.63      0.66       283
 #
-#     accuracy                           0.87      5568
-#    macro avg       0.75      0.74      0.74      5568
-# weighted avg       0.87      0.87      0.87      5568
-#
+#     accuracy                           0.83      3786
+#    macro avg       0.74      0.71      0.72      3786
+# weighted avg       0.82      0.83      0.82      3786
 # --------------------------------------------------
-# Finished MalwareClassifierMLP.train_and_evaluate() in 155.96 secs
+# Finished MalwareClassifierMLP.train_and_evaluate() in 110.31 secs
+
+# For max_features = 1_000:
+# Cross-Validation f1_macro scores: [0.6714, 0.6527, 0.667, 0.6677, 0.6816, 0.6908, 0.6921, 0.699, 0.6994, 0.681]
+# Cross-Validation f1_macro mean:   0.6803
+# Cross-Validation f1_macro std:    0.0154
+# --------------------------------------------------
+# Finished MalwareClassifierMLP.cross_validate() in 1411.77 secs
+# Classification Report:
+#                precision    recall  f1-score   support
+#
+#       adware       0.79      0.60      0.68       232
+#     backdoor       0.71      0.65      0.68       282
+#   downloader       0.70      0.72      0.71       220
+#      dropper       0.53      0.58      0.55       168
+#      spyware       0.51      0.47      0.49       158
+#       trojan       0.88      0.84      0.86      1788
+#        virus       0.69      0.88      0.77       655
+#         worm       0.65      0.58      0.61       283
+#
+#     accuracy                           0.76      3786
+#    macro avg       0.68      0.66      0.67      3786
+# weighted avg       0.77      0.76      0.76      3786
+# --------------------------------------------------
+# Finished MalwareClassifierMLP.train_and_evaluate() in 175.96 secs
 
 
 class MalwareClassifierMLP(BaseMalwareClassifier):
