@@ -1,4 +1,6 @@
+import inspect
 from abc import ABC, abstractmethod
+from datetime import datetime
 from enum import StrEnum
 from pathlib import Path
 from typing import Any
@@ -9,13 +11,20 @@ import pandas as pd
 from matplotlib import pyplot as plt
 from scipy.sparse import csc_matrix
 from sklearn.feature_extraction.text import CountVectorizer
-from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
+from sklearn.metrics import (
+    confusion_matrix,
+    ConfusionMatrixDisplay,
+    accuracy_score,
+    precision_score,
+    recall_score,
+    f1_score,
+)
 from sklearn.preprocessing import LabelEncoder, MinMaxScaler
 
 from xmc.classifiers.utils import load_dataset, save_plot
 from xmc.explainers.base import BaseMalwareExplainer
 from xmc.settings import MODELS_DIR_PATH
-from xmc.utils import prompt_overwrite, timer, prompt_options, round_values
+from xmc.utils import prompt_overwrite, timer, prompt_options
 
 
 class BaseMalwareClassifier(ABC):
@@ -23,8 +32,8 @@ class BaseMalwareClassifier(ABC):
 
     def __init__(
         self,
-        max_features: int = 1_000,
-        ngram_range: tuple[int, int] = (1, 2),
+        max_features: int,
+        ngram_range: tuple[int, int],
         use_scaler: bool = False,
         random_state: int = 69,
     ) -> None:
@@ -37,6 +46,10 @@ class BaseMalwareClassifier(ABC):
         self.label_encoder = LabelEncoder()
         self.scaler = MinMaxScaler() if use_scaler else None
         self.random_state = random_state
+        self.reset_score_metrics()
+        self.init_params = ", ".join(
+            [str(x) for x in (inspect.signature(self.__init__).parameters.values())]
+        )
 
     @property
     @abstractmethod
@@ -63,13 +76,6 @@ class BaseMalwareClassifier(ABC):
         )
 
     @staticmethod
-    def display_cv_results(scoring: str, scores: list[float]) -> None:
-        print(f"Cross-Validation {scoring} scores:", round_values(scores, 4))
-        print(f"Cross-Validation {scoring} mean:   {np.mean(scores):.4f}")
-        print(f"Cross-Validation {scoring} std:    {np.std(scores, ddof=1):.4f}")
-        print("-" * 50)
-
-    @staticmethod
     def comma_tokenizer(text: str) -> list[str]:
         return text.split(",")
 
@@ -79,8 +85,57 @@ class BaseMalwareClassifier(ABC):
         y = self.label_encoder.fit_transform(df["class"])
         return X, y
 
+    def save_init_params(self):
+        ", ".join(
+            [str(x) for x in (inspect.signature(self.__init__).parameters.values())]
+        )
+
+    def reset_score_metrics(self) -> None:
+        self.score_metrics = {
+            "accuracy": [],
+            "precision_macro": [],
+            "precision_weighted": [],
+            "recall_macro": [],
+            "recall_weighted": [],
+            "f1_macro": [],
+            "f1_weighted": [],
+        }
+
+    def calc_score_metrics(self, y_true: np.ndarray, y_pred: np.ndarray) -> None:
+        self.score_metrics["accuracy"].append(accuracy_score(y_true, y_pred))
+        self.score_metrics["precision_macro"].append(
+            precision_score(y_true, y_pred, average="macro")
+        )
+        self.score_metrics["precision_weighted"].append(
+            precision_score(y_true, y_pred, average="weighted")
+        )
+        self.score_metrics["recall_macro"].append(
+            recall_score(y_true, y_pred, average="macro")
+        )
+        self.score_metrics["recall_weighted"].append(
+            recall_score(y_true, y_pred, average="weighted")
+        )
+        self.score_metrics["f1_macro"].append(f1_score(y_true, y_pred, average="macro"))
+        self.score_metrics["f1_weighted"].append(
+            f1_score(y_true, y_pred, average="weighted")
+        )
+
+    def log_score_metrics(self, params: Any | None = None) -> None:
+        res = (
+            f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}]\n"
+            f"Params: {params if params else self.init_params}\n"
+            f"Cross-Validation Results Summary:\n"
+            f"{'Metric':<25}{'Mean':<10}SD\n"
+        )
+        for metric, values in self.score_metrics.items():
+            res += f"{metric:<25}{np.mean(values):<10.4f}{np.std(values, ddof=1):.4f}\n"
+        res += "–" * 50 + "\n"
+        with (MODELS_DIR_PATH / f"{self.model_name}_log.txt").open("a") as f:
+            f.write(res)
+        print(res)
+
     @abstractmethod
-    def cross_validate(self, X, y, *, cv_splits, scoring): ...
+    def cross_validate(self, X, y, *, cv_splits): ...
 
     @abstractmethod
     def train_and_evaluate(self, X, y, *, test_size): ...
@@ -154,7 +209,7 @@ class BaseMalwareClassifier(ABC):
             X, y = instance.load_and_transform_data()
             if RunMethod.CV in method_names:
                 print(f"Running {RunMethod.CV} method...")
-                instance.cross_validate(X, y, cv_splits=10, scoring="f1_macro")
+                instance.cross_validate(X, y, cv_splits=10)
             if RunMethod.TRAIN in method_names:
                 print(f"Running {RunMethod.TRAIN} method...")
                 X = X.toarray() if hasattr(X, "toarray") else X
