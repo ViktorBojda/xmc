@@ -5,7 +5,17 @@ from pathlib import Path
 from typing import Callable, Any, NoReturn
 
 import numpy as np
+import pandas as pd
+from matplotlib import pyplot as plt
 from sklearn.model_selection import StratifiedShuffleSplit
+
+from xmc.settings import (
+    PLOTS_DIR_PATH,
+    SLOVAK_TRANS_MAP,
+    PAGE_WIDTH,
+    PAGE_HEIGHT,
+    DATASETS_DIR_PATH,
+)
 
 
 def prompt_overwrite(file_path: Path) -> bool:
@@ -74,6 +84,15 @@ def prompt_options(
     )
 
 
+def load_dataset(name: str) -> pd.DataFrame:
+    dataset_path = DATASETS_DIR_PATH / name
+    if not dataset_path.exists():
+        raise FileNotFoundError(
+            f"Dataset '{name}' not found in the datasets directory '{DATASETS_DIR_PATH}'."
+        )
+    return pd.read_csv(dataset_path)
+
+
 def stratified_sample(
     X: np.ndarray, y: np.ndarray, *, size: int, random_state: int
 ) -> np.ndarray:
@@ -103,3 +122,40 @@ def try_import_shap():
 
 def round_values(values: list[float], decimals: int = 4) -> list[float]:
     return [round(value, decimals) for value in values]
+
+
+def set_plt_style():
+    try:
+        plt.style.use("xmc.thesis")
+    except Exception:
+        print(
+            "WARNING: Failed to set style for Matplotlib, make sure LaTeX is installed."
+        )
+        plt.style.use("default")
+
+
+def save_plot(title: str | None, save_as: str) -> None:
+    if title:
+        plt.title(title)
+    plt.tight_layout()
+    save_path = PLOTS_DIR_PATH / save_as
+    save_path.parent.mkdir(parents=True, exist_ok=True)
+    plt.savefig(save_path, dpi=600)
+
+
+def slovak_trans(name: str) -> str:
+    return SLOVAK_TRANS_MAP.get(name, name)
+
+
+def page_figsize(
+    w_frac: float,
+    h_frac: float,
+    page_w_in: float = PAGE_WIDTH,
+    page_h_in: float = PAGE_HEIGHT,
+) -> tuple[float, float]:
+    """
+    Compute a Matplotlib figsize (in inches) relative to page size.
+    """
+    width = page_w_in * w_frac
+    height = page_h_in * h_frac
+    return width, height

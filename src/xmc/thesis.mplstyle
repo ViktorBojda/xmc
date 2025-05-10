@@ -1,0 +1,11 @@
+text.usetex: True
+text.latex.preamble: \usepackage{amsmath}\usepackage{amssymb}
+font.family: serif
+font.serif: Computer Modern
+axes.titlesize: 11
+axes.labelsize: 11
+xtick.labelsize: 11
+ytick.labelsize: 11
+legend.fontsize: 11
+savefig.bbox: tight
+savefig.format: pdf

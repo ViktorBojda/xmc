@@ -7,9 +7,15 @@ import pandas as pd
 import seaborn as sns
 from matplotlib import pyplot as plt
 
-from xmc.classifiers.utils import save_plot, page_figsize, set_plt_style, slovak_trans
 from xmc.settings import DATASETS_DIR_PATH, ROOT_DIR
-from xmc.utils import prompt_overwrite, timer
+from xmc.utils import (
+    prompt_overwrite,
+    timer,
+    set_plt_style,
+    save_plot,
+    slovak_trans,
+    page_figsize,
+)
 
 
 class Preprocessor:

@@ -18,3 +18,13 @@ EXPLANATIONS_DIR_PATH = Path(EXPLANATIONS_DIR)
 
 tf.get_logger().setLevel(logging.ERROR)  # suppress deprecation messages
 tf.compat.v1.disable_v2_behavior()  # disable TF2 behaviour as alibi code still relies on TF1 constructs
+
+PAGE_WIDTH = 6.10356  # inches
+PAGE_HEIGHT = 9.33253  # inches
+
+SLOVAK_TRANS_MAP = {
+    "virus": "vírus",
+    "worm": "červ",
+    "adware": "advér",
+    "spyware": "spajvér",
+}

@@ -19,10 +19,9 @@ from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.preprocessing import LabelEncoder, MinMaxScaler
 from sklearn.utils import compute_class_weight
 
-from xmc.classifiers.utils import save_plot
 from xmc.exceptions import CounterfactualNotFound, AnchorNotFound
 from xmc.settings import EXPLANATIONS_DIR_PATH
-from xmc.utils import prompt_options, try_import_shap, round_values, timer
+from xmc.utils import prompt_options, try_import_shap, round_values, timer, save_plot
 
 if TYPE_CHECKING:
     from xmc.classifiers.base import BaseMalwareClassifier

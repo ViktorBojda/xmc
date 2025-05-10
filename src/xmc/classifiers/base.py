@@ -21,10 +21,9 @@ from sklearn.metrics import (
 )
 from sklearn.preprocessing import LabelEncoder, MinMaxScaler
 
-from xmc.classifiers.utils import load_dataset, save_plot
 from xmc.explainers.base import BaseMalwareExplainer
 from xmc.settings import MODELS_DIR_PATH
-from xmc.utils import prompt_overwrite, timer, prompt_options
+from xmc.utils import prompt_overwrite, timer, prompt_options, save_plot, load_dataset
 
 
 class BaseMalwareClassifier(ABC):
