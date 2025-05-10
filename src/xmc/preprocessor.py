@@ -1,3 +1,4 @@
+import tarfile
 from pathlib import Path
 from typing import Any
 
@@ -7,7 +8,7 @@ import seaborn as sns
 from matplotlib import pyplot as plt
 
 from xmc.classifiers.utils import save_plot, page_figsize, set_plt_style, slovak_trans
-from xmc.settings import DATASETS_DIR_PATH
+from xmc.settings import DATASETS_DIR_PATH, ROOT_DIR
 from xmc.utils import prompt_overwrite, timer
 
 
@@ -160,7 +161,30 @@ class Preprocessor:
         )
         print("Successfully preprocessed khas datasets.")
 
-    def preprocess_datasets(self) -> None:
+    def validate_datasets(self):
+        all_dirs_exist = all(
+            [
+                self.DRZEHRA_DATASET_DIR_PATH.exists(),
+                self.KHAS_DATASET_DIR_PATH.exists(),
+                self.OCATAK_DATASET_DIR_PATH.exists(),
+            ]
+        )
+        if all_dirs_exist:
+            return
+        print("Dataset directories not found, trying to extract...")
+        tar_gz_path = DATASETS_DIR_PATH.with_suffix(".tar.gz")
+        if not tar_gz_path.exists():
+            raise FileNotFoundError(
+                f"Compressed file not found at '{tar_gz_path}'. "
+                f"Failed to extract, make sure it exists."
+            )
+        root_path = Path(ROOT_DIR)
+        with tarfile.open(tar_gz_path, "r:gz") as tar:
+            tar.extractall(root_path)
+        print(f"Successfully extracted '{tar_gz_path}' to '{root_path}'.")
+
+    def preprocess_datasets(self, compress: bool = False) -> None:
+        self.validate_datasets()
         if not prompt_overwrite(self.FINAL_DATASET):
             return
 
@@ -270,11 +294,18 @@ class Preprocessor:
 
         (DATASETS_DIR_PATH / "preproc_log.txt").write_text(log_text)
         df.to_csv(self.FINAL_DATASET, index=False)
+        if compress:
+            tar_gz_path = DATASETS_DIR_PATH.with_suffix(".tar.gz")
+            with tarfile.open(tar_gz_path, "w:gz") as tar:
+                tar.add(DATASETS_DIR_PATH, arcname=DATASETS_DIR_PATH.name)
+            print(
+                f"Successfully compressed directory '{DATASETS_DIR_PATH.name}' to '{tar_gz_path}'."
+            )
         print(f"Successfully preprocessed datasets. Saved to {self.FINAL_DATASET}")
 
     @timer
     def run(self) -> None:
-        self.preprocess_datasets()
+        self.preprocess_datasets(compress=False)
 
 
 if __name__ == "__main__":
