@@ -1,38 +1,29 @@
 from typing import Any
 
 import numpy as np
+import optuna
 from imblearn.ensemble import BalancedRandomForestClassifier
+from optuna.pruners import MedianPruner
+from optuna.study import StudyDirection
 from scipy.sparse import csc_matrix
-from sklearn.metrics import classification_report
-from sklearn.model_selection import train_test_split, StratifiedKFold, cross_val_score
+from sklearn import clone
+from sklearn.metrics import (
+    classification_report,
+    make_scorer,
+    accuracy_score,
+    f1_score,
+    precision_score,
+    recall_score,
+)
+from sklearn.model_selection import (
+    train_test_split,
+    StratifiedKFold,
+    cross_validate as sklearn_cross_validate,
+)
 
 from xmc.classifiers.base import BaseMalwareClassifier
 from xmc.explainers.brf import MalwareExplainerBRF
-from xmc.utils import timer
-
-# Cross-Validation f1_macro scores: [0.7464, 0.7538, 0.7836, 0.7654, 0.7441, 0.7382, 0.7591, 0.7694, 0.7599, 0.7337]
-# Cross-Validation f1_macro mean:   0.7554
-# Cross-Validation f1_macro std:    0.0153
-# --------------------------------------------------
-# Finished MalwareClassifierBRF.cross_validate() in 713.47 secs
-# Classification Report:
-#                precision    recall  f1-score   support
-#
-#       adware       0.89      0.62      0.73       279
-#     backdoor       0.91      0.76      0.82       366
-#   downloader       0.76      0.78      0.77       225
-#      dropper       0.57      0.73      0.64       169
-#      spyware       0.50      0.58      0.54       160
-#       trojan       0.89      0.98      0.93      2913
-#        virus       0.96      0.88      0.92      1097
-#        worms       0.84      0.58      0.68       359
-#
-#     accuracy                           0.87      5568
-#    macro avg       0.79      0.74      0.76      5568
-# weighted avg       0.88      0.87      0.87      5568
-#
-# --------------------------------------------------
-# Finished MalwareClassifierBRF.train_and_evaluate() in 230.98 secs
+from xmc.utils import timer, load_dataset
 
 
 class MalwareClassifierBRF(BaseMalwareClassifier):
@@ -41,18 +32,17 @@ class MalwareClassifierBRF(BaseMalwareClassifier):
 
     def __init__(
         self,
-        max_features: int = 1_000,
+        max_features: int = 10_000,
         ngram_range: tuple[int, int] = (1, 2),
         use_scaler: bool = False,  # counterfactuals work better with scaler
         n_estimators: int = 250,
         max_depth: int = 31,
-        replacement: bool = True,
-        bootstrap: bool = False,
-        sampling_strategy: str = "not majority",
         min_samples_split: int = 2,
         min_samples_leaf: int = 1,
         rf_max_features: str | None = None,
-        random_state: int = 69,
+        replacement: bool = True,
+        bootstrap: bool = False,
+        sampling_strategy: str = "not majority",
         verbose: int = 2,
         n_jobs: int = -1,
     ):
@@ -60,7 +50,6 @@ class MalwareClassifierBRF(BaseMalwareClassifier):
             max_features=max_features,
             ngram_range=ngram_range,
             use_scaler=use_scaler,
-            random_state=random_state,
         )
         self.classifier = BalancedRandomForestClassifier(
             n_estimators=n_estimators,
@@ -77,29 +66,101 @@ class MalwareClassifierBRF(BaseMalwareClassifier):
         )
 
     @timer
-    def cross_validate(
-        self,
-        X: csc_matrix,
-        y: np.ndarray,
-        *,
-        cv_splits: int = 10,
-        scoring: str = "f1_macro",
-    ) -> None:
-        """
-        Performs Stratified K-Fold cross-validation and prints the scores.
-        """
+    def _tune_hyperparameters(self, *, n_trials: int | None):
+        """Hyperparameter tuning, for development only"""
+        df = load_dataset(self.DATASET_NAME)
+        y = self.label_encoder.fit_transform(df["class"])
+        ngram_range_choices = [(1, 1), (1, 2), (1, 3)]
+
+        def objective(trial: optuna.Trial):
+            vectorizer_params = {
+                "ngram_range": ngram_range_choices[
+                    trial.suggest_categorical(
+                        "ngram_range_i", list(range(len(ngram_range_choices)))
+                    )
+                ],
+                "max_features": trial.suggest_categorical(
+                    "max_features", [500, 1_000, 5_000, 10_000, 15_000]
+                ),
+            }
+            model_params = {
+                "n_estimators": 100,
+                "max_depth": None,
+                "min_samples_split": 2,
+                "min_samples_leaf": 1,
+                "max_features": "sqrt",
+            }
+            self.vectorizer.set_params(**vectorizer_params)
+            X = csc_matrix(self.vectorizer.fit_transform(df["api"]))
+            self.reset_score_metrics()
+            kfold = StratifiedKFold(
+                n_splits=5, shuffle=True, random_state=self.random_state
+            )
+            for fold_idx, (train_idx, val_idx) in enumerate(kfold.split(X, y)):
+                X_train, y_train = X[train_idx], y[train_idx]
+                X_val, y_val = X[val_idx], y[val_idx]
+                model: BalancedRandomForestClassifier = clone(self.classifier)
+                model.set_params(**model_params, verbose=0)
+                model.fit(X_train, y_train)
+                y_pred = model.predict(X_val)
+                self.calc_score_metrics(y_val, y_pred)
+
+                trial.report(np.mean(self.score_metrics["f1_macro"]), step=fold_idx)
+                if trial.should_prune():
+                    rf_max_features = model_params.pop("max_features")
+                    self.log_score_metrics(
+                        {
+                            **vectorizer_params,
+                            **model_params,
+                            "rf_max_features": rf_max_features,
+                        },
+                    )
+                    raise optuna.TrialPruned()
+            rf_max_features = model_params.pop("max_features")
+            self.log_score_metrics(
+                {
+                    **vectorizer_params,
+                    **model_params,
+                    "rf_max_features": rf_max_features,
+                },
+            )
+            return np.mean(self.score_metrics["f1_macro"])
+
+        study = optuna.create_study(
+            direction=StudyDirection.MAXIMIZE,
+            pruner=MedianPruner(n_startup_trials=5, n_warmup_steps=3),
+            sampler=optuna.samplers.TPESampler(seed=self.random_state),
+        )
+        study.optimize(
+            objective, n_trials=n_trials, gc_after_trial=False, show_progress_bar=True
+        )
+        print("Best hyperparameters:", study.best_trial.params)
+
+    @timer
+    def cross_validate(self, X: csc_matrix, y: np.ndarray, *, cv_splits: int) -> None:
+        scoring = {
+            "accuracy": make_scorer(accuracy_score),
+            "precision_macro": make_scorer(precision_score, average="macro"),
+            "precision_weighted": make_scorer(precision_score, average="weighted"),
+            "recall_macro": make_scorer(recall_score, average="macro"),
+            "recall_weighted": make_scorer(recall_score, average="weighted"),
+            "f1_macro": make_scorer(f1_score, average="macro"),
+            "f1_weighted": make_scorer(f1_score, average="weighted"),
+        }
         kfold = StratifiedKFold(
             n_splits=cv_splits, shuffle=True, random_state=self.random_state
         )
-        cv_scores = cross_val_score(
-            self.classifier, X, y, cv=kfold, scoring=scoring, verbose=1, n_jobs=-1
+        cv_results = sklearn_cross_validate(
+            self.classifier, X, y, cv=kfold, scoring=scoring, n_jobs=-1, verbose=1
         )
-        self.display_cv_results(scoring, cv_scores)
+        for key, scores in cv_results.items():
+            if key.startswith("test_"):
+                metric = key[5:]
+                self.score_metrics[metric] = scores
+        self.log_score_metrics()
 
     @timer
-    def train_and_evaluate(
-        self, X: np.ndarray, y: np.ndarray, *, test_size: float = 0.2
-    ) -> None:
+    def train_and_evaluate(self, X: np.ndarray, y: np.ndarray, *, test_size) -> None:
         """
         Splits data into train/test, fits the classifier on training set,
         predicts on the test set, decodes the labels, and prints a classification report.
