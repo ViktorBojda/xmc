@@ -155,6 +155,7 @@ markupsafe==3.0.2
     # via werkzeug
 matplotlib==3.9.2
     # via alibi
+    # via seaborn
     # via xmc
 mdurl==0.1.2
     # via markdown-it-py
@@ -199,6 +200,7 @@ numpy==1.26.4
     # via scikit-image
     # via scikit-learn
     # via scipy
+    # via seaborn
     # via spacy
     # via tensorboard
     # via tensorflow
@@ -270,6 +272,7 @@ packaging==24.2
 pandas==2.2.3
     # via alibi
     # via cudf-cu12
+    # via seaborn
     # via xmc
 pathspec==0.12.1
     # via black
@@ -346,6 +349,8 @@ scipy==1.14.1
     # via scikit-image
     # via scikit-learn
     # via xgboost
+seaborn==0.13.2
+    # via xmc
 setuptools==78.1.0
     # via marisa-trie
     # via spacy
