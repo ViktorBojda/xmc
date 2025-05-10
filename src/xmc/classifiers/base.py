@@ -28,7 +28,7 @@ from xmc.utils import prompt_overwrite, timer, prompt_options
 
 
 class BaseMalwareClassifier(ABC):
-    DATASET_NAME = "preprocessed_merged.csv"
+    DATASET_NAME = "malware_dataset.csv"
 
     def __init__(
         self,
