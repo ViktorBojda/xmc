@@ -23,23 +23,23 @@ from sklearn.model_selection import (
 
 from xmc.classifiers.base import BaseMalwareClassifier
 from xmc.explainers.brf import MalwareExplainerBRF
-from xmc.utils import timer, load_dataset
+from xmc.utils import timer
 
 
 class MalwareClassifierBRF(BaseMalwareClassifier):
-    model_name = "brf"
+    model_name = "brf_1k"
     explainer_class = MalwareExplainerBRF
 
     def __init__(
         self,
-        max_features: int = 10_000,
+        max_features: int = 1_000,
         ngram_range: tuple[int, int] = (1, 2),
         use_scaler: bool = False,  # counterfactuals work better with scaler
-        n_estimators: int = 250,
-        max_depth: int = 31,
+        n_estimators: int = 200,
+        max_depth: int = 27,
         min_samples_split: int = 2,
         min_samples_leaf: int = 1,
-        rf_max_features: str | None = None,
+        rf_max_features: str | None = 0.33,
         replacement: bool = True,
         bootstrap: bool = False,
         sampling_strategy: str = "not majority",
@@ -66,23 +66,14 @@ class MalwareClassifierBRF(BaseMalwareClassifier):
         )
 
     @timer
-    def _tune_hyperparameters(self, *, n_trials: int | None):
+    def _tune_hyperparameters(self, *, n_trials: int | None = 20):
         """Hyperparameter tuning, for development only"""
-        df = load_dataset(self.DATASET_NAME)
-        y = self.label_encoder.fit_transform(df["class"])
-        ngram_range_choices = [(1, 1), (1, 2), (1, 3)]
+        self.log_write("Starting hyperparameter tuning (k=5)...\n")
+        storage_path = "sqlite:///brf_study.db"
+        study_name = "brf_optimization"
+        X, y = self.load_and_transform_data()
 
         def objective(trial: optuna.Trial):
-            vectorizer_params = {
-                "ngram_range": ngram_range_choices[
-                    trial.suggest_categorical(
-                        "ngram_range_i", list(range(len(ngram_range_choices)))
-                    )
-                ],
-                "max_features": trial.suggest_categorical(
-                    "max_features", [500, 1_000, 5_000, 10_000, 15_000]
-                ),
-            }
             model_params = {
                 "n_estimators": 100,
                 "max_depth": None,
@@ -90,8 +81,13 @@ class MalwareClassifierBRF(BaseMalwareClassifier):
                 "min_samples_leaf": 1,
                 "max_features": "sqrt",
             }
-            self.vectorizer.set_params(**vectorizer_params)
-            X = csc_matrix(self.vectorizer.fit_transform(df["api"]))
+            new_model_params = {
+                "max_depth": trial.suggest_int("max_depth", 11, 31, step=2),
+                "max_features": trial.suggest_float(
+                    "max_features", 0.01, 1.0, step=0.01
+                ),
+            }
+            model_params.update(new_model_params)
             self.reset_score_metrics()
             kfold = StratifiedKFold(
                 n_splits=5, shuffle=True, random_state=self.random_state
@@ -110,7 +106,8 @@ class MalwareClassifierBRF(BaseMalwareClassifier):
                     rf_max_features = model_params.pop("max_features")
                     self.log_score_metrics(
                         {
-                            **vectorizer_params,
+                            "max_features": 1_000,
+                            "n_gram": (1, 2),
                             **model_params,
                             "rf_max_features": rf_max_features,
                         },
@@ -119,7 +116,8 @@ class MalwareClassifierBRF(BaseMalwareClassifier):
             rf_max_features = model_params.pop("max_features")
             self.log_score_metrics(
                 {
-                    **vectorizer_params,
+                    "max_features": 1_000,
+                    "n_gram": (1, 2),
                     **model_params,
                     "rf_max_features": rf_max_features,
                 },
@@ -130,11 +128,16 @@ class MalwareClassifierBRF(BaseMalwareClassifier):
             direction=StudyDirection.MAXIMIZE,
             pruner=MedianPruner(n_startup_trials=5, n_warmup_steps=3),
             sampler=optuna.samplers.TPESampler(seed=self.random_state),
+            study_name=study_name,
+            storage=storage_path,
+            load_if_exists=True,
         )
         study.optimize(
             objective, n_trials=n_trials, gc_after_trial=False, show_progress_bar=True
         )
-        print("Best hyperparameters:", study.best_trial.params)
+        self.log_write(
+            f"Hyperparameter tuning finished. Best hyperparameters: {study.best_trial.params}\n"
+        )
 
     @timer
     def cross_validate(self, X: csc_matrix, y: np.ndarray, *, cv_splits: int) -> None:
@@ -157,7 +160,7 @@ class MalwareClassifierBRF(BaseMalwareClassifier):
             if key.startswith("test_"):
                 metric = key[5:]
                 self.score_metrics[metric] = scores
-        self.log_score_metrics()
+        self.log_score_metrics(weighted=True)
 
     @timer
     def train_and_evaluate(self, X: np.ndarray, y: np.ndarray, *, test_size) -> None:
