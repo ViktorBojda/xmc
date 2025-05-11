@@ -21,8 +21,8 @@ from sklearn.metrics import (
 )
 from sklearn.preprocessing import LabelEncoder, MinMaxScaler
 
-from xmc.explainers.base import BaseMalwareExplainer
 from xmc.settings import MODELS_DIR_PATH
+from xmc.explainers.base import BaseMalwareExplainer
 from xmc.utils import prompt_overwrite, timer, prompt_options, save_plot, load_dataset
 
 
@@ -46,9 +46,7 @@ class BaseMalwareClassifier(ABC):
         self.scaler = MinMaxScaler() if use_scaler else None
         self.random_state = random_state
         self.reset_score_metrics()
-        self.init_params = ", ".join(
-            [str(x) for x in (inspect.signature(self.__init__).parameters.values())]
-        )
+        self.init_params = self.get_model_architecture()
 
     @property
     @abstractmethod
@@ -61,6 +59,11 @@ class BaseMalwareClassifier(ABC):
     @property
     @abstractmethod
     def explainer_class(self) -> type[BaseMalwareExplainer]: ...
+
+    def get_model_architecture(self) -> str:
+        return ", ".join(
+            [str(x) for x in (inspect.signature(self.__init__).parameters.values())]
+        )
 
     def plot_confusion_matrix(self, y_true: pd.Series, y_pred: pd.Series) -> None:
         classes = self.label_encoder.classes_
@@ -84,6 +87,12 @@ class BaseMalwareClassifier(ABC):
         y = self.label_encoder.fit_transform(df["class"])
         return X, y
 
+    def log_write(self, text: str) -> None:
+        log_text = f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}]\n{text}"
+        print(log_text)
+        with (MODELS_DIR_PATH / f"{self.model_name}_log.txt").open("a") as f:
+            f.write(log_text)
+
     def save_init_params(self):
         ", ".join(
             [str(x) for x in (inspect.signature(self.__init__).parameters.values())]
@@ -92,46 +101,57 @@ class BaseMalwareClassifier(ABC):
     def reset_score_metrics(self) -> None:
         self.score_metrics = {
             "accuracy": [],
-            "precision_macro": [],
             "precision_weighted": [],
-            "recall_macro": [],
+            "precision_macro": [],
             "recall_weighted": [],
-            "f1_macro": [],
+            "recall_macro": [],
             "f1_weighted": [],
+            "f1_macro": [],
         }
 
     def calc_score_metrics(self, y_true: np.ndarray, y_pred: np.ndarray) -> None:
         self.score_metrics["accuracy"].append(accuracy_score(y_true, y_pred))
         self.score_metrics["precision_macro"].append(
-            precision_score(y_true, y_pred, average="macro")
+            precision_score(y_true, y_pred, average="macro", zero_division=0)
         )
         self.score_metrics["precision_weighted"].append(
-            precision_score(y_true, y_pred, average="weighted")
+            precision_score(y_true, y_pred, average="weighted", zero_division=0)
         )
         self.score_metrics["recall_macro"].append(
-            recall_score(y_true, y_pred, average="macro")
+            recall_score(y_true, y_pred, average="macro", zero_division=0)
         )
         self.score_metrics["recall_weighted"].append(
-            recall_score(y_true, y_pred, average="weighted")
+            recall_score(y_true, y_pred, average="weighted", zero_division=0)
         )
-        self.score_metrics["f1_macro"].append(f1_score(y_true, y_pred, average="macro"))
+        self.score_metrics["f1_macro"].append(
+            f1_score(y_true, y_pred, average="macro", zero_division=0)
+        )
         self.score_metrics["f1_weighted"].append(
-            f1_score(y_true, y_pred, average="weighted")
+            f1_score(y_true, y_pred, average="weighted", zero_division=0)
         )
 
-    def log_score_metrics(self, params: Any | None = None) -> None:
-        res = (
-            f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}]\n"
-            f"Params: {params if params else self.init_params}\n"
+    def log_score_metrics(
+        self, params: Any | None = None, *, weighted: bool = False
+    ) -> None:
+        text = (
+            f"Architecture: {params if params else self.init_params}\n"
             f"Cross-Validation Results Summary:\n"
             f"{'Metric':<25}{'Mean':<10}SD\n"
         )
         for metric, values in self.score_metrics.items():
-            res += f"{metric:<25}{np.mean(values):<10.4f}{np.std(values, ddof=1):.4f}\n"
-        res += "–" * 50 + "\n"
-        with (MODELS_DIR_PATH / f"{self.model_name}_log.txt").open("a") as f:
-            f.write(res)
-        print(res)
+            if not weighted and "weighted" in metric:
+                continue
+            text += (
+                f"{metric:<25}{np.mean(values):<10.4f}{np.std(values, ddof=1):.4f}\n"
+            )
+        text += "LaTeX table row:\n"
+        for metric, values in self.score_metrics.items():
+            if not weighted and "weighted" in metric:
+                continue
+            text += f"{np.mean(values):.3f}\pm{np.std(values, ddof=1):.3f} & "
+        text = text[:-2] + "\\\\\n"
+        text += "–" * 50 + "\n"
+        self.log_write(text)
 
     @abstractmethod
     def cross_validate(self, X, y, *, cv_splits): ...
@@ -198,17 +218,23 @@ class BaseMalwareClassifier(ABC):
             CV = "Cross Validation"
             TRAIN = "Train & Evaluate"
             EXPLAIN = "Explain"
+            TUNE = "Tune"  # TODO: temporary
 
         print("Choose which classifier method(s) to run, options are:")
         method_names, display_names = prompt_options(
             RunMethod._value2member_map_, multi_select=True
         )
+        if RunMethod.TUNE in method_names:
+            print(f"Running {RunMethod.TUNE} method...")
+            instance = cls()
+            instance._tune_hyperparameters()
+            return
         if RunMethod.CV in method_names or RunMethod.TRAIN in method_names:
             instance = cls()
             X, y = instance.load_and_transform_data()
             if RunMethod.CV in method_names:
                 print(f"Running {RunMethod.CV} method...")
-                instance.cross_validate(X, y, cv_splits=10)
+                instance.cross_validate(X, y, cv_splits=2)
             if RunMethod.TRAIN in method_names:
                 print(f"Running {RunMethod.TRAIN} method...")
                 X = X.toarray() if hasattr(X, "toarray") else X
