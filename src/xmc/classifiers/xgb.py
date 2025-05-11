@@ -15,25 +15,33 @@ from xgboost.callback import EarlyStopping
 
 from xmc.classifiers.base import BaseMalwareClassifier
 from xmc.explainers.xgb import MalwareExplainerXGB
-from xmc.utils import timer, load_dataset
+from xmc.utils import timer
+
+# Architecture: max_features: int = 1000, ngram_range: tuple[int, int] = (1, 2), patience: int | None = 50, max_depth: int = 8, min_child_weight: float = 1.0, subsample: float = 0.7, colsample_bytree: float = 0.45, learning_rate: float = 0.11, n_estimators: int = 350, gamma: float = 0.0, verbosity: int = 2, device: str | None = None, n_jobs: int | None = None
+# Cross-Validation Results Summary:
+# Metric                   Mean      SD
+# accuracy                 0.8033    0.0080
+# precision_macro          0.7495    0.0095
+# recall_macro             0.7259    0.0146
+# f1_macro                 0.7330    0.0121
 
 
 class MalwareClassifierXGB(BaseMalwareClassifier):
-    model_name = "xgb"
+    model_name = "xgb_1k"
     explainer_class = MalwareExplainerXGB
 
     def __init__(
         self,
-        max_features: int = 10_000,
+        max_features: int = 1_000,
         ngram_range: tuple[int, int] = (1, 2),
         patience: int | None = 50,
-        max_depth: int = 20,
-        min_child_weight: float = 3,
-        subsample: float = 0.7692,
-        colsample_bytree: float = 0.6295,
-        learning_rate: float = 0.1837,
-        n_estimators: int = 400,
-        gamma: float = 0.00003,
+        max_depth: int = 8,
+        min_child_weight: float = 1.0,
+        subsample: float = 0.7,
+        colsample_bytree: float = 0.45,
+        learning_rate: float = 0.11,
+        n_estimators: int = 350,
+        gamma: float = 0.0,
         verbosity: int = 2,
         device: str | None = None,
         n_jobs: int | None = None,
@@ -81,45 +89,54 @@ class MalwareClassifierXGB(BaseMalwareClassifier):
         score = f1_score(y_true, y_pred, average="macro")
         return score
 
-    def _tune_hyperparameters(self, *, n_trials: int | None):
+    def _tune_hyperparameters(self, *, n_trials: int | None = 10):
         """Hyperparameter tuning, for development only"""
-        df = load_dataset(self.DATASET_NAME)
-        y = self.label_encoder.fit_transform(df["class"])
-        ngram_range_choices = [(1, 1), (1, 2), (1, 3)]
+        self.log_write("Starting hyperparameter tuning (k=5)...\n")
+        storage_path = "sqlite:///xgb_study.db"
+        study_name = "xgb_optimization"
+        X, y = self.load_and_transform_data()
+        self.patience = 20
+        basic_params = {
+            "max_features": 1000,
+            "ngram_range": (1, 2),
+            "patience": self.patience,
+        }
 
         def objective(trial: Trial):
-            vectorizer_params = {
-                "ngram_range": ngram_range_choices[
-                    trial.suggest_categorical(
-                        "ngram_range_i", list(range(len(ngram_range_choices)))
-                    )
-                ],
-                "max_features": trial.suggest_categorical(
-                    "max_features", [500, 1_000, 5_000, 10_000, 15_000]
-                ),
-            }
-            # model_params = {
-            #     "max_depth": trial.suggest_int("max_depth", 1, 30),
-            #     "min_child_weight": trial.suggest_float(
-            #         "min_child_weight", 1e-10, 1e10, log=True
-            #     ),
-            #     "subsample": trial.suggest_float("subsample", 0, 1),
-            #     "colsample_bytree": trial.suggest_float("colsample_bytree", 0, 1),
-            #     "learning_rate": trial.suggest_float("learning_rate", 0.001, 0.3),
-            #     "n_estimators": trial.suggest_int("n_estimators", 100, 1000),
-            #     "gamma": trial.suggest_float("gamma", 0, 0.01),
+            # default_model_params = {
+            #     "max_depth": 6,
+            #     "min_child_weight": 1,
+            #     "subsample": 1,
+            #     "colsample_bytree": 1,
+            #     "learning_rate": 0.3,
+            #     "n_estimators": 100,
+            #     "gamma": 0,
             # }
             model_params = {
-                "max_depth": 6,
+                "max_depth": 8,
                 "min_child_weight": 1,
-                "subsample": 1,
-                "colsample_bytree": 1,
-                "learning_rate": 0.3,
-                "n_estimators": 100,
+                "subsample": 0.7,
+                "colsample_bytree": 0.45,
+                "learning_rate": 0.11,
+                "n_estimators": 350,
                 "gamma": 0,
             }
-            self.vectorizer.set_params(**vectorizer_params)
-            X = csc_matrix(self.vectorizer.fit_transform(df["api"]))
+            new_model_params = {
+                "max_depth": trial.suggest_int("max_depth", 6, 30, step=2),
+                "min_child_weight": trial.suggest_float(
+                    "min_child_weight", 0.01, 1.0, step=0.01
+                ),
+                "subsample": trial.suggest_float("subsample", 0.3, 1.0, step=0.05),
+                "colsample_bytree": trial.suggest_float(
+                    "colsample_bytree", 0.3, 1.0, step=0.05
+                ),
+                "learning_rate": trial.suggest_float(
+                    "learning_rate", 0.001, 0.3, step=0.001
+                ),
+                "n_estimators": trial.suggest_int("n_estimators", 100, 500, step=25),
+                "gamma": trial.suggest_float("gamma", 0, 1, step=0.01),
+            }
+            model_params.update(new_model_params)
             self.reset_score_metrics()
             kfold = StratifiedKFold(
                 n_splits=5, shuffle=True, random_state=self.random_state
@@ -135,20 +152,25 @@ class MalwareClassifierXGB(BaseMalwareClassifier):
 
                 trial.report(np.mean(self.score_metrics["f1_macro"]), step=fold_idx)
                 if trial.should_prune():
-                    self.log_score_metrics({**vectorizer_params, **model_params})
+                    self.log_score_metrics({**basic_params, **model_params})
                     raise TrialPruned()
-            self.log_score_metrics({**vectorizer_params, **model_params})
+            self.log_score_metrics({**basic_params, **model_params})
             return np.mean(self.score_metrics["f1_macro"])
 
         study = optuna.create_study(
             direction=StudyDirection.MAXIMIZE,
             pruner=MedianPruner(n_startup_trials=5, n_warmup_steps=3),
             sampler=optuna.samplers.TPESampler(seed=self.random_state),
+            storage=storage_path,
+            study_name=study_name,
+            load_if_exists=True,
         )
         study.optimize(
             objective, n_trials=n_trials, gc_after_trial=False, show_progress_bar=True
         )
-        print("Best hyperparameters:", study.best_trial.params)
+        self.log_write(
+            f"Hyperparameter tuning finished. Best hyperparameters: {study.best_trial.params}\n"
+        )
 
     @timer
     def cross_validate(self, X: csc_matrix, y: np.ndarray, *, cv_splits: int):
