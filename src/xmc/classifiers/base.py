@@ -234,7 +234,7 @@ class BaseMalwareClassifier(ABC):
             X, y = instance.load_and_transform_data()
             if RunMethod.CV in method_names:
                 print(f"Running {RunMethod.CV} method...")
-                instance.cross_validate(X, y, cv_splits=2)
+                instance.cross_validate(X, y, cv_splits=10)
             if RunMethod.TRAIN in method_names:
                 print(f"Running {RunMethod.TRAIN} method...")
                 X = X.toarray() if hasattr(X, "toarray") else X
