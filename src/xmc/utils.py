@@ -120,8 +120,8 @@ def try_import_shap():
         return ShapUnavailable()
 
 
-def round_values(values: list[float], decimals: int = 4) -> list[float]:
-    return [round(value, decimals) for value in values]
+def format_floats(values: list[float], decimals: int = 4) -> str:
+    return ", ".join([f"{value:.{decimals}f}" for value in values])
 
 
 def set_plt_style():

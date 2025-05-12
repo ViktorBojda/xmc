@@ -11,6 +11,7 @@ from typing import TYPE_CHECKING, Any
 import joblib
 import numpy as np
 import tensorflow as tf
+from alibi.api.interfaces import Explanation as AlibiExplanation
 from alibi.explainers import AnchorTabular
 
 from alibi.explainers.cfproto import CounterfactualProto
@@ -21,7 +22,7 @@ from sklearn.utils import compute_class_weight
 
 from xmc.exceptions import CounterfactualNotFound, AnchorNotFound
 from xmc.settings import EXPLANATIONS_DIR_PATH
-from xmc.utils import prompt_options, try_import_shap, round_values, timer, save_plot
+from xmc.utils import prompt_options, try_import_shap, format_floats, timer, save_plot
 
 if TYPE_CHECKING:
     from xmc.classifiers.base import BaseMalwareClassifier
@@ -323,7 +324,7 @@ class BaseMalwareExplainer(ABC):
         cf_proba: list[float],
         rtol: float = 1e-05,
         atol: float = 1e-08,
-    ) -> str:
+    ) -> tuple[str, np.array]:
         if self.scaler:
             cf_instance = np.rint(
                 self.scaler.inverse_transform(np.array(cf_instance).reshape(1, -1))
@@ -334,14 +335,14 @@ class BaseMalwareExplainer(ABC):
             rtol, atol = 2e-3, 0.2
         result = ""
         for idx in diff_features:
-            cf_value = int(cf_instance[idx])
+            cf_value = round(cf_instance[idx])
             orig_value = orig_instance[idx]
             if cf_value == orig_value:
                 continue
             orig_instance[idx] = cf_value
             result += (
                 f"\nFeature: {self.feature_names[idx]} (index {idx})\n"
-                f"Value: {cf_value}\nOriginal value: {orig_value}\n"
+                f"Original value: {orig_value}\nValue: {cf_value}\n"
             )
         orig_instance = orig_instance.reshape(1, -1)
         if self.scaler:
@@ -353,7 +354,88 @@ class BaseMalwareExplainer(ABC):
         )
         if not result:
             raise ValueError("Something went wrong. No feature changes detected.")
-        return result
+        return result, control_proba
+
+    def _create_cf_explanation_for_instance(
+        self,
+        idx: int,
+        explainer: CounterfactualProto,
+        predictor: Callable[[np.ndarray], np.ndarray],
+        base_dir: Path,
+        *,
+        can_rerun: bool = False,
+    ):
+        instance = self.X_test[idx]
+        class_name = self.label_encoder.classes_[self.y_test[idx]]
+        instance_dir = base_dir / f"{class_name}/instance_{idx}"
+        instance_descriptor = f"instance of class '{class_name}' (index {idx})"
+        explanation_json_file = instance_dir / f"explanation.json"
+        try:
+            if explanation_json_file.exists():
+                if can_rerun:
+                    explanation = AlibiExplanation.from_json(
+                        explanation_json_file.open().read()
+                    )
+                else:
+                    print(
+                        f"Explanation already exists for {instance_descriptor}, skipping."
+                    )
+                    return
+            else:
+                print(f"Searching for counterfactual for {instance_descriptor}...\n")
+                instance_dir.mkdir(parents=True, exist_ok=True)
+                # reshape instance to (1, 10_000)
+                explanation = explainer.explain(
+                    instance.reshape(1, -1), k=5, verbose=True
+                )
+                explanation_json_file.write_text(explanation.to_json())
+
+            if cf := getattr(explanation, "cf", None):
+                if len(cf["X"]) != 1:
+                    raise ValueError(
+                        f"Expected single counterfactual instance, found {len(cf['X'])}"
+                    )
+                cf_instance, cf_class, cf_proba = (
+                    cf["X"][0],
+                    cf["class"],
+                    cf["proba"][0],
+                )
+                differences = instance - cf_instance
+                diff_features = np.where(np.abs(differences) > 1e-6)[0]
+                cf_features, true_proba = self.cf_feature_formatter(
+                    predictor,
+                    cf_instance,
+                    instance,
+                    diff_features,
+                    cf_class,
+                    cf_proba,
+                )
+                result = (
+                    f"Counterfactual explanation for {instance_descriptor}:\n"
+                    f"Original class: {self.label_encoder.classes_[explanation.orig_class]}\n"
+                    f"CF class: {self.label_encoder.classes_[cf_class]}\n\n"
+                    f"Original class proba: {format_floats(explanation.orig_proba[0], 4)}\n"
+                    f"CF class proba:       {format_floats(true_proba, 4)}\n"
+                    f"{cf_features}"
+                )
+                print(result)
+                (instance_dir / f"explanation.txt").write_text(result)
+            else:
+                raise CounterfactualNotFound(
+                    f"No counterfactual found for {instance_descriptor}."
+                )
+        except Exception as e:
+            timestamp = dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            error_msg = (
+                f"[{timestamp}] Error while generating counterfactual for {instance_descriptor}:\n"
+                f"{str(e)}\n"
+            )
+            print(error_msg)
+            with (base_dir / f"error_logs.txt").open("a") as f:
+                f.write(error_msg)
+                f.write(f"Traceback:\n{traceback.format_exc()}\n")
+                f.write("-" * 50 + "\n")
+        print("-" * 50)
 
     def create_counterfactual_explanations(
         self,
@@ -361,6 +443,8 @@ class BaseMalwareExplainer(ABC):
         *,
         explainer_params: dict[str, Any] | None = None,
         samples_per_class: int = 5,
+        instance_ids: int | list[int] | None = None,
+        rerun_all: bool = False,
     ):
         explainer_kwargs = {
             "kappa": 0.1,
@@ -381,6 +465,14 @@ class BaseMalwareExplainer(ABC):
         explainer.fit(self.X_train)
         y_pred = np.argmax(predictor(self.X_test), axis=1)
         base_dir = self.explanations_path / "counterfactuals"
+        if instance_ids:
+            if not isinstance(instance_ids, list):
+                instance_ids = [instance_ids]
+            for instance_id in instance_ids:
+                self._create_cf_explanation_for_instance(
+                    instance_id, explainer, predictor, base_dir, can_rerun=True
+                )
+            return
         for class_idx, class_name in enumerate(self.label_encoder.classes_):
             try:
                 correct_idxs = self.get_correct_pred_idxs(class_idx, y_pred)
@@ -397,75 +489,10 @@ class BaseMalwareExplainer(ABC):
                     f"Failed to find {samples_per_class} correct predictions for class '{class_name}', "
                     f"generating counterfactuals for the {sample_length} samples found."
                 )
-
             for idx in sampled_idxs:
-                instance = self.X_test[idx]
-                instance_dir = base_dir / f"{class_name}/instance_{idx}"
-                instance_dir.mkdir(parents=True, exist_ok=True)
-                instance_descriptor = f"instance of class '{class_name}' (index {idx})"
-                explanation_json_file = instance_dir / f"explanation.json"
-                if explanation_json_file.exists():
-                    print(
-                        f"Explanation already exists for {instance_descriptor}, skipping."
-                    )
-                    continue
-                try:
-                    print(
-                        f"Searching for counterfactual for {instance_descriptor}...\n"
-                    )
-                    # reshape instance to (1, 10_000)
-                    explanation = explainer.explain(
-                        instance.reshape(1, -1), k=5, verbose=True
-                    )
-                    explanation_json_file.write_text(explanation.to_json())
-                    if cf := getattr(explanation, "cf", None):
-                        if len(cf["X"]) != 1:
-                            raise ValueError(
-                                f"Expected single counterfactual instance, found {len(cf['X'])}"
-                            )
-                        cf_instance, cf_class, cf_proba = (
-                            cf["X"][0],
-                            cf["class"],
-                            cf["proba"][0],
-                        )
-                        differences = instance - cf_instance
-                        diff_features = np.where(np.abs(differences) > 1e-6)[0]
-                        cf_features = self.cf_feature_formatter(
-                            predictor,
-                            cf_instance,
-                            instance,
-                            diff_features,
-                            cf_class,
-                            cf_proba,
-                        )
-                        result = (
-                            f"Counterfactual explanation for {instance_descriptor}:\n"
-                            f"Class: {self.label_encoder.classes_[cf_class]}\n"
-                            f"Class probabilities: {round_values(cf_proba, 4)}\n\n"
-                            f"Original class: {self.label_encoder.classes_[explanation.orig_class]}\n"
-                            f"Original class probabilities: {round_values(explanation.orig_proba[0], 4)}\n"
-                            f"{cf_features}"
-                        )
-                        print(result)
-                        (instance_dir / f"explanation.txt").write_text(result)
-                    else:
-                        raise CounterfactualNotFound(
-                            f"No counterfactual found for {instance_descriptor}."
-                        )
-                except Exception as e:
-                    timestamp = dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-                    error_msg = (
-                        f"[{timestamp}] Error while generating counterfactual for {instance_descriptor}:\n"
-                        f"{str(e)}\n"
-                    )
-                    print(error_msg)
-                    with (base_dir / f"error_logs.txt").open("a") as f:
-                        f.write(error_msg)
-                        f.write(f"Traceback:\n{traceback.format_exc()}\n")
-                        f.write("-" * 50 + "\n")
-                print("-" * 50)
-            print(f"Counterfactuals creation finished for class '{class_name}'.\n")
-            print("-" * 50)
+                self._create_cf_explanation_for_instance(
+                    idx, explainer, predictor, base_dir, can_rerun=rerun_all
+                )
 
 
 class TreeMalwareExplainer(BaseMalwareExplainer):

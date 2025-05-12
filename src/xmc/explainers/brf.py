@@ -16,4 +16,7 @@ class MalwareExplainerBRF(TreeMalwareExplainer):
 
     @timer
     def explain_counterfactuals(self) -> None:
-        self.create_counterfactual_explanations(self.model.predict_proba)
+        # Finished MalwareExplainerBRF.explain_counterfactuals() in 33223.63 secs
+        self.create_counterfactual_explanations(
+            self.model.predict_proba, explainer_params={"eps": (1, 1)}
+        )

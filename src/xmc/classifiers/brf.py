@@ -160,7 +160,7 @@ class MalwareClassifierBRF(BaseMalwareClassifier):
             if key.startswith("test_"):
                 metric = key[5:]
                 self.score_metrics[metric] = scores
-        self.log_score_metrics(weighted=True)
+        self.log_score_metrics()
 
     @timer
     def train_and_evaluate(self, X: np.ndarray, y: np.ndarray, *, test_size) -> None:
