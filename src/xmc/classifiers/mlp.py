@@ -5,9 +5,12 @@ from pathlib import Path
 from typing import Any
 
 import numpy as np
+import optuna
 import torch
 import torch.nn as nn
 import torch.optim as optim
+from optuna.pruners import MedianPruner
+from optuna.study import StudyDirection
 from torch.optim import Optimizer
 from torch.utils.data import DataLoader, TensorDataset
 
@@ -19,114 +22,96 @@ from xmc.explainers.mlp import MalwareExplainerMLP
 from xmc.settings import MODELS_DIR_PATH
 from xmc.utils import timer
 
-# For max_features = 10_000:
-# Cross-Validation f1_macro scores: [0.7262, 0.7171, 0.7276, 0.7207, 0.7267, 0.7524, 0.7375, 0.7511, 0.731, 0.724]
-# Cross-Validation f1_macro mean:   0.7314
-# Cross-Validation f1_macro std:    0.0120
-# --------------------------------------------------
-# Finished MalwareClassifierMLP.cross_validate() in 1118.30 secs
-# Classification Report:
-#                precision    recall  f1-score   support
-#
-#       adware       0.76      0.71      0.73       232
-#     backdoor       0.73      0.66      0.69       282
-#   downloader       0.78      0.69      0.73       220
-#      dropper       0.57      0.65      0.61       168
-#      spyware       0.56      0.53      0.54       158
-#       trojan       0.89      0.93      0.91      1788
-#        virus       0.91      0.90      0.90       655
-#         worm       0.69      0.63      0.66       283
-#
-#     accuracy                           0.83      3786
-#    macro avg       0.74      0.71      0.72      3786
-# weighted avg       0.82      0.83      0.82      3786
-# --------------------------------------------------
-# Finished MalwareClassifierMLP.train_and_evaluate() in 110.31 secs
-
-# For max_features = 1_000:
-# Cross-Validation f1_macro scores: [0.6714, 0.6527, 0.667, 0.6677, 0.6816, 0.6908, 0.6921, 0.699, 0.6994, 0.681]
-# Cross-Validation f1_macro mean:   0.6803
-# Cross-Validation f1_macro std:    0.0154
-# --------------------------------------------------
-# Finished MalwareClassifierMLP.cross_validate() in 1411.77 secs
-# Classification Report:
-#                precision    recall  f1-score   support
-#
-#       adware       0.79      0.60      0.68       232
-#     backdoor       0.71      0.65      0.68       282
-#   downloader       0.70      0.72      0.71       220
-#      dropper       0.53      0.58      0.55       168
-#      spyware       0.51      0.47      0.49       158
-#       trojan       0.88      0.84      0.86      1788
-#        virus       0.69      0.88      0.77       655
-#         worm       0.65      0.58      0.61       283
-#
-#     accuracy                           0.76      3786
-#    macro avg       0.68      0.66      0.67      3786
-# weighted avg       0.77      0.76      0.76      3786
-# --------------------------------------------------
-# Finished MalwareClassifierMLP.train_and_evaluate() in 175.96 secs
+# Architecture: max_features: int = 1000, ngram_range: tuple[int, int] = (1, 2), num_layers: int = 1, hidden_dim: int = 256, activation: str = 'relu', dropout_rate: float = 0.2, batch_size: int = 64, learning_rate: float = 0.0025897653095650194, epochs: int = 500, patience: int | None = 50, device: str | None = None, num_workers: int = -1, {'layer_0': 'Linear(in_features=1000, out_features=256, bias=True)', 'layer_1': 'ReLU()', 'layer_2': 'Dropout(p=0.2, inplace=False)', 'layer_3': 'Linear(in_features=256, out_features=8, bias=True)'}
+# Cross-Validation Results Summary:
+# Metric                   Mean      SD
+# accuracy                 0.7726    0.0078
+# precision_macro          0.6988    0.0120
+# recall_macro             0.6823    0.0166
+# f1_macro                 0.6865    0.0126
 
 
 class MalwareClassifierMLP(BaseMalwareClassifier):
-    model_name = "mlp"
+    model_name = "mlp_1k"
     explainer_class = MalwareExplainerMLP
 
     @classmethod
     def model_path(cls) -> Path:
         return MODELS_DIR_PATH / f"{cls.model_name}.pt.gz"
 
-    class MalwareNet(nn.Module):
-        def __init__(self, input_dim: int, hidden_dim: int, num_classes: int) -> None:
-            super().__init__()
-            self.net = nn.Sequential(
-                nn.Linear(input_dim, hidden_dim),
-                nn.BatchNorm1d(hidden_dim),
-                nn.LeakyReLU(negative_slope=0.01),
-                nn.Dropout(0.3),
-                nn.Linear(hidden_dim, hidden_dim),
-                nn.BatchNorm1d(hidden_dim),
-                nn.LeakyReLU(negative_slope=0.01),
-                nn.Dropout(0.3),
-                nn.Linear(hidden_dim, num_classes),
-            )
-
-        def forward(self, x):
-            return self.net(x)
-
     def __init__(
         self,
         max_features: int = 1_000,
         ngram_range: tuple[int, int] = (1, 2),
-        epochs: int = 300,
-        patience: int | None = 50,
-        batch_size: int = 256,
+        num_layers: int = 1,
         hidden_dim: int = 256,
-        learning_rate: float = 0.001,
+        activation: str = "relu",
+        dropout_rate: float = 0.2,
+        batch_size: int = 64,
+        learning_rate: float = 0.0025897653095650194,
+        epochs: int = 400,
+        patience: int | None = 50,
         device: str | None = None,
         num_workers: int = -1,
-        random_state: int = 69,
     ) -> None:
         super().__init__(
-            max_features=max_features,
-            ngram_range=ngram_range,
-            use_scaler=True,
-            random_state=random_state,
+            max_features=max_features, ngram_range=ngram_range, use_scaler=True
         )
-        self.device = (
-            device if device else ("cuda" if torch.cuda.is_available() else "cpu")
-        )
-        self.num_workers = num_workers if num_workers != -1 else os.cpu_count()
+        self.net_params = {
+            "num_layers": num_layers,
+            "hidden_dim": hidden_dim,
+            "activation": activation,
+            "dropout_rate": dropout_rate,
+        }
         self.epochs = epochs
         self.patience = patience
         self.batch_size = batch_size
         self.learning_rate = learning_rate
-        self.hidden_dim = hidden_dim
-        # set after fit_transform
-        self.model = None
-        self.input_dim = None
-        self.num_classes = None
+        self.device = (
+            device if device else ("cuda" if torch.cuda.is_available() else "cpu")
+        )
+        self.num_workers = num_workers if num_workers != -1 else os.cpu_count()
         self.set_random_seed()
+        self.model = None  # set after fit_transform
+
+    class MalwareNet(nn.Module):
+        def __init__(
+            self,
+            input_dim: int,
+            num_classes: int,
+            num_layers: int,
+            hidden_dim: int,
+            activation: str,
+            dropout_rate: float,
+            *,
+            epochs: int | None = None,
+            patience: int | None = None,
+            batch_size: int | None = None,
+            learning_rate: float | None = None,
+        ) -> None:
+            super().__init__()
+            layers = []
+            in_dim = input_dim
+            for i in range(num_layers):
+                layers.append(nn.Linear(in_dim, hidden_dim))
+                if activation == "relu":
+                    layers.append(nn.ReLU())
+                if activation == "leaky_relu":
+                    layers.append(nn.LeakyReLU())
+                if activation == "elu":
+                    layers.append(nn.ELU())
+                layers.append(nn.Dropout(dropout_rate))
+                in_dim = hidden_dim
+            layers.append(nn.Linear(hidden_dim, num_classes))
+            self.net = nn.Sequential(*layers)
+            # required only for training
+            self.epochs = epochs
+            self.patience = patience
+            self.batch_size = batch_size
+            self.learning_rate = learning_rate
+
+        def forward(self, x):
+            return self.net(x)
 
     def set_random_seed(self) -> None:
         import random
@@ -140,11 +125,93 @@ class MalwareClassifierMLP(BaseMalwareClassifier):
     def load_and_transform_data(self) -> tuple[np.ndarray, np.ndarray]:
         X, y = super().load_and_transform_data()
         X = X.toarray()  # convert to dense for PyTorch
-        self.input_dim = X.shape[1]
-        self.num_classes = len(self.label_encoder.classes_)
-        self.model = self.MalwareNet(self.input_dim, self.hidden_dim, self.num_classes)
-        self.model.to(self.device)
+        self.net_params["input_dim"] = X.shape[1]
+        self.net_params["num_classes"] = len(self.label_encoder.classes_)
+        self.model = self.MalwareNet(
+            **self.net_params,
+            epochs=self.epochs,
+            patience=self.patience,
+            batch_size=self.batch_size,
+            learning_rate=self.learning_rate,
+        ).to(self.device)
+        self.init_params += f", {self.get_model_layers()}"
         return X, y
+
+    def _tune_hyperparameters(self, *, n_trials: int | None = 10):
+        """Hyperparameter tuning, for development only"""
+        self.log_write("Starting hyperparameter tuning (k=5)...\n")
+        storage_path = "sqlite:///mlp_1k_study.db"
+        study_name = "mlp_1k_optimization"
+        X, y = self.load_and_transform_data()
+        input_dim = X.shape[1]
+        num_classes = len(self.label_encoder.classes_)
+        basic_params = {
+            "max_features": 1000,
+            "ngram_range": (1, 2),
+        }
+
+        def objective(trial: optuna.Trial):
+            model_params = {
+                "num_layers": 1,
+                "hidden_dim": 256,
+                "activation": "relu",
+                "dropout_rate": 0.2,
+                "batch_size": 64,
+                "learning_rate": 0.0025897653095650194,
+                "epochs": 300,
+                "patience": 20,
+            }
+            new_model_params = {
+                "learning_rate": trial.suggest_float(
+                    "learning_rate", 1e-5, 1e-2, log=True
+                ),
+                "batch_size": trial.suggest_categorical(
+                    "batch_size", [64, 128, 256, 512]
+                ),
+                "hidden_dim": trial.suggest_categorical(
+                    "hidden_dim", [32, 64, 128, 256, 512]
+                ),
+                "dropout_rate": trial.suggest_float("dropout_rate", 0.1, 0.7, step=0.1),
+                "num_layers": trial.suggest_int("num_layers", 1, 4),
+                "activation": trial.suggest_categorical(
+                    "activation", ["relu", "leaky_relu", "elu"]
+                ),
+            }
+            model_params.update(new_model_params)
+            self.reset_score_metrics()
+            kfold = StratifiedKFold(
+                n_splits=5, shuffle=True, random_state=self.random_state
+            )
+            for fold_idx, (train_idx, val_idx) in enumerate(kfold.split(X, y)):
+                fold_model = self.MalwareNet(input_dim, num_classes, **model_params).to(
+                    self.device
+                )
+                y_val, y_pred = self._train_and_evaluate(
+                    fold_model, X[train_idx], y[train_idx], X[val_idx], y[val_idx]
+                )
+                self.calc_score_metrics(y_val, y_pred)
+
+                trial.report(np.mean(self.score_metrics["f1_macro"]), step=fold_idx)
+                if trial.should_prune():
+                    self.log_score_metrics({**basic_params, **model_params})
+                    raise optuna.TrialPruned()
+            self.log_score_metrics({**basic_params, **model_params})
+            return np.mean(self.score_metrics["f1_macro"])
+
+        study = optuna.create_study(
+            direction=StudyDirection.MAXIMIZE,
+            pruner=MedianPruner(n_startup_trials=5, n_warmup_steps=3),
+            sampler=optuna.samplers.TPESampler(seed=self.random_state),
+            storage=storage_path,
+            study_name=study_name,
+            load_if_exists=True,
+        )
+        study.optimize(
+            objective, n_trials=n_trials, gc_after_trial=False, show_progress_bar=True
+        )
+        self.log_write(
+            f"Hyperparameter tuning finished. Best hyperparameters: {study.best_trial.params}\n"
+        )
 
     def _prepare_train_test_data(
         self,
@@ -165,20 +232,20 @@ class MalwareClassifierMLP(BaseMalwareClassifier):
         )
         train_loader = DataLoader(
             train_ds,
-            batch_size=self.batch_size,
+            batch_size=model.batch_size,
             shuffle=True,
             num_workers=self.num_workers,
             pin_memory=True,
         )
         test_loader = DataLoader(
             test_ds,
-            batch_size=self.batch_size,
+            batch_size=model.batch_size,
             shuffle=False,
             num_workers=self.num_workers,
             pin_memory=True,
         )
         criterion = nn.CrossEntropyLoss()
-        optimizer = optim.Adam(model.parameters(), lr=self.learning_rate)
+        optimizer = optim.Adam(model.parameters(), lr=model.learning_rate)
         return train_loader, test_loader, criterion, optimizer
 
     def _train_one_epoch(
@@ -223,19 +290,20 @@ class MalwareClassifierMLP(BaseMalwareClassifier):
         criterion: nn.Module,
         optimizer: Optimizer,
     ) -> None:
+        self.set_random_seed()
         best_f1 = 0.0
         patience_counter = 0
         best_model_state = None
-        for epoch in range(self.epochs):
+        for epoch in range(model.epochs):
             train_loss = self._train_one_epoch(
                 model, train_loader, criterion, optimizer
             )
             val_true, val_pred = self._evaluate(model, test_loader)
             curr_f1 = f1_score(val_true, val_pred, average="macro")
             print(
-                f"Epoch {epoch + 1}/{self.epochs}, Train Loss: {train_loss:.4f}, Val Macro F1: {curr_f1:.4f}"
+                f"Epoch {epoch + 1}/{model.epochs}, Train Loss: {train_loss:.4f}, Val Macro F1: {curr_f1:.4f}"
             )
-            if self.patience is None:
+            if model.patience is None:
                 continue
             if curr_f1 > best_f1:
                 best_f1 = curr_f1
@@ -244,48 +312,50 @@ class MalwareClassifierMLP(BaseMalwareClassifier):
             else:
                 patience_counter += 1
                 print(f"No improvement for {patience_counter} epoch(s).")
-                if patience_counter >= self.patience:
+                if patience_counter >= model.patience:
                     print("Early stopping triggered.")
                     break
         if best_model_state:
             model.load_state_dict(best_model_state)
         print("Training complete.")
 
-    @timer
-    def cross_validate(
+    def _train_and_evaluate(
         self,
-        X: np.ndarray,
-        y: np.ndarray,
-        *,
-        cv_splits: int = 10,
-        scoring: str = "f1_macro",
-    ) -> None:
-        """
-        Performs cross-validation in a manner similar to scikit-learn.
-        """
+        model: MalwareNet,
+        X_train: np.ndarray,
+        y_train: np.ndarray,
+        X_test: np.ndarray,
+        y_test: np.ndarray,
+    ) -> tuple[np.ndarray, np.ndarray]:
+        X_train = self.scaler.fit_transform(X_train)
+        X_test = self.scaler.transform(X_test)
+        train_loader, test_loader, criterion, optimizer = self._prepare_train_test_data(
+            model, X_train, y_train, X_test, y_test
+        )
+        self._train(model, train_loader, test_loader, criterion, optimizer)
+        y_true, y_pred = self._evaluate(model, test_loader)
+        return y_true, y_pred
+
+    @timer
+    def cross_validate(self, X: np.ndarray, y: np.ndarray, *, cv_splits) -> None:
         kfold = StratifiedKFold(
             n_splits=cv_splits, shuffle=True, random_state=self.random_state
         )
-        scores = []
         for fold_idx, (train_idx, val_idx) in enumerate(kfold.split(X, y), 1):
             # re-init model for each fold
             fold_model = self.MalwareNet(
-                self.input_dim, self.hidden_dim, self.num_classes
+                **self.net_params,
+                epochs=self.epochs,
+                patience=self.patience,
+                batch_size=self.batch_size,
+                learning_rate=self.learning_rate,
             ).to(self.device)
-            X_train = self.scaler.fit_transform(X[train_idx])
-            X_val = self.scaler.transform(X[val_idx])
-            train_loader, val_loader, criterion, optimizer = (
-                self._prepare_train_test_data(
-                    fold_model, X_train, y[train_idx], X_val, y[val_idx]
-                )
+            y_val, y_pred = self._train_and_evaluate(
+                fold_model, X[train_idx], y[train_idx], X[val_idx], y[val_idx]
             )
-            self._train(fold_model, train_loader, val_loader, criterion, optimizer)
-            val_true, val_pred = self._evaluate(fold_model, val_loader)
-            fold_score = f1_score(val_true, val_pred, average=scoring.split("_")[1])
-            scores.append(float(fold_score))
-            print(f"Fold {fold_idx}, {scoring}={fold_score:.4f}")
-
-        self.display_cv_results(scoring, scores)
+            self.calc_score_metrics(y_val, y_pred)
+            print(f"Fold {fold_idx}, f1_macro={self.score_metrics['f1_macro'][-1]:.4f}")
+        self.log_score_metrics()
 
     @timer
     def train_and_evaluate(
@@ -297,28 +367,27 @@ class MalwareClassifierMLP(BaseMalwareClassifier):
         X_train, X_test, y_train, y_test = train_test_split(
             X, y, test_size=test_size, random_state=self.random_state, stratify=y
         )
-        X_train = self.scaler.fit_transform(X_train)
-        X_test = self.scaler.transform(X_test)
-        train_loader, test_loader, criterion, optimizer = self._prepare_train_test_data(
+        y_true_enc, y_pred_enc = self._train_and_evaluate(
             self.model, X_train, y_train, X_test, y_test
         )
-        self._train(self.model, train_loader, test_loader, criterion, optimizer)
-        y_true_encoded, y_pred_encoded = self._evaluate(self.model, test_loader)
-        y_true = self.label_encoder.inverse_transform(y_true_encoded)
-        y_pred = self.label_encoder.inverse_transform(y_pred_encoded)
+        y_true = self.label_encoder.inverse_transform(y_true_enc)
+        y_pred = self.label_encoder.inverse_transform(y_pred_enc)
         self.plot_confusion_matrix(y_true, y_pred)
         print("Classification Report:\n", classification_report(y_true, y_pred))
         print("-" * 50)
         self.save_model_artifacts(X_train, X_test, y_train, y_test)
 
+    def get_model_layers(self) -> dict[str, str]:
+        architecture = {}
+        for i, layer in enumerate(self.model.net.children()):
+            layer_name = f"layer_{i}"
+            architecture[layer_name] = str(layer)
+        return architecture
+
     def get_model_artifacts(self) -> dict[str, Any]:
         artifacts = super().get_model_artifacts()
         artifacts.update(
-            {
-                "model_state_dict": self.model.state_dict(),
-                "input_dim": next(self.model.parameters()).shape[1],
-                "hidden_dim": self.hidden_dim,
-            }
+            {"model_state_dict": self.model.state_dict(), "net_params": self.net_params}
         )
         return artifacts
 
@@ -336,10 +405,7 @@ class MalwareClassifierMLP(BaseMalwareClassifier):
     def load_model_artifacts(cls) -> dict[str, Any]:
         artifacts = super().load_model_artifacts()
         # reconstruct the model
-        num_classes = len(artifacts["label_encoder"].classes_)
-        model = MalwareClassifierMLP.MalwareNet(
-            artifacts["input_dim"], artifacts["hidden_dim"], num_classes
-        )
+        model = MalwareClassifierMLP.MalwareNet(**artifacts["net_params"])
         model.load_state_dict(artifacts["model_state_dict"])
         model.to(torch.device("cuda" if torch.cuda.is_available() else "cpu"))
         model.eval()
