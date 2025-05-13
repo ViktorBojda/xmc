@@ -465,7 +465,7 @@ class BaseMalwareExplainer(ABC):
             use_kdtree=True,
             **explainer_kwargs,
         )
-        explainer.fit(self.X_train)
+        explainer.fit(self.X_train, update_feature_range=False if self.scaler else True)
         y_pred = np.argmax(predictor(self.X_test), axis=1)
         base_dir = self.explanations_path / "counterfactuals"
         if instance_ids:
