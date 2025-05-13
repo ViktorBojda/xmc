@@ -85,13 +85,15 @@ class MalwareExplainerMLP(BaseMalwareExplainer):
 
     @timer
     def explain_counterfactuals(self) -> None:
-        # Finished MalwareExplainerMLP.explain_counterfactuals() in 2180.01 secs
+        # Finished MalwareExplainerMLP.explain_counterfactuals() in 3330.09 secs
         def predictor(X: np.ndarray) -> np.ndarray:
             with torch.no_grad():
                 X_tensor = torch.tensor(X, dtype=torch.float32).to(self.device)
                 outputs = self.model(X_tensor)
                 return outputs.cpu().numpy()
 
+        # increase kappa to 0.1 if cf class doesn't match control class
+        # beta > 0 penalizes changes to many features
         self.create_counterfactual_explanations(
-            predictor, explainer_params={"kappa": 1.0}
+            predictor, explainer_params={"kappa": 0.01, "beta": 1.0, "c_init": 5.0}
         )
