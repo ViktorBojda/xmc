@@ -335,7 +335,7 @@ class BaseMalwareExplainer(ABC):
             orig_instance = np.rint(
                 self.scaler.inverse_transform(orig_instance.reshape(1, -1))
             ).astype(int)[0]
-            rtol, atol = 2e-3, 0.2
+            rtol, atol = 2e-3, 0.3
         result = ""
         for idx in diff_features:
             cf_value = round(cf_instance[idx])
@@ -352,9 +352,9 @@ class BaseMalwareExplainer(ABC):
             orig_instance = self.scaler.transform(orig_instance)
         control_proba = predictor(orig_instance)[0]
         control_class = int(np.argmax(control_proba))
-        # self.assert_cf_valid(
-        #     cf_class, cf_proba, control_class, control_proba, rtol=rtol, atol=atol
-        # )
+        self.assert_cf_valid(
+            cf_class, cf_proba, control_class, control_proba, rtol=rtol, atol=atol
+        )
         if not result:
             raise ValueError("Something went wrong. No feature changes detected.")
         return result, control_proba
