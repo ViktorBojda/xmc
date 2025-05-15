@@ -328,6 +328,12 @@ class BaseMalwareExplainer(ABC):
         rtol: float = 1e-05,
         atol: float = 1e-08,
     ) -> tuple[str, np.array]:
+        from xmc.classifiers import MalwareClassifierXGB
+
+        # unsure why, but it works only like this
+        round_fn = (
+            int if issubclass(self.classifier_class, MalwareClassifierXGB) else round
+        )
         if self.scaler:
             cf_instance = np.rint(
                 self.scaler.inverse_transform(np.array(cf_instance).reshape(1, -1))
@@ -338,7 +344,7 @@ class BaseMalwareExplainer(ABC):
             rtol, atol = 2e-3, 0.3
         result = ""
         for idx in diff_features:
-            cf_value = round(cf_instance[idx])
+            cf_value = round_fn(cf_instance[idx])
             orig_value = orig_instance[idx]
             if cf_value == orig_value:
                 continue
@@ -450,10 +456,12 @@ class BaseMalwareExplainer(ABC):
         rerun_all: bool = False,
     ):
         explainer_kwargs = {
-            "kappa": 0.1,
+            "kappa": 0.1,  # kappa > 0 increases cf proba differences
+            "beta": 0.0,  # beta > 0 penalizes changes to many features
             "max_iterations": 500,
-            "c_steps": 5,
-            "eps": (0.001, 0.001),
+            "c_init": 10.0,  # increase if no cf are found
+            "c_steps": 5,  # increase if no cf are found
+            "eps": (0.001, 0.001),  # higher the value, larger the perturbation size
         }
         if explainer_params:
             explainer_kwargs.update(explainer_params)
