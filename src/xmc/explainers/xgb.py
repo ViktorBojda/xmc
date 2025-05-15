@@ -14,4 +14,8 @@ class MalwareExplainerXGB(TreeMalwareExplainer):
 
     @timer
     def explain_counterfactuals(self, **kwargs) -> None:
-        self.create_counterfactual_explanations(self.model.predict_proba)
+        # Finished MalwareExplainerXGB.explain_counterfactuals() in 6565.18 secs
+        self.create_counterfactual_explanations(
+            self.model.predict_proba,
+            explainer_params={"kappa": 0.01, "beta": 1.0, "c_init": 5.0},
+        )

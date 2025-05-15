@@ -93,7 +93,6 @@ class MalwareExplainerMLP(BaseMalwareExplainer):
                 return outputs.cpu().numpy()
 
         # increase kappa to 0.1 if cf class doesn't match control class
-        # beta > 0 penalizes changes to many features
         self.create_counterfactual_explanations(
             predictor, explainer_params={"kappa": 0.01, "beta": 1.0, "c_init": 5.0}
         )

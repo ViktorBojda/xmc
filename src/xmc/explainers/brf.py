@@ -17,6 +17,8 @@ class MalwareExplainerBRF(TreeMalwareExplainer):
     @timer
     def explain_counterfactuals(self) -> None:
         # Finished MalwareExplainerBRF.explain_counterfactuals() in 33223.63 secs
+        # due to internal mechanics of RF, perturbation size must be set higher
+        # https://github.com/SeldonIO/alibi/issues/170#issuecomment-563244788
         self.create_counterfactual_explanations(
             self.model.predict_proba, explainer_params={"eps": (1, 1)}
         )
