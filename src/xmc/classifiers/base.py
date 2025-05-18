@@ -23,7 +23,16 @@ from sklearn.preprocessing import LabelEncoder, MinMaxScaler
 
 from xmc.settings import MODELS_DIR_PATH
 from xmc.explainers.base import BaseMalwareExplainer
-from xmc.utils import prompt_overwrite, timer, prompt_options, save_plot, load_dataset
+from xmc.utils import (
+    prompt_overwrite,
+    timer,
+    prompt_options,
+    save_plot,
+    load_dataset,
+    set_plt_style,
+    page_figsize,
+    slovak_trans,
+)
 
 
 class BaseMalwareClassifier(ABC):
@@ -65,17 +74,30 @@ class BaseMalwareClassifier(ABC):
             [str(x) for x in (inspect.signature(self.__init__).parameters.values())]
         )
 
-    def plot_confusion_matrix(self, y_true: pd.Series, y_pred: pd.Series) -> None:
+    def plot_confusion_matrix(
+        self, y_true: pd.Series, y_pred: pd.Series, *, disp_model_name: str
+    ) -> None:
         classes = self.label_encoder.classes_
-        cm = confusion_matrix(y_true, y_pred, labels=classes, normalize="true")
-        _, ax = plt.subplots(figsize=(5, 5))
-        disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=classes)
-        disp.plot(ax=ax, values_format=".2f")
-        plt.xticks(rotation=45)
-        save_plot(
-            title=f"{self.model_name.upper()} Confusion Matrix",
-            save_as=f"{self.model_name.lower()}/confusion_matrix",
-        )
+        disp_classes = [slovak_trans(cls) for cls in classes]
+        set_plt_style()
+        for norm_type, label in [
+            ("true", "s riadkovou normalizáciou"),
+            ("pred", "so stĺpcovou normalizáciou"),
+        ]:
+            cm = confusion_matrix(y_true, y_pred, labels=classes, normalize=norm_type)
+            fig, ax = plt.subplots(figsize=page_figsize(w_frac=None, h_frac=0.6))
+            disp = ConfusionMatrixDisplay(
+                confusion_matrix=cm, display_labels=disp_classes
+            )
+            disp.plot(ax=ax, values_format=".2f")
+            ax.set_title(f"Konfúzna matica pre {disp_model_name} {label}")
+            ax.set_xlabel("Predikovaná trieda")
+            ax.set_ylabel("Skutočná trieda")
+            ax.tick_params(axis="x", rotation=45)
+            save_plot(
+                title=None,
+                save_as=f"{self.model_name.lower()}/confusion_matrix_{norm_type}",
+            )
 
     @staticmethod
     def comma_tokenizer(text: str) -> list[str]:
