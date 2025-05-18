@@ -25,6 +25,32 @@ from xmc.classifiers.base import BaseMalwareClassifier
 from xmc.explainers.brf import MalwareExplainerBRF
 from xmc.utils import timer
 
+"""
+Architecture: max_features: int = 1000, ngram_range: tuple[int, int] = (1, 2), use_scaler: bool = False, n_estimators: int = 200, max_depth: int = 27, min_samples_split: int = 2, min_samples_leaf: int = 1, rf_max_features: str | None = 0.33, replacement: bool = True, bootstrap: bool = False, sampling_strategy: str = 'not majority', verbose: int = 2, n_jobs: int = -1
+Cross-Validation Results Summary:
+Metric                   Mean      SD
+accuracy                 0.7924    0.0067
+precision_macro          0.7747    0.0128
+recall_macro             0.6874    0.0132
+f1_macro                 0.7172    0.0123
+
+Classification Report:
+               precision    recall  f1-score   support
+
+      adware      0.853     0.573     0.686       232
+    backdoor      0.842     0.660     0.740       282
+  downloader      0.758     0.727     0.742       220
+     dropper      0.593     0.685     0.635       168
+     spyware      0.552     0.608     0.578       158
+      trojan      0.789     0.960     0.866      1788
+       virus      0.970     0.643     0.773       655
+        worm      0.795     0.618     0.696       283
+
+    accuracy                          0.793      3786
+   macro avg      0.769     0.684     0.715      3786
+weighted avg      0.808     0.793     0.787      3786
+"""
+
 
 class MalwareClassifierBRF(BaseMalwareClassifier):
     model_name = "brf_1k"
@@ -178,8 +204,10 @@ class MalwareClassifierBRF(BaseMalwareClassifier):
         y_pred_encoded = self.classifier.predict(X_test)
         y_pred = self.label_encoder.inverse_transform(y_pred_encoded)
         y_true = self.label_encoder.inverse_transform(y_test)
-        print("Classification Report:\n", classification_report(y_true, y_pred))
-        self.plot_confusion_matrix(y_true, y_pred)
+        self.plot_confusion_matrix(y_true, y_pred, disp_model_name="RF")
+        print(
+            "Classification Report:\n", classification_report(y_true, y_pred, digits=3)
+        )
         print("-" * 50)
         self.save_model_artifacts(X_train, X_test, y_train, y_test)
 

@@ -17,13 +17,32 @@ from xmc.classifiers.base import BaseMalwareClassifier
 from xmc.explainers.xgb import MalwareExplainerXGB
 from xmc.utils import timer
 
-# Architecture: max_features: int = 1000, ngram_range: tuple[int, int] = (1, 2), patience: int | None = 50, max_depth: int = 8, min_child_weight: float = 1.0, subsample: float = 0.7, colsample_bytree: float = 0.45, learning_rate: float = 0.11, n_estimators: int = 350, gamma: float = 0.0, verbosity: int = 2, device: str | None = None, n_jobs: int | None = None
-# Cross-Validation Results Summary:
-# Metric                   Mean      SD
-# accuracy                 0.8033    0.0080
-# precision_macro          0.7495    0.0095
-# recall_macro             0.7259    0.0146
-# f1_macro                 0.7330    0.0121
+
+"""
+Architecture: max_features: int = 1000, ngram_range: tuple[int, int] = (1, 2), patience: int | None = 50, max_depth: int = 8, min_child_weight: float = 1.0, subsample: float = 0.7, colsample_bytree: float = 0.45, learning_rate: float = 0.11, n_estimators: int = 350, gamma: float = 0.0, verbosity: int = 2, device: str | None = None, n_jobs: int | None = None
+Cross-Validation Results Summary:
+Metric                   Mean      SD
+accuracy                 0.8033    0.0080
+precision_macro          0.7495    0.0095
+recall_macro             0.7259    0.0146
+f1_macro                 0.7330    0.0121
+
+Classification Report:
+               precision    recall  f1-score   support
+
+      adware      0.804     0.638     0.712       232
+    backdoor      0.787     0.706     0.744       282
+  downloader      0.768     0.736     0.752       220
+     dropper      0.661     0.708     0.684       168
+     spyware      0.627     0.563     0.593       158
+      trojan      0.890     0.852     0.871      1788
+       virus      0.716     0.907     0.800       655
+        worm      0.669     0.650     0.659       283
+
+    accuracy                          0.797      3786
+   macro avg      0.740     0.720     0.727      3786
+weighted avg      0.802     0.797     0.797      3786
+"""
 
 
 class MalwareClassifierXGB(BaseMalwareClassifier):
@@ -196,8 +215,10 @@ class MalwareClassifierXGB(BaseMalwareClassifier):
         y_pred_encoded = self.classifier.predict(X_test)
         y_pred = self.label_encoder.inverse_transform(y_pred_encoded)
         y_true = self.label_encoder.inverse_transform(y_test)
-        self.plot_confusion_matrix(y_true, y_pred)
-        print("Classification Report:\n", classification_report(y_true, y_pred))
+        self.plot_confusion_matrix(y_true, y_pred, disp_model_name="XGB")
+        print(
+            "Classification Report:\n", classification_report(y_true, y_pred, digits=3)
+        )
         print("-" * 50)
         self.save_model_artifacts(X_train, X_test, y_train, y_test)
 

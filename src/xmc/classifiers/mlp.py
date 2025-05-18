@@ -22,13 +22,32 @@ from xmc.explainers.mlp import MalwareExplainerMLP
 from xmc.settings import MODELS_DIR_PATH
 from xmc.utils import timer
 
-# Architecture: max_features: int = 1000, ngram_range: tuple[int, int] = (1, 2), num_layers: int = 1, hidden_dim: int = 256, activation: str = 'relu', dropout_rate: float = 0.2, batch_size: int = 64, learning_rate: float = 0.0025897653095650194, epochs: int = 500, patience: int | None = 50, device: str | None = None, num_workers: int = -1, {'layer_0': 'Linear(in_features=1000, out_features=256, bias=True)', 'layer_1': 'ReLU()', 'layer_2': 'Dropout(p=0.2, inplace=False)', 'layer_3': 'Linear(in_features=256, out_features=8, bias=True)'}
-# Cross-Validation Results Summary:
-# Metric                   Mean      SD
-# accuracy                 0.7726    0.0078
-# precision_macro          0.6988    0.0120
-# recall_macro             0.6823    0.0166
-# f1_macro                 0.6865    0.0126
+
+"""
+Architecture: max_features: int = 1000, ngram_range: tuple[int, int] = (1, 2), num_layers: int = 1, hidden_dim: int = 256, activation: str = 'relu', dropout_rate: float = 0.2, batch_size: int = 64, learning_rate: float = 0.0025897653095650194, epochs: int = 500, patience: int | None = 50, device: str | None = None, num_workers: int = -1, {'layer_0': 'Linear(in_features=1000, out_features=256, bias=True)', 'layer_1': 'ReLU()', 'layer_2': 'Dropout(p=0.2, inplace=False)', 'layer_3': 'Linear(in_features=256, out_features=8, bias=True)'}
+Cross-Validation Results Summary:
+Metric                   Mean      SD
+accuracy                 0.7726    0.0078
+precision_macro          0.6988    0.0120
+recall_macro             0.6823    0.0166
+f1_macro                 0.6865    0.0126
+
+Classification Report:
+               precision    recall  f1-score   support
+
+      adware      0.710     0.677     0.693       232
+    backdoor      0.721     0.670     0.695       282
+  downloader      0.762     0.655     0.704       220
+     dropper      0.585     0.637     0.610       168
+     spyware      0.517     0.475     0.495       158
+      trojan      0.885     0.829     0.856      1788
+       virus      0.674     0.878     0.763       655
+        worm      0.623     0.565     0.593       283
+
+    accuracy                          0.763      3786
+   macro avg      0.685     0.673     0.676      3786
+weighted avg      0.770     0.763     0.763      3786
+"""
 
 
 class MalwareClassifierMLP(BaseMalwareClassifier):
@@ -372,8 +391,10 @@ class MalwareClassifierMLP(BaseMalwareClassifier):
         )
         y_true = self.label_encoder.inverse_transform(y_true_enc)
         y_pred = self.label_encoder.inverse_transform(y_pred_enc)
-        self.plot_confusion_matrix(y_true, y_pred)
-        print("Classification Report:\n", classification_report(y_true, y_pred))
+        self.plot_confusion_matrix(y_true, y_pred, disp_model_name="MLP")
+        print(
+            "Classification Report:\n", classification_report(y_true, y_pred, digits=3)
+        )
         print("-" * 50)
         self.save_model_artifacts(X_train, X_test, y_train, y_test)
 
