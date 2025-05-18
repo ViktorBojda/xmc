@@ -148,14 +148,20 @@ def slovak_trans(name: str) -> str:
 
 
 def page_figsize(
-    w_frac: float,
-    h_frac: float,
+    w_frac: float | None,
+    h_frac: float | None,
     page_w_in: float = PAGE_WIDTH,
     page_h_in: float = PAGE_HEIGHT,
 ) -> tuple[float, float]:
     """
     Compute a Matplotlib figsize (in inches) relative to page size.
     """
-    width = page_w_in * w_frac
-    height = page_h_in * h_frac
+    if not w_frac and not h_frac:
+        raise ValueError("At least one of w_frac or h_frac is required.")
+    if w_frac:
+        width = page_w_in * w_frac
+    if h_frac:
+        height = page_h_in * h_frac
+    width = width if w_frac else height
+    height = height if h_frac else width
     return width, height
