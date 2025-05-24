@@ -208,14 +208,9 @@ class BaseMalwareExplainer(ABC):
         if not anchor_formatter:
             anchor_formatter = self.join_anchor_rules
         y_pred = predictor(self.X_test)
-        class_weights = compute_class_weight(
-            class_weight="balanced", classes=np.unique(self.y_train), y=self.y_train
-        )
         thresholds = {"strict": 0.9, "general": 0.8}
         base_dir = self.explanations_path / "anchors"
-        total_count = self.y_test.shape[0]
         for class_idx, class_name in enumerate(self.label_encoder.classes_):
-            total_class_count = np.sum(self.y_test == class_idx)
             try:
                 correct_idxs = self.get_correct_pred_idxs(class_idx, y_pred)
             except ValueError as e:
@@ -270,8 +265,6 @@ class BaseMalwareExplainer(ABC):
                                 f"Anchors explanation for {instance_descriptor}:\n"
                                 f"Precision: {round(explanation.precision, 4)}\n"
                                 f"Coverage: {coverage}\n"
-                                f"Weighted coverage: {round(class_weights[class_idx] * coverage, 4)}\n"
-                                f"Class coverage: {round(total_count * coverage / total_class_count, 4)}\n"
                                 f"Anchor:\nIF {anchor_formatter(anchor)}\nTHEN PREDICT {class_name}\n"
                             )
                             print(result)
