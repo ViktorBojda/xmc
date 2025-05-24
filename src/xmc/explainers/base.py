@@ -19,11 +19,18 @@ from matplotlib import pyplot as plt
 from scipy.special import softmax
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.preprocessing import LabelEncoder, MinMaxScaler
-from sklearn.utils import compute_class_weight
 
 from xmc.exceptions import CounterfactualNotFound, AnchorNotFound
 from xmc.settings import EXPLANATIONS_DIR_PATH
-from xmc.utils import prompt_options, try_import_shap, format_floats, timer, save_plot
+from xmc.utils import (
+    prompt_options,
+    try_import_shap,
+    format_floats,
+    timer,
+    save_plot,
+    set_plt_style,
+    page_figsize,
+)
 
 if TYPE_CHECKING:
     from xmc.classifiers.base import BaseMalwareClassifier
@@ -112,8 +119,15 @@ class BaseMalwareExplainer(ABC):
         beeswarm_max_display: int = 30,
         samples_per_class: int = 5,
     ):
+        from xmc.classifiers import MalwareClassifierBRF
+
+        print("Creating SHAP plots...")
+        set_plt_style()
         plt.figure(clear=True)
         base_dir = f"{self.classifier_class.model_name}/shap/"
+        trunc_feature_names = [
+            name[:50] + "…" if len(name) > 50 else name for name in self.feature_names
+        ]
         for class_idx, class_name in enumerate(self.label_encoder.classes_):
             class_explanation = explanation[:, :, class_idx]
             plt.clf()
@@ -168,31 +182,66 @@ class BaseMalwareExplainer(ABC):
                         instance_features = self.scaler.inverse_transform(
                             instance_features.reshape(1, -1)
                         )
-                    plt.clf()
                     if explanation.base_values.ndim == 2:
                         base_value = explanation.base_values[idx, class_idx]
                     else:
+                        # relevant only for mlp explainer
                         base_value = explanation.base_values[class_idx]
+                    # these hacks are needed because shap's plot settings are not public
+                    fig, ax = plt.subplots(figsize=page_figsize(w_frac=1, h_frac=0.4))
+                    plt.sca(ax)
+                    res = shap.plots.decision(
+                        base_value,
+                        explanation.values[idx, :, class_idx],
+                        instance_features,
+                        trunc_feature_names,
+                        auto_size_plot=False,
+                        show=False,
+                        return_objects=True,
+                    )
+                    x1 = res.xlim[1]
+                    x_leftmost = (
+                        res.base_value
+                        + np.cumsum(explanation.values[idx, :, class_idx]).min()
+                    )
+                    x_base = res.base_value - (0.1 * (x1 - res.base_value))
+                    x0 = res.xlim[0] if x_leftmost < x_base else x_base
+                    xlim = (x0, x1)
+                    plt.clf()
                     shap.plots.decision(
                         base_value,
                         explanation.values[idx, :, class_idx],
                         instance_features,
-                        self.feature_names,
+                        trunc_feature_names,
+                        auto_size_plot=False,
+                        feature_display_range=slice(-1, -16, -1),
                         show=False,
+                        xlim=xlim,
                     )
+                    ax = plt.gca()
+                    ax.tick_params(axis="y", labelsize=10)
+                    ax.tick_params(axis="x", labelsize=10)
+                    for child in ax.get_children():
+                        if isinstance(
+                            child, plt.Text
+                        ) and child.get_text().strip().startswith("("):
+                            child.set_fontsize(10)
+                    unit_label = (
+                        "pravdepodobnosť"
+                        if issubclass(self.classifier_class, MalwareClassifierBRF)
+                        else "logit"
+                    )
+                    ax.set_xlabel(f"Výstup modelu ({unit_label})", fontsize=11)
                     save_plot(
-                        f"SHAP Decision Plot for Class: {class_name} ({identifier.capitalize()})",
+                        None,
                         f"{base_dir}/decision/{identifier.lower()}/{class_name}/instance_{idx}",
                     )
+                    plt.close(fig)
 
             correct_idxs = self.get_correct_pred_idxs(
                 class_idx, y_pred, raise_if_empty=False
             )
             create_decision_plot(correct_idxs, "correct")
-            incorrect_idxs = np.where(
-                (self.y_test == class_idx) & (y_pred != class_idx)
-            )[0]
-            create_decision_plot(incorrect_idxs, "misclassified")
 
             print(f"SHAP plots created for class {class_name}.")
         plt.close("all")
