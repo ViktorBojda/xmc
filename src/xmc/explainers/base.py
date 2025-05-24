@@ -16,6 +16,7 @@ from alibi.explainers import AnchorTabular
 
 from alibi.explainers.cfproto import CounterfactualProto
 from matplotlib import pyplot as plt
+from scipy.special import softmax
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.preprocessing import LabelEncoder, MinMaxScaler
 from sklearn.utils import compute_class_weight
@@ -334,7 +335,7 @@ class BaseMalwareExplainer(ABC):
             orig_instance = np.rint(
                 self.scaler.inverse_transform(orig_instance.reshape(1, -1))
             ).astype(int)[0]
-            rtol, atol = 2e-3, 0.3
+            atol = 0.1
         result = ""
         for idx in diff_features:
             cf_value = round_fn(cf_instance[idx])
@@ -344,7 +345,8 @@ class BaseMalwareExplainer(ABC):
             orig_instance[idx] = cf_value
             result += (
                 f"\nFeature: {self.feature_names[idx]} (index {idx})\n"
-                f"Original value: {orig_value}\nValue: {cf_value}\n"
+                f"Original value: {orig_value}\n"
+                f"CF Value:       {cf_value}\n"
             )
         orig_instance = orig_instance.reshape(1, -1)
         if self.scaler:
@@ -397,14 +399,22 @@ class BaseMalwareExplainer(ABC):
                     raise ValueError(
                         f"Expected single counterfactual instance, found {len(cf['X'])}"
                     )
-                cf_instance, cf_class, cf_proba = (
+                cf_instance, cf_class, cf_proba, orig_proba = (
                     cf["X"][0],
                     cf["class"],
                     cf["proba"][0],
+                    explanation.orig_proba[0],
                 )
                 differences = instance - cf_instance
                 diff_features = np.where(np.abs(differences) > 1e-6)[0]
-                cf_features, true_proba = self.cf_feature_formatter(
+                from xmc.classifiers import MalwareClassifierMLP
+
+                if issubclass(self.classifier_class, MalwareClassifierMLP):
+                    _predictor: Callable[[np.ndarray, bool], np.ndarray] = predictor
+                    predictor = lambda x: _predictor(x, proba=True)
+                    cf_proba = softmax(cf_proba)
+                    orig_proba = softmax(orig_proba)
+                cf_features, true_cf_proba = self.cf_feature_formatter(
                     predictor,
                     cf_instance,
                     instance,
@@ -415,9 +425,9 @@ class BaseMalwareExplainer(ABC):
                 result = (
                     f"Counterfactual explanation for {instance_descriptor}:\n"
                     f"Original class: {self.label_encoder.classes_[explanation.orig_class]}\n"
-                    f"CF class: {self.label_encoder.classes_[cf_class]}\n\n"
-                    f"Original class proba: {format_floats(explanation.orig_proba[0], 4)}\n"
-                    f"CF class proba:       {format_floats(true_proba, 4)}\n"
+                    f"CF class:       {self.label_encoder.classes_[cf_class]}\n\n"
+                    f"Original class proba: {format_floats(orig_proba, 4)}\n"
+                    f"CF class proba:       {format_floats(true_cf_proba, 4)}\n"
                     f"{cf_features}"
                 )
                 print(result)

@@ -5,6 +5,7 @@ from typing import TYPE_CHECKING
 
 import numpy as np
 import torch
+from torch.nn.functional import softmax
 
 from xmc.explainers.base import BaseMalwareExplainer
 from xmc.utils import timer, stratified_sample, try_import_shap
@@ -86,10 +87,15 @@ class MalwareExplainerMLP(BaseMalwareExplainer):
     @timer
     def explain_counterfactuals(self) -> None:
         # Finished MalwareExplainerMLP.explain_counterfactuals() in 3330.09 secs
-        def predictor(X: np.ndarray) -> np.ndarray:
+        def predictor(X: np.ndarray, *, proba: bool = False) -> np.ndarray:
             with torch.no_grad():
                 X_tensor = torch.tensor(X, dtype=torch.float32).to(self.device)
                 outputs = self.model(X_tensor)
+                if proba:
+                    # CounterfactualProto expects predictor that returns proba,
+                    # but works better with logits, optional proba output
+                    # added only for validation and formatting
+                    outputs = softmax(outputs, dim=1)
                 return outputs.cpu().numpy()
 
         # increase kappa to 0.1 if cf class doesn't match control class
