@@ -391,7 +391,7 @@ class MalwareClassifierMLP(BaseMalwareClassifier):
         )
         y_true = self.label_encoder.inverse_transform(y_true_enc)
         y_pred = self.label_encoder.inverse_transform(y_pred_enc)
-        self.plot_confusion_matrix(y_true, y_pred, disp_model_name="MLP")
+        self.plot_confusion_matrix(y_true, y_pred)
         print(
             "Classification Report:\n", classification_report(y_true, y_pred, digits=3)
         )

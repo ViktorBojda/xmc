@@ -215,7 +215,7 @@ class MalwareClassifierXGB(BaseMalwareClassifier):
         y_pred_encoded = self.classifier.predict(X_test)
         y_pred = self.label_encoder.inverse_transform(y_pred_encoded)
         y_true = self.label_encoder.inverse_transform(y_test)
-        self.plot_confusion_matrix(y_true, y_pred, disp_model_name="XGB")
+        self.plot_confusion_matrix(y_true, y_pred)
         print(
             "Classification Report:\n", classification_report(y_true, y_pred, digits=3)
         )

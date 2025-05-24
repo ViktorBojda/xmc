@@ -74,9 +74,7 @@ class BaseMalwareClassifier(ABC):
             [str(x) for x in (inspect.signature(self.__init__).parameters.values())]
         )
 
-    def plot_confusion_matrix(
-        self, y_true: pd.Series, y_pred: pd.Series, *, disp_model_name: str
-    ) -> None:
+    def plot_confusion_matrix(self, y_true: pd.Series, y_pred: pd.Series) -> None:
         classes = self.label_encoder.classes_
         disp_classes = [slovak_trans(cls) for cls in classes]
         set_plt_style()
@@ -85,12 +83,12 @@ class BaseMalwareClassifier(ABC):
             ("pred", "so stĺpcovou normalizáciou"),
         ]:
             cm = confusion_matrix(y_true, y_pred, labels=classes, normalize=norm_type)
-            fig, ax = plt.subplots(figsize=page_figsize(w_frac=None, h_frac=0.6))
+            fig, ax = plt.subplots(figsize=page_figsize(w_frac=None, h_frac=0.5))
             disp = ConfusionMatrixDisplay(
                 confusion_matrix=cm, display_labels=disp_classes
             )
             disp.plot(ax=ax, values_format=".2f")
-            ax.set_title(f"Konfúzna matica pre {disp_model_name} {label}")
+            ax.set_title(f"Konfúzna matica {label}")
             ax.set_xlabel("Predikovaná trieda")
             ax.set_ylabel("Skutočná trieda")
             ax.tick_params(axis="x", rotation=45)
