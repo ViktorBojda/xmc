@@ -1,0 +1,66 @@
+Counterfactual explanation for instance of class 'trojan' (index 3092):
+Original class: trojan
+CF class:       backdoor
+
+Original class proba: 0.0001, 0.0000, 0.0000, 0.0000, 0.0000, 0.9995, 0.0000, 0.0002
+CF class proba:       0.0775, 0.2908, 0.1375, 0.0150, 0.0300, 0.1875, 0.0333, 0.2283
+
+Feature: closesocket socket (index 31)
+Original value: 0
+CF Value:       4
+
+Feature: copyfilea ntdelayexecution (index 55)
+Original value: 0
+CF Value:       1
+
+Feature: getprocaddress (index 277)
+Original value: 1
+CF Value:       0
+
+Feature: globalmemorystatusex (index 351)
+Original value: 0
+CF Value:       1
+
+Feature: internetgetconnectedstate (index 366)
+Original value: 0
+CF Value:       1
+
+Feature: internetopena (index 371)
+Original value: 0
+CF Value:       1
+
+Feature: ldrgetprocedureaddress (index 399)
+Original value: 0
+CF Value:       2
+
+Feature: ldrgetprocedureaddress ldrgetprocedureaddress (index 411)
+Original value: 0
+CF Value:       1
+
+Feature: ldrloaddll (index 430)
+Original value: 0
+CF Value:       1
+
+Feature: ntclose ntclose (index 532)
+Original value: 0
+CF Value:       1
+
+Feature: ntopenkey (index 642)
+Original value: 0
+CF Value:       2
+
+Feature: ntqueryvaluekey (index 700)
+Original value: 0
+CF Value:       1
+
+Feature: regopenkeyexa regqueryinfokeya (index 835)
+Original value: 0
+CF Value:       1
+
+Feature: thread32next (index 959)
+Original value: 0
+CF Value:       1
+
+Feature: wsastartup (index 996)
+Original value: 0
+CF Value:       1

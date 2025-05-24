@@ -1,0 +1,82 @@
+Counterfactual explanation for instance of class 'downloader' (index 281):
+Original class: downloader
+CF class:       worm
+
+Original class proba: 0.0008, 0.0031, 0.9527, 0.0042, 0.0077, 0.0137, 0.0039, 0.0140
+CF class proba:       0.0039, 0.0553, 0.2924, 0.0284, 0.0821, 0.0628, 0.0695, 0.4057
+
+Feature: coinitializeex (index 40)
+Original value: 1
+CF Value:       0
+
+Feature: copyfilea (index 52)
+Original value: 1
+CF Value:       2
+
+Feature: createthread (index 76)
+Original value: 1
+CF Value:       0
+
+Feature: getfileattributesw setfileattributesw (index 228)
+Original value: 1
+CF Value:       0
+
+Feature: getfileversioninfosizew (index 242)
+Original value: 2
+CF Value:       0
+
+Feature: getsystemdirectorya (index 289)
+Original value: 1
+CF Value:       0
+
+Feature: gettemppathw (index 328)
+Original value: 1
+CF Value:       0
+
+Feature: internetgetconnectedstate (index 366)
+Original value: 1
+CF Value:       0
+
+Feature: ldrgetdllhandle ldrgetdllhandle (index 395)
+Original value: 1
+CF Value:       0
+
+Feature: ldrgetprocedureaddress regcreatekeyexa (index 424)
+Original value: 1
+CF Value:       0
+
+Feature: ldrunloaddll (index 434)
+Original value: 9
+CF Value:       7
+
+Feature: ldrunloaddll ldrunloaddll (index 436)
+Original value: 1
+CF Value:       0
+
+Feature: ntclose ldrgetdllhandle (index 525)
+Original value: 1
+CF Value:       0
+
+Feature: ntfreevirtualmemory (index 626)
+Original value: 2
+CF Value:       4
+
+Feature: ntopenfile (index 636)
+Original value: 4
+CF Value:       3
+
+Feature: ntopenkey ntqueryvaluekey (index 646)
+Original value: 1
+CF Value:       0
+
+Feature: ntqueryvaluekey ntclose (index 702)
+Original value: 1
+CF Value:       0
+
+Feature: openservicea ldrgetprocedureaddress (index 747)
+Original value: 2
+CF Value:       0
+
+Feature: regqueryvalueexa regclosekey (index 856)
+Original value: 1
+CF Value:       4

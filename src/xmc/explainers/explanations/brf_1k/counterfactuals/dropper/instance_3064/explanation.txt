@@ -1,0 +1,10 @@
+Counterfactual explanation for instance of class 'dropper' (index 3064):
+Original class: dropper
+CF class:       spyware
+
+Original class proba: 0.0200, 0.0203, 0.0468, 0.4701, 0.1083, 0.1072, 0.0517, 0.1756
+CF class proba:       0.0650, 0.0700, 0.1350, 0.2099, 0.2201, 0.1000, 0.0500, 0.1500
+
+Feature: wsastartup (index 996)
+Original value: 0
+CF Value:       1

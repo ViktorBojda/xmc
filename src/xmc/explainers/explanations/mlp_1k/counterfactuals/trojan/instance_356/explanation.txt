@@ -1,0 +1,22 @@
+Counterfactual explanation for instance of class 'trojan' (index 356):
+Original class: trojan
+CF class:       worm
+
+Original class proba: 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 1.0000, 0.0000, 0.0000
+CF class proba:       0.0000, 0.0003, 0.0003, 0.0000, 0.0000, 0.3487, 0.0000, 0.6508
+
+Feature: getfiletype ntcreatefile (index 238)
+Original value: 0
+CF Value:       258
+
+Feature: ntqueryvaluekey ntsetvaluekey (index 706)
+Original value: 0
+CF Value:       80
+
+Feature: setfilepointer setfilepointer (index 914)
+Original value: 0
+CF Value:       112
+
+Feature: wsastartup (index 996)
+Original value: 0
+CF Value:       361

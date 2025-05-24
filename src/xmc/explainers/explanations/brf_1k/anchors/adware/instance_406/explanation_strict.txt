@@ -1,0 +1,20 @@
+Anchors explanation for instance of class 'adware', index 406, mode 'strict':
+Precision: 0.2531
+Coverage: 0.0086
+Anchor:
+IF ioctlsocket > 0.00
+AND setlasterror > 0.00
+AND regclosekey regcreatekeyexw <= 0.00
+AND _cexit <= 0.00
+AND ntqueryvaluekey <= 0.00
+AND getwindowlonga <= 0.00
+AND widechartomultibyte > 0.00
+AND writeprocessmemory readprocessmemory <= 0.00
+AND __getmainargs <= 0.00
+AND tlssetvalue > 0.00
+AND translatemessage dispatchmessagea <= 0.00
+AND getcurrentprocess > 0.00
+AND writefile > 0.00
+AND getstdhandle > 0.00
+AND getacp > 0.00
+THEN PREDICT adware

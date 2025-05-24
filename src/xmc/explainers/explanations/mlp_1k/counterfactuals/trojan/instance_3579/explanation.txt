@@ -1,0 +1,22 @@
+Counterfactual explanation for instance of class 'trojan' (index 3579):
+Original class: trojan
+CF class:       virus
+
+Original class proba: 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 1.0000, 0.0000, 0.0000
+CF class proba:       0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0021, 0.9979, 0.0000
+
+Feature: findfirstfileexw ntopenfile (index 141)
+Original value: 0
+CF Value:       303
+
+Feature: ntclose drawtextexw (index 513)
+Original value: 0
+CF Value:       9
+
+Feature: ntopenfile ntclose (index 638)
+Original value: 0
+CF Value:       109
+
+Feature: writeconsolew (index 989)
+Original value: 1
+CF Value:       141

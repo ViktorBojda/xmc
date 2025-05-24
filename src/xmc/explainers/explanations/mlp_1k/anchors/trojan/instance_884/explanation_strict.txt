@@ -1,0 +1,7 @@
+Anchors explanation for instance of class 'trojan', index 884, mode 'strict':
+Precision: 1.0
+Coverage: 0.0324
+Anchor:
+IF getmodulehandlea getprocaddress > 0
+AND getprocaddress virtualprotect > 0
+THEN PREDICT trojan

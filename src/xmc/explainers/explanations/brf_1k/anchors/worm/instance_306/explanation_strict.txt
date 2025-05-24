@@ -1,0 +1,20 @@
+Anchors explanation for instance of class 'worm', index 306, mode 'strict':
+Precision: 0.1915
+Coverage: 0.2312
+Anchor:
+IF getwindowlonga <= 0.00
+AND ntopenkey > 0.00
+AND regclosekey getaddrinfo <= 0.00
+AND drawtextexa getsystemmetrics <= 0.00
+AND ntwritefile ntsetinformationfile <= 0.00
+AND loadresource ntopenfile <= 0.00
+AND gethostbyname findwindowa <= 0.00
+AND ntwritevirtualmemory <= 0.00
+AND select ntdelayexecution <= 0.00
+AND timegettime ntdelayexecution <= 0.00
+AND isdebuggerpresent deletefilew <= 0.00
+AND findresourceexw getcursorpos <= 0.00
+AND findwindowa getcursorpos <= 0.00
+AND createremotethread <= 0.00
+AND updatewindow <= 0.00
+THEN PREDICT worm

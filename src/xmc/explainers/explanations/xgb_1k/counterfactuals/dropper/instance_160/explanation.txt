@@ -1,0 +1,90 @@
+Counterfactual explanation for instance of class 'dropper' (index 160):
+Original class: dropper
+CF class:       spyware
+
+Original class proba: 0.0018, 0.0069, 0.0062, 0.8360, 0.1020, 0.0037, 0.0191, 0.0243
+CF class proba:       0.0038, 0.0155, 0.0108, 0.4117, 0.4324, 0.0076, 0.0590, 0.0593
+
+Feature: createdirectoryw (index 64)
+Original value: 1
+CF Value:       0
+
+Feature: gettemppathw (index 328)
+Original value: 1
+CF Value:       0
+
+Feature: getvolumenameforvolumemountpointw ntclose (index 337)
+Original value: 3
+CF Value:       0
+
+Feature: ldrgetdllhandle ldrgetdllhandle (index 395)
+Original value: 3
+CF Value:       2
+
+Feature: ldrgetprocedureaddress ntduplicateobject (index 418)
+Original value: 1
+CF Value:       0
+
+Feature: ldrgetprocedureaddress seterrormode (index 429)
+Original value: 1
+CF Value:       0
+
+Feature: ldrunloaddll ntopenkey (index 438)
+Original value: 1
+CF Value:       0
+
+Feature: ntallocatevirtualmemory ldrgetprocedureaddress (index 492)
+Original value: 1
+CF Value:       0
+
+Feature: ntallocatevirtualmemory ldrloaddll (index 493)
+Original value: 2
+CF Value:       0
+
+Feature: ntclose getsystemtimeasfiletime (index 521)
+Original value: 37
+CF Value:       35
+
+Feature: ntclose ntterminateprocess (index 552)
+Original value: 2
+CF Value:       0
+
+Feature: ntcreatefile ntcreatesection (index 572)
+Original value: 9
+CF Value:       10
+
+Feature: ntcreatefile setfilepointer (index 578)
+Original value: 2
+CF Value:       0
+
+Feature: ntfreevirtualmemory ntfreevirtualmemory (index 631)
+Original value: 2
+CF Value:       3
+
+Feature: ntqueryattributesfile (index 677)
+Original value: 4
+CF Value:       2
+
+Feature: ntquerysysteminformation (index 698)
+Original value: 2
+CF Value:       0
+
+Feature: ntsetvaluekey ntclose (index 720)
+Original value: 1
+CF Value:       2
+
+Feature: ntterminateprocess ntclose (index 723)
+Original value: 1
+CF Value:       0
+
+Feature: ntterminateprocess ntterminateprocess (index 724)
+Original value: 1
+CF Value:       0
+
+Feature: ntwritefile ntclose (index 729)
+Original value: 1
+CF Value:       0
+
+Feature: shellexecuteexw (index 936)
+Original value: 1
+CF Value:       0

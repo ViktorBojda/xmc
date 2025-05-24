@@ -1,0 +1,10 @@
+Counterfactual explanation for instance of class 'worm' (index 494):
+Original class: worm
+CF class:       dropper
+
+Original class proba: 0.0150, 0.0651, 0.0400, 0.2696, 0.1651, 0.0953, 0.0600, 0.2900
+CF class proba:       0.0450, 0.1400, 0.1450, 0.2049, 0.1451, 0.0850, 0.0450, 0.1900
+
+Feature: getadaptersaddresses getadaptersaddresses (index 178)
+Original value: 0
+CF Value:       1

@@ -1,0 +1,50 @@
+Counterfactual explanation for instance of class 'trojan' (index 196):
+Original class: trojan
+CF class:       adware
+
+Original class proba: 0.0768, 0.0044, 0.0168, 0.0237, 0.0116, 0.8059, 0.0543, 0.0065
+CF class proba:       0.4170, 0.0048, 0.0320, 0.0418, 0.0127, 0.4062, 0.0724, 0.0132
+
+Feature: couninitialize (index 57)
+Original value: 1
+CF Value:       0
+
+Feature: getclassnamea (index 184)
+Original value: 1
+CF Value:       0
+
+Feature: getcpinfo (index 191)
+Original value: 1
+CF Value:       0
+
+Feature: getfileattributesa (index 216)
+Original value: 1
+CF Value:       0
+
+Feature: globalalloc (index 347)
+Original value: 1
+CF Value:       0
+
+Feature: regsetvalueexa (index 866)
+Original value: 1
+CF Value:       0
+
+Feature: setfocus (index 920)
+Original value: 1
+CF Value:       0
+
+Feature: settextcolor (index 927)
+Original value: 1
+CF Value:       0
+
+Feature: sizeofresource (index 943)
+Original value: 1
+CF Value:       0
+
+Feature: translatemessage (index 969)
+Original value: 1
+CF Value:       0
+
+Feature: waitforsingleobject (index 984)
+Original value: 1
+CF Value:       0

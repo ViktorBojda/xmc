@@ -1,0 +1,194 @@
+Counterfactual explanation for instance of class 'adware' (index 187):
+Original class: adware
+CF class:       dropper
+
+Original class proba: 0.9963, 0.0007, 0.0003, 0.0007, 0.0008, 0.0001, 0.0003, 0.0006
+CF class proba:       0.2796, 0.1445, 0.0334, 0.3759, 0.0538, 0.0100, 0.0326, 0.0701
+
+Feature: closesocket ntclose (index 28)
+Original value: 2
+CF Value:       0
+
+Feature: closesocket socket (index 31)
+Original value: 4
+CF Value:       2
+
+Feature: deletefilew (index 94)
+Original value: 2
+CF Value:       0
+
+Feature: findresourcea findresourcea (index 146)
+Original value: 1
+CF Value:       0
+
+Feature: getfiletype (index 236)
+Original value: 3
+CF Value:       2
+
+Feature: getfiletype getfiletype (index 237)
+Original value: 2
+CF Value:       0
+
+Feature: getkeystate (index 257)
+Original value: 1
+CF Value:       2
+
+Feature: getsysteminfo (index 295)
+Original value: 1
+CF Value:       0
+
+Feature: getsystemmetrics drawtextexa (index 301)
+Original value: 1
+CF Value:       0
+
+Feature: getsystemmetrics ldrloaddll (index 310)
+Original value: 1
+CF Value:       2
+
+Feature: getsystemtimeasfiletime getsystemtimeasfiletime (index 319)
+Original value: 1
+CF Value:       0
+
+Feature: getvolumenameforvolumemountpointw ntclose (index 337)
+Original value: 3
+CF Value:       2
+
+Feature: ldrgetdllhandle (index 393)
+Original value: 20
+CF Value:       18
+
+Feature: ldrgetdllhandle ldrgetdllhandle (index 395)
+Original value: 3
+CF Value:       2
+
+Feature: ldrgetprocedureaddress ldrunloaddll (index 413)
+Original value: 1
+CF Value:       0
+
+Feature: ldrgetprocedureaddress ntallocatevirtualmemory (index 415)
+Original value: 3
+CF Value:       7
+
+Feature: ldrgetprocedureaddress ntcreatefile (index 417)
+Original value: 1
+CF Value:       0
+
+Feature: ldrgetprocedureaddress ntopenkey (index 419)
+Original value: 1
+CF Value:       0
+
+Feature: ldrgetprocedureaddress ntprotectvirtualmemory (index 421)
+Original value: 1
+CF Value:       0
+
+Feature: ldrloaddll seterrormode (index 433)
+Original value: 1
+CF Value:       0
+
+Feature: ldrunloaddll (index 434)
+Original value: 3
+CF Value:       4
+
+Feature: ldrunloaddll ntclose (index 437)
+Original value: 1
+CF Value:       0
+
+Feature: loadresource drawtextexw (index 449)
+Original value: 1
+CF Value:       0
+
+Feature: loadresource getsystemmetrics (index 451)
+Original value: 1
+CF Value:       3
+
+Feature: ntallocatevirtualmemory ldrgetdllhandle (index 491)
+Original value: 1
+CF Value:       0
+
+Feature: ntallocatevirtualmemory ntallocatevirtualmemory (index 495)
+Original value: 5
+CF Value:       6
+
+Feature: ntclose ntdelayexecution (index 536)
+Original value: 1
+CF Value:       0
+
+Feature: ntcreatefile getfilesizeex (index 568)
+Original value: 1
+CF Value:       0
+
+Feature: ntfreevirtualmemory ntallocatevirtualmemory (index 628)
+Original value: 1
+CF Value:       2
+
+Feature: ntopenfile ntqueryinformationfile (index 641)
+Original value: 2
+CF Value:       1
+
+Feature: ntopenmutant (index 654)
+Original value: 1
+CF Value:       0
+
+Feature: ntopenmutant ntclose (index 655)
+Original value: 1
+CF Value:       0
+
+Feature: ntprotectvirtualmemory ntprotectvirtualmemory (index 675)
+Original value: 1
+CF Value:       0
+
+Feature: ntqueryvaluekey (index 700)
+Original value: 9
+CF Value:       11
+
+Feature: ntreadfile (index 707)
+Original value: 2
+CF Value:       1
+
+Feature: ntreadfile ntclose (index 709)
+Original value: 1
+CF Value:       3
+
+Feature: ntwritefile (index 728)
+Original value: 2
+CF Value:       1
+
+Feature: ntwritefile ntclose (index 729)
+Original value: 2
+CF Value:       0
+
+Feature: regclosekey ntopenkey (index 789)
+Original value: 2
+CF Value:       1
+
+Feature: regopenkeyexa regopenkeyexa (index 834)
+Original value: 3
+CF Value:       0
+
+Feature: regopenkeyexa regqueryvalueexa (index 836)
+Original value: 1
+CF Value:       0
+
+Feature: regqueryvalueexa (index 853)
+Original value: 1
+CF Value:       0
+
+Feature: regqueryvalueexa regclosekey (index 856)
+Original value: 1
+CF Value:       0
+
+Feature: seterrormode ldrgetprocedureaddress (index 896)
+Original value: 1
+CF Value:       0
+
+Feature: setfilepointer (index 909)
+Original value: 1
+CF Value:       2
+
+Feature: setfilepointer ntreadfile (index 911)
+Original value: 1
+CF Value:       0
+
+Feature: wsastartup (index 996)
+Original value: 1
+CF Value:       0

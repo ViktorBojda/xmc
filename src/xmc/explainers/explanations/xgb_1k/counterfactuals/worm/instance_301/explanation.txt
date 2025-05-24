@@ -1,0 +1,42 @@
+Counterfactual explanation for instance of class 'worm' (index 301):
+Original class: worm
+CF class:       spyware
+
+Original class proba: 0.0086, 0.0273, 0.0073, 0.0822, 0.2721, 0.0016, 0.0272, 0.5737
+CF class proba:       0.0104, 0.0439, 0.0083, 0.0861, 0.4248, 0.0020, 0.0295, 0.3951
+
+Feature: findfirstfileexw (index 133)
+Original value: 4
+CF Value:       3
+
+Feature: getsysteminfo (index 295)
+Original value: 2
+CF Value:       1
+
+Feature: getsystemwindowsdirectoryw ntcreatefile (index 326)
+Original value: 1
+CF Value:       0
+
+Feature: getusernamea (index 333)
+Original value: 28
+CF Value:       7
+
+Feature: ldrgetprocedureaddress ntclose (index 416)
+Original value: 3
+CF Value:       2
+
+Feature: ntallocatevirtualmemory getfiletype (index 488)
+Original value: 1
+CF Value:       0
+
+Feature: oleinitialize (index 738)
+Original value: 22
+CF Value:       15
+
+Feature: regclosekey ntclose (index 784)
+Original value: 2
+CF Value:       1
+
+Feature: regcreatekeyexa (index 801)
+Original value: 1
+CF Value:       0

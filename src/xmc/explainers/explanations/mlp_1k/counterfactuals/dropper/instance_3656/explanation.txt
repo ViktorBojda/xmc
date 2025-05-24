@@ -1,0 +1,18 @@
+Counterfactual explanation for instance of class 'dropper' (index 3656):
+Original class: dropper
+CF class:       worm
+
+Original class proba: 0.0000, 0.0005, 0.0000, 0.9124, 0.0607, 0.0004, 0.0034, 0.0225
+CF class proba:       0.0000, 0.0017, 0.0000, 0.4065, 0.0674, 0.0015, 0.1016, 0.4212
+
+Feature: ntclose setfileattributesw (index 560)
+Original value: 0
+CF Value:       28
+
+Feature: ntcreatefile setfilepointer (index 578)
+Original value: 2
+CF Value:       0
+
+Feature: ntwritefile ntclose (index 729)
+Original value: 2
+CF Value:       0

@@ -1,0 +1,9 @@
+Anchors explanation for instance of class 'downloader', index 112, mode 'general':
+Precision: 0.8144
+Coverage: 0.0
+Anchor:
+IF ntdelayexecution gethostbyname > 0
+AND regcreatekeyexa regqueryvalueexa > 0
+AND connect > 0
+AND ntfreevirtualmemory ntallocatevirtualmemory <= 0
+THEN PREDICT downloader

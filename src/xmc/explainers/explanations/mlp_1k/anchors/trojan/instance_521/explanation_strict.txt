@@ -1,0 +1,7 @@
+Anchors explanation for instance of class 'trojan', index 521, mode 'strict':
+Precision: 0.9687
+Coverage: 0.0601
+Anchor:
+IF createwindowexa > 0
+AND translatemessage dispatchmessagea > 0
+THEN PREDICT trojan

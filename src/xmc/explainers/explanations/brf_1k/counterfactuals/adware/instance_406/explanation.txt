@@ -1,0 +1,14 @@
+Counterfactual explanation for instance of class 'adware' (index 406):
+Original class: adware
+CF class:       trojan
+
+Original class proba: 1.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000
+CF class proba:       0.2952, 0.1001, 0.0350, 0.0000, 0.0500, 0.4436, 0.0519, 0.0242
+
+Feature: getprocaddress (index 277)
+Original value: 1
+CF Value:       0
+
+Feature: loadlibrarya (index 443)
+Original value: 1
+CF Value:       0

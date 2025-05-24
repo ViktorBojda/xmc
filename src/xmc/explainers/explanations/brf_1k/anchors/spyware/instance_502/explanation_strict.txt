@@ -1,0 +1,20 @@
+Anchors explanation for instance of class 'spyware', index 502, mode 'strict':
+Precision: 0.1778
+Coverage: 0.1937
+Anchor:
+IF getcursorpos getsystemmetrics <= 0.00
+AND ntopenkey > 0.00
+AND ldrloaddll > 0.00
+AND ldrgetprocedureaddress > 0.00
+AND ntclose > 0.00
+AND readfile <= 0.00
+AND getadaptersaddresses getadaptersaddresses <= 0.00
+AND writeconsolew <= 0.00
+AND ioctlsocket connect <= 0.00
+AND getcurrentprocess <= 0.00
+AND ntdelayexecution ntopenfile <= 0.00
+AND getversion <= 0.00
+AND ntclose ntquerykey <= 0.00
+AND getfiletype ntwritefile <= 0.00
+AND connect ntdelayexecution <= 0.00
+THEN PREDICT spyware

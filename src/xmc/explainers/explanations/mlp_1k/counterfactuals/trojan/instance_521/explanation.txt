@@ -1,0 +1,38 @@
+Counterfactual explanation for instance of class 'trojan' (index 521):
+Original class: trojan
+CF class:       downloader
+
+Original class proba: 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 1.0000, 0.0000, 0.0000
+CF class proba:       0.0038, 0.0000, 0.5021, 0.0000, 0.0000, 0.4942, 0.0000, 0.0000
+
+Feature: createdirectoryw (index 64)
+Original value: 0
+CF Value:       290
+
+Feature: getfiletype (index 236)
+Original value: 1
+CF Value:       94
+
+Feature: gethostbyname (index 252)
+Original value: 0
+CF Value:       80
+
+Feature: ntcreatefile getfiletype (index 569)
+Original value: 0
+CF Value:       566
+
+Feature: ntcreatekey (index 579)
+Original value: 0
+CF Value:       215
+
+Feature: ntdelayexecution ntcreatefile (index 604)
+Original value: 0
+CF Value:       423
+
+Feature: ntopenfile ntqueryinformationfile (index 641)
+Original value: 0
+CF Value:       101
+
+Feature: wsastartup (index 996)
+Original value: 0
+CF Value:       216

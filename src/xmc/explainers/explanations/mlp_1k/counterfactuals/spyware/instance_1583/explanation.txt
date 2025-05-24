@@ -1,0 +1,10 @@
+Counterfactual explanation for instance of class 'spyware' (index 1583):
+Original class: spyware
+CF class:       worm
+
+Original class proba: 0.0000, 0.0000, 0.0000, 0.0000, 1.0000, 0.0000, 0.0000, 0.0000
+CF class proba:       0.0000, 0.0000, 0.0000, 0.0000, 0.4833, 0.0006, 0.0002, 0.5159
+
+Feature: ntclose setfileattributesw (index 560)
+Original value: 0
+CF Value:       84

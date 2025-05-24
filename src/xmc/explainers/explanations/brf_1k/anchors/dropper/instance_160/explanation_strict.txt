@@ -1,0 +1,20 @@
+Anchors explanation for instance of class 'dropper', index 160, mode 'strict':
+Precision: 0.2017
+Coverage: 0.1923
+Anchor:
+IF screentoclient <= 0.00
+AND ldrgetprocedureaddress ldrgetprocedureaddress > 0.00
+AND ntqueryvaluekey ntclose > 0.00
+AND getcommandlinea <= 0.00
+AND ntopenkey > 0.00
+AND regclosekey regcreatekeyexw <= 0.00
+AND getmodulehandlew <= 0.00
+AND openservicea <= 0.00
+AND ntcreatekey ntqueryvaluekey <= 0.00
+AND ldrgetprocedureaddress > 0.00
+AND globallock <= 0.00
+AND findclose <= 0.00
+AND multibytetowidechar <= 0.00
+AND ntdeviceiocontrolfile <= 0.00
+AND globalalloc <= 0.00
+THEN PREDICT dropper

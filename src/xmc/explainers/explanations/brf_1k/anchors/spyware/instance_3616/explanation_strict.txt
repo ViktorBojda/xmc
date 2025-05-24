@@ -1,0 +1,20 @@
+Anchors explanation for instance of class 'spyware', index 3616, mode 'strict':
+Precision: 0.1698
+Coverage: 0.2522
+Anchor:
+IF createcompatibledc <= 0.00
+AND ntclose ntclose > 0.00
+AND ntopenkey > 0.00
+AND writefile <= 0.00
+AND getprocaddress <= 0.00
+AND ntallocatevirtualmemory > 0.00
+AND ntclose > 0.00
+AND virtualprotect <= 0.00
+AND unhandledexceptionfilter <= 0.00
+AND ntquerydirectoryfile ntdelayexecution <= 0.00
+AND deletefilea <= 0.00
+AND closesocket connect <= 0.00
+AND regcreatekeyexw regsetvalueexw <= 0.00
+AND winexec <= 0.00
+AND enumwindows enumwindows <= 0.00
+THEN PREDICT spyware

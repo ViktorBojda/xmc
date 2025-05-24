@@ -1,0 +1,8 @@
+Anchors explanation for instance of class 'dropper', index 579, mode 'strict':
+Precision: 0.752
+Coverage: 0.0003
+Anchor:
+IF ntclose ntmapviewofsection > 0
+AND ntcreatefile ntwritefile > 0
+AND ntfreevirtualmemory <= 0
+THEN PREDICT dropper

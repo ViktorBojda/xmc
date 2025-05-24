@@ -1,0 +1,20 @@
+Anchors explanation for instance of class 'backdoor', index 162, mode 'strict':
+Precision: 0.2871
+Coverage: 0.0662
+Anchor:
+IF ntdelayexecution ntdelayexecution <= 0.00
+AND ntdelayexecution > 0.00
+AND regclosekey ldrloaddll <= 0.00
+AND getsystemwindowsdirectoryw getsystemwindowsdirectoryw <= 0.00
+AND getstringtypew <= 0.00
+AND localfree <= 0.00
+AND ntopenkeyex ntclose <= 0.00
+AND ntdelayexecution createtoolhelp32snapshot <= 0.00
+AND ldrgetdllhandle regenumvaluea <= 0.00
+AND createfilea <= 0.00
+AND ntopenprocess ntallocatevirtualmemory <= 0.00
+AND terminateprocess <= 0.00
+AND ntclose process32nextw <= 0.00
+AND globalfree <= 0.00
+AND getprocaddress virtualprotect <= 0.00
+THEN PREDICT backdoor

@@ -1,0 +1,10 @@
+Counterfactual explanation for instance of class 'trojan' (index 3606):
+Original class: trojan
+CF class:       worm
+
+Original class proba: 0.0002, 0.0001, 0.0000, 0.0000, 0.0000, 0.9976, 0.0002, 0.0019
+CF class proba:       0.0000, 0.0000, 0.0100, 0.0000, 0.0000, 0.2494, 0.0000, 0.7406
+
+Feature: enumwindows (index 123)
+Original value: 0
+CF Value:       1

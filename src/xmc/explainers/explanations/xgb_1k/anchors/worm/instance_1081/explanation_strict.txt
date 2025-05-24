@@ -1,0 +1,20 @@
+Anchors explanation for instance of class 'worm', index 1081, mode 'strict':
+Precision: 0.2256
+Coverage: 0.1343
+Anchor:
+IF messageboxtimeouta messageboxtimeouta <= 0.00
+AND ntallocatevirtualmemory ntfreevirtualmemory > 0.00
+AND seterrormode seterrormode <= 0.00
+AND ntallocatevirtualmemory > 0.00
+AND getcurrentprocessid <= 0.00
+AND findwindoww <= 0.00
+AND outputdebugstringa <= 0.00
+AND getfileversioninfosizew <= 0.00
+AND getcommandlinea <= 0.00
+AND getprocaddress <= 0.00
+AND getfileattributesa <= 0.00
+AND outputdebugstringa outputdebugstringa <= 0.00
+AND getasynckeystate <= 0.00
+AND atoi <= 0.00
+AND findwindowa socket <= 0.00
+THEN PREDICT worm

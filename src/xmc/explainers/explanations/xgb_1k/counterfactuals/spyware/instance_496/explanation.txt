@@ -1,0 +1,166 @@
+Counterfactual explanation for instance of class 'spyware' (index 496):
+Original class: spyware
+CF class:       backdoor
+
+Original class proba: 0.0015, 0.0246, 0.0061, 0.0077, 0.9141, 0.0055, 0.0214, 0.0190
+CF class proba:       0.0091, 0.3301, 0.0205, 0.0685, 0.3243, 0.0251, 0.0943, 0.1282
+
+Feature: copyfilea (index 52)
+Original value: 1
+CF Value:       0
+
+Feature: createdirectoryw (index 64)
+Original value: 1
+CF Value:       0
+
+Feature: getcomputernamea (index 188)
+Original value: 1
+CF Value:       0
+
+Feature: getsystemtimeasfiletime (index 316)
+Original value: 1
+CF Value:       2
+
+Feature: getsystemwindowsdirectoryw (index 323)
+Original value: 1
+CF Value:       0
+
+Feature: getsystemwindowsdirectoryw ntcreatefile (index 326)
+Original value: 1
+CF Value:       0
+
+Feature: gettemppathw (index 328)
+Original value: 1
+CF Value:       0
+
+Feature: ldrgetprocedureaddress getsystemwindowsdirectoryw (index 408)
+Original value: 1
+CF Value:       0
+
+Feature: ldrloaddll ldrgetprocedureaddress (index 431)
+Original value: 24
+CF Value:       27
+
+Feature: loadresource sizeofresource (index 456)
+Original value: 3
+CF Value:       0
+
+Feature: ntallocatevirtualmemory (index 486)
+Original value: 20
+CF Value:       23
+
+Feature: ntallocatevirtualmemory ldrloaddll (index 493)
+Original value: 1
+CF Value:       0
+
+Feature: ntallocatevirtualmemory ntallocatevirtualmemory (index 495)
+Original value: 1
+CF Value:       0
+
+Feature: ntallocatevirtualmemory ntfreevirtualmemory (index 498)
+Original value: 1
+CF Value:       3
+
+Feature: ntclose (index 507)
+Original value: 20
+CF Value:       17
+
+Feature: ntclose ldrloaddll (index 527)
+Original value: 2
+CF Value:       4
+
+Feature: ntclose ntclose (index 532)
+Original value: 2
+CF Value:       0
+
+Feature: ntclose ntdelayexecution (index 536)
+Original value: 1
+CF Value:       4
+
+Feature: ntclose ntopenprocess (index 546)
+Original value: 1
+CF Value:       0
+
+Feature: ntclose ntunmapviewofsection (index 553)
+Original value: 3
+CF Value:       0
+
+Feature: ntcreatefile ntcreatesection (index 572)
+Original value: 1
+CF Value:       0
+
+Feature: ntfreevirtualmemory ntallocatevirtualmemory (index 628)
+Original value: 1
+CF Value:       0
+
+Feature: ntfreevirtualmemory ntfreevirtualmemory (index 631)
+Original value: 13
+CF Value:       12
+
+Feature: ntmapviewofsection ntclose (index 634)
+Original value: 1
+CF Value:       0
+
+Feature: ntopenkey (index 642)
+Original value: 1
+CF Value:       0
+
+Feature: ntopenkey ntqueryvaluekey (index 646)
+Original value: 1
+CF Value:       0
+
+Feature: ntqueryinformationfile ntclose (index 692)
+Original value: 1
+CF Value:       2
+
+Feature: ntquerysysteminformation (index 698)
+Original value: 1
+CF Value:       0
+
+Feature: ntqueryvaluekey (index 700)
+Original value: 1
+CF Value:       0
+
+Feature: ntterminateprocess (index 722)
+Original value: 3
+CF Value:       4
+
+Feature: ntterminateprocess ntterminateprocess (index 724)
+Original value: 1
+CF Value:       2
+
+Feature: ntunmapviewofsection ntclose (index 726)
+Original value: 4
+CF Value:       0
+
+Feature: process32firstw (index 756)
+Original value: 2
+CF Value:       1
+
+Feature: process32firstw process32nextw (index 757)
+Original value: 2
+CF Value:       0
+
+Feature: process32nextw ntclose (index 761)
+Original value: 1
+CF Value:       0
+
+Feature: regclosekey ldrloaddll (index 782)
+Original value: 2
+CF Value:       0
+
+Feature: regclosekey regopenkeyexw (index 798)
+Original value: 1
+CF Value:       0
+
+Feature: regopenkeyexa (index 830)
+Original value: 2
+CF Value:       5
+
+Feature: regopenkeyexw (index 838)
+Original value: 1
+CF Value:       2
+
+Feature: regqueryvalueexa regclosekey (index 856)
+Original value: 2
+CF Value:       0

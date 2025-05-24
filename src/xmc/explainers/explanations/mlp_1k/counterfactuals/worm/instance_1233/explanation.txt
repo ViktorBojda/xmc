@@ -1,0 +1,10 @@
+Counterfactual explanation for instance of class 'worm' (index 1233):
+Original class: worm
+CF class:       backdoor
+
+Original class proba: 0.0000, 0.0677, 0.0348, 0.0106, 0.0045, 0.0024, 0.0065, 0.8735
+CF class proba:       0.0000, 0.2754, 0.0725, 0.2716, 0.1193, 0.0027, 0.0126, 0.2459
+
+Feature: ntcreatefile setfilepointer (index 578)
+Original value: 0
+CF Value:       10

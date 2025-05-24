@@ -1,0 +1,14 @@
+Counterfactual explanation for instance of class 'trojan' (index 884):
+Original class: trojan
+CF class:       downloader
+
+Original class proba: 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 1.0000, 0.0000, 0.0000
+CF class proba:       0.0000, 0.0000, 0.5219, 0.0013, 0.0000, 0.4766, 0.0000, 0.0002
+
+Feature: createdirectoryw (index 64)
+Original value: 0
+CF Value:       130
+
+Feature: ntdelayexecution ntcreatefile (index 604)
+Original value: 0
+CF Value:       67

@@ -1,0 +1,8 @@
+Anchors explanation for instance of class 'trojan', index 356, mode 'strict':
+Precision: 0.9633
+Coverage: 0.0694
+Anchor:
+IF lstrlena > 0
+AND loadlibrarya > 0
+AND getcurrentprocess <= 0
+THEN PREDICT trojan

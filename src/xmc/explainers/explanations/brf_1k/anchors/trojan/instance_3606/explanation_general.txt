@@ -1,0 +1,7 @@
+Anchors explanation for instance of class 'trojan', index 3606, mode 'general':
+Precision: 0.9901
+Coverage: 0.0968
+Anchor:
+IF getprocaddress > 0.00
+AND atoi > 0.00
+THEN PREDICT trojan

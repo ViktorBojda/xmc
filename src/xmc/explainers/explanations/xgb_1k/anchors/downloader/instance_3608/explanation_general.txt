@@ -1,0 +1,20 @@
+Anchors explanation for instance of class 'downloader', index 3608, mode 'general':
+Precision: 0.2357
+Coverage: 0.0453
+Anchor:
+IF regsetvalueexa > 0.00
+AND cocreateinstance > 0.00
+AND virtualalloc <= 0.00
+AND regcreatekeyexa > 0.00
+AND getcurrentprocessid getcurrentthreadid <= 0.00
+AND virtualfree <= 0.00
+AND getcomputernamea <= 0.00
+AND seterrormode > 0.00
+AND regclosekey > 0.00
+AND getprocessheap <= 0.00
+AND clsidfromstring <= 0.00
+AND drawtextexw getforegroundwindow <= 0.00
+AND createthread > 0.00
+AND localalloc <= 0.00
+AND virtualprotect <= 0.00
+THEN PREDICT downloader

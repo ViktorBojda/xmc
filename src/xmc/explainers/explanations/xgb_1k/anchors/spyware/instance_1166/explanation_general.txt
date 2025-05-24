@@ -1,0 +1,20 @@
+Anchors explanation for instance of class 'spyware', index 1166, mode 'general':
+Precision: 0.164
+Coverage: 0.2359
+Anchor:
+IF isprocessorfeaturepresent <= 0.00
+AND ntopenkey > 0.00
+AND virtualfree <= 0.00
+AND defwindowproca <= 0.00
+AND internetopena <= 0.00
+AND getprocaddress virtualprotect <= 0.00
+AND ntallocatevirtualmemory > 0.00
+AND getversionexa <= 0.00
+AND getlocaleinfoa <= 0.00
+AND getdc <= 0.00
+AND showwindow <= 0.00
+AND memcpy memset <= 0.00
+AND postquitmessage <= 0.00
+AND ldrgetprocedureaddress > 0.00
+AND queryperformancecounter <= 0.00
+THEN PREDICT spyware

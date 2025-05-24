@@ -1,0 +1,20 @@
+Anchors explanation for instance of class 'backdoor', index 3640, mode 'general':
+Precision: 0.2626
+Coverage: 0.072
+Anchor:
+IF regopenkeyexw > 0.00
+AND getsystemmetrics getsystemmetrics > 0.00
+AND ntquerykey <= 0.00
+AND shgetfolderpathw shgetfolderpathw <= 0.00
+AND getfiletype setfilepointer <= 0.00
+AND getwindowrect <= 0.00
+AND heapfree <= 0.00
+AND findwindoww enumwindows <= 0.00
+AND ntquerydirectoryfile getfileattributesw <= 0.00
+AND ntopenfile ntopenfile <= 0.00
+AND lstrcmpa <= 0.00
+AND sysallocstring <= 0.00
+AND getvolumepathnamesforvolumenamew getvolumepathnamesforvolumenamew <= 0.00
+AND setfileattributesw ntcreatefile <= 0.00
+AND updatewindow <= 0.00
+THEN PREDICT backdoor

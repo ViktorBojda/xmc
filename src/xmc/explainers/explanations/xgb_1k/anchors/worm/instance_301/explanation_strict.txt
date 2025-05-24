@@ -1,0 +1,20 @@
+Anchors explanation for instance of class 'worm', index 301, mode 'strict':
+Precision: 0.309
+Coverage: 0.0296
+Anchor:
+IF __exception__ > 0.00
+AND getfiletype > 1.00
+AND findresourcea loadresource <= 0.00
+AND cocreateinstance cocreateinstance <= 0.00
+AND virtualalloc virtualfree <= 0.00
+AND createwindowexa <= 0.00
+AND ntopenprocess ntallocatevirtualmemory <= 0.00
+AND tlsalloc <= 0.00
+AND findresourcea sizeofresource <= 0.00
+AND bitblt <= 0.00
+AND internetqueryoptiona <= 0.00
+AND ntclose > 0.00
+AND setfocus <= 0.00
+AND memcpy <= 0.00
+AND ntallocatevirtualmemory writeprocessmemory <= 0.00
+THEN PREDICT worm

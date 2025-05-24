@@ -1,0 +1,20 @@
+Anchors explanation for instance of class 'worm', index 1081, mode 'general':
+Precision: 0.1962
+Coverage: 0.234
+Anchor:
+IF thread32next <= 0.00
+AND ntopenkey ntqueryvaluekey > 0.00
+AND regclosekey getaddrinfo <= 0.00
+AND ntopenprocess ntallocatevirtualmemory <= 0.00
+AND getlasterror <= 0.00
+AND getcursorpos getsystemmetrics <= 0.00
+AND sysallocstring <= 0.00
+AND writeconsolew <= 0.00
+AND timegettime <= 0.00
+AND socket createthread <= 0.00
+AND gettemppatha <= 0.00
+AND getfileattributesa <= 0.00
+AND ntdelayexecution getsystemtimeasfiletime <= 0.00
+AND getcurrentprocessid getcurrentthreadid <= 0.00
+AND sethandlecount <= 0.00
+THEN PREDICT worm

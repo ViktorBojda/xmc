@@ -1,0 +1,20 @@
+Anchors explanation for instance of class 'worm', index 555, mode 'strict':
+Precision: 0.7767
+Coverage: 0.003
+Anchor:
+IF variantclear > 0
+AND loadlibrarya <= 0
+AND cocreateinstance <= 0
+AND getmodulefilenamew <= 0
+AND raise <= 0
+AND getmodulehandlea getprocaddress <= 0
+AND coinitializeex <= 0
+AND memcpy <= 0
+AND terminateprocess <= 0
+AND getuserdefaultlcid <= 0
+AND getprocaddress virtualprotect <= 0
+AND ldrgetprocedureaddress regopenkeyexw <= 0
+AND updatewindow <= 0
+AND ldrgetprocedureaddress getsystemwindowsdirectoryw <= 0
+AND setwindowtexta <= 0
+THEN PREDICT worm

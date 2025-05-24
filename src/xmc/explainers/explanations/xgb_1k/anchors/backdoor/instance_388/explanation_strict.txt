@@ -1,0 +1,20 @@
+Anchors explanation for instance of class 'backdoor', index 388, mode 'strict':
+Precision: 0.2628
+Coverage: 0.0156
+Anchor:
+IF ntclose ntdelayexecution > 0.00
+AND ldrgetdllhandle > 2.00
+AND ntclose getvolumenameforvolumemountpointw <= 0.00
+AND findfirstfileexw findfirstfileexw <= 0.00
+AND terminateprocess <= 0.00
+AND ntallocatevirtualmemory > 0.00
+AND getstdhandle <= 0.00
+AND writeprocessmemory ntallocatevirtualmemory <= 0.00
+AND findresourcew loadresource <= 0.00
+AND writefile <= 0.00
+AND cocreateinstance __exception__ <= 0.00
+AND getcursorpos enumwindows <= 0.00
+AND ntclose ntquerykey <= 0.00
+AND getdc <= 0.00
+AND coinitialize <= 0.00
+THEN PREDICT backdoor

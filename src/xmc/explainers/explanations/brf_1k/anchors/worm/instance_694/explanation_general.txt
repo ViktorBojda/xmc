@@ -1,0 +1,20 @@
+Anchors explanation for instance of class 'worm', index 694, mode 'general':
+Precision: 0.2343
+Coverage: 0.1162
+Anchor:
+IF createfilea <= 0.00
+AND regopenkeyexa > 1.00
+AND getadaptersaddresses <= 0.00
+AND internetsetoptiona internetsetoptiona <= 0.00
+AND selectobject <= 0.00
+AND openmutexa <= 0.00
+AND lookupprivilegevaluew ntclose <= 0.00
+AND getcurrentprocess <= 0.00
+AND drawtextexa getcursorpos <= 0.00
+AND setfocus <= 0.00
+AND getdesktopwindow <= 0.00
+AND ldrgetprocedureaddress ntprotectvirtualmemory <= 0.00
+AND isprocessorfeaturepresent <= 0.00
+AND getsysteminfo getsysteminfo <= 0.00
+AND muldiv <= 0.00
+THEN PREDICT worm

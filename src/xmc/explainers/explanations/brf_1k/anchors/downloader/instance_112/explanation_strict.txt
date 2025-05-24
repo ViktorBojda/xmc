@@ -1,0 +1,20 @@
+Anchors explanation for instance of class 'downloader', index 112, mode 'strict':
+Precision: 0.9141
+Coverage: 0.0
+Anchor:
+IF process32nextw process32nextw <= 0.00
+AND ldrgetprocedureaddress ldrloaddll > 0.00
+AND ldrgetprocedureaddress ldrgetprocedureaddress > 0.00
+AND ldrgetprocedureaddress > 0.00
+AND setendoffile <= 0.00
+AND ntclose ntclose > 0.00
+AND ntclose > 0.00
+AND ntduplicateobject > 0.00
+AND getprocaddress <= 0.00
+AND connect > 0.00
+AND regcreatekeyexa regqueryvalueexa > 0.00
+AND wsastartup > 0.00
+AND regclosekey <= 0.00
+AND getsystemdirectorya <= 0.00
+AND ntqueryvaluekey <= 0.00
+THEN PREDICT downloader

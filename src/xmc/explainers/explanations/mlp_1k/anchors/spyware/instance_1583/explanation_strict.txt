@@ -1,0 +1,20 @@
+Anchors explanation for instance of class 'spyware', index 1583, mode 'strict':
+Precision: 0.4773
+Coverage: 0.0
+Anchor:
+IF getmessagew > 0
+AND exitprocess <= 0
+AND isdebuggerpresent > 0
+AND seterrormode <= 0
+AND memcpy <= 0
+AND findfirstfileexw ntquerydirectoryfile <= 0
+AND regopenkeyexw loadstringw <= 0
+AND createprocessinternalw ntclose <= 0
+AND waitforsingleobject <= 0
+AND deletecriticalsection <= 0
+AND ioctlsocket <= 0
+AND ntquerykey ntopenkeyex <= 0
+AND getcurrentprocessid getcurrentthreadid <= 0
+AND ntreadfile ntfreevirtualmemory <= 0
+AND virtualfree <= 0
+THEN PREDICT spyware

@@ -1,0 +1,8 @@
+Anchors explanation for instance of class 'backdoor', index 3384, mode 'general':
+Precision: 0.9974
+Coverage: 0.0222
+Anchor:
+IF raise > 0.00
+AND _cexit > 0.00
+AND openmutexa > 0.00
+THEN PREDICT backdoor

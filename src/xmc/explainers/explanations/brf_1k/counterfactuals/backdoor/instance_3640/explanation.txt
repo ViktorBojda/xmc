@@ -1,0 +1,18 @@
+Counterfactual explanation for instance of class 'backdoor' (index 3640):
+Original class: backdoor
+CF class:       spyware
+
+Original class proba: 0.0050, 0.6200, 0.0400, 0.0250, 0.2450, 0.0050, 0.0150, 0.0450
+CF class proba:       0.0050, 0.2000, 0.2052, 0.1142, 0.2203, 0.1301, 0.0300, 0.0952
+
+Feature: createprocessinternalw (index 70)
+Original value: 0
+CF Value:       1
+
+Feature: getadaptersaddresses getadaptersaddresses (index 178)
+Original value: 0
+CF Value:       1
+
+Feature: wsastartup (index 996)
+Original value: 1
+CF Value:       0

@@ -1,0 +1,9 @@
+Anchors explanation for instance of class 'virus', index 589, mode 'general':
+Precision: 0.9101
+Coverage: 0.0104
+Anchor:
+IF getlasterror > 0
+AND getprocaddress <= 0
+AND ldrgetprocedureaddress <= 0
+AND exitprocess <= 0
+THEN PREDICT virus

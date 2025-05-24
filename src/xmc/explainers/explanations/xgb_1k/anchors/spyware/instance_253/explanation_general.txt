@@ -1,0 +1,20 @@
+Anchors explanation for instance of class 'spyware', index 253, mode 'general':
+Precision: 0.1735
+Coverage: 0.205
+Anchor:
+IF ntdelayexecution ntdelayexecution <= 0.00
+AND ldrgetdllhandle > 0.00
+AND internetopena <= 0.00
+AND getmodulefilenamew <= 0.00
+AND ntwritefile ntdelayexecution <= 0.00
+AND freelibrary <= 0.00
+AND outputdebugstringa <= 0.00
+AND ntclose ntclose > 0.00
+AND globalalloc <= 0.00
+AND findwindowa findwindowa <= 0.00
+AND virtualalloc virtualfree <= 0.00
+AND rtlunwind <= 0.00
+AND ntdelayexecution getsystemtimeasfiletime <= 0.00
+AND ntopenkey > 0.00
+AND getversion <= 0.00
+THEN PREDICT spyware

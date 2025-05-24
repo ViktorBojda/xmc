@@ -1,0 +1,22 @@
+Counterfactual explanation for instance of class 'downloader' (index 112):
+Original class: downloader
+CF class:       worm
+
+Original class proba: 0.0086, 0.0688, 0.7353, 0.0245, 0.0091, 0.0592, 0.0116, 0.0828
+CF class proba:       0.0039, 0.0998, 0.1959, 0.1464, 0.1351, 0.1419, 0.0165, 0.2606
+
+Feature: copyfilea (index 52)
+Original value: 0
+CF Value:       1
+
+Feature: copyfilea ntdelayexecution (index 55)
+Original value: 0
+CF Value:       1
+
+Feature: ntopenkey (index 642)
+Original value: 0
+CF Value:       1
+
+Feature: wsastartup (index 996)
+Original value: 1
+CF Value:       0

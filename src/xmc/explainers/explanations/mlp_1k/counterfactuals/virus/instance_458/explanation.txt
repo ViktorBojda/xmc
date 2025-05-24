@@ -1,0 +1,14 @@
+Counterfactual explanation for instance of class 'virus' (index 458):
+Original class: virus
+CF class:       backdoor
+
+Original class proba: 0.0036, 0.0061, 0.0008, 0.0013, 0.0016, 0.0040, 0.9816, 0.0010
+CF class proba:       0.0241, 0.4921, 0.1105, 0.0053, 0.0352, 0.0123, 0.2783, 0.0422
+
+Feature: createthread (index 76)
+Original value: 1
+CF Value:       0
+
+Feature: wsastartup (index 996)
+Original value: 0
+CF Value:       7

@@ -1,0 +1,30 @@
+Counterfactual explanation for instance of class 'adware' (index 874):
+Original class: adware
+CF class:       worm
+
+Original class proba: 1.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000
+CF class proba:       0.3366, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.6634
+
+Feature: createdirectoryw (index 64)
+Original value: 8
+CF Value:       0
+
+Feature: findfirstfileexw ntopenfile (index 141)
+Original value: 0
+CF Value:       99
+
+Feature: ldrgetprocedureaddress ntprotectvirtualmemory (index 421)
+Original value: 1
+CF Value:       0
+
+Feature: ntcreatefile findresourcea (index 565)
+Original value: 0
+CF Value:       17
+
+Feature: setfileattributesw ntcreatefile (index 906)
+Original value: 0
+CF Value:       29
+
+Feature: setfilepointer ntwritefile (index 912)
+Original value: 0
+CF Value:       15

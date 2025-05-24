@@ -1,0 +1,8 @@
+Anchors explanation for instance of class 'virus', index 3138, mode 'general':
+Precision: 0.8062
+Coverage: 0.0058
+Anchor:
+IF getdesktopwindow > 0.00
+AND getprocaddress <= 0.00
+AND ntclose <= 0.00
+THEN PREDICT virus

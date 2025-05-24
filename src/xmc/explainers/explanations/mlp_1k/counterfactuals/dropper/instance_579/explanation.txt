@@ -1,0 +1,10 @@
+Counterfactual explanation for instance of class 'dropper' (index 579):
+Original class: dropper
+CF class:       worm
+
+Original class proba: 0.0001, 0.0007, 0.0002, 0.9552, 0.0028, 0.0009, 0.0062, 0.0337
+CF class proba:       0.0004, 0.0892, 0.0055, 0.4317, 0.0100, 0.0009, 0.0005, 0.4618
+
+Feature: wsastartup (index 996)
+Original value: 0
+CF Value:       21

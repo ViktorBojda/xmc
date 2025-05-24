@@ -1,0 +1,22 @@
+Counterfactual explanation for instance of class 'adware' (index 187):
+Original class: adware
+CF class:       dropper
+
+Original class proba: 1.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000
+CF class proba:       0.4156, 0.0000, 0.0000, 0.5841, 0.0000, 0.0000, 0.0000, 0.0002
+
+Feature: createdirectoryw (index 64)
+Original value: 7
+CF Value:       0
+
+Feature: ldrgetprocedureaddress ntprotectvirtualmemory (index 421)
+Original value: 1
+CF Value:       0
+
+Feature: ntcreatefile findresourcea (index 565)
+Original value: 0
+CF Value:       48
+
+Feature: setfilepointer ntwritefile (index 912)
+Original value: 0
+CF Value:       1

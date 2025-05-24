@@ -1,0 +1,10 @@
+Counterfactual explanation for instance of class 'dropper' (index 858):
+Original class: dropper
+CF class:       virus
+
+Original class proba: 0.0083, 0.0025, 0.0102, 0.5742, 0.0077, 0.0089, 0.3792, 0.0091
+CF class proba:       0.0127, 0.0036, 0.0147, 0.3810, 0.0112, 0.0141, 0.5495, 0.0132
+
+Feature: createprocessinternalw (index 70)
+Original value: 2
+CF Value:       1

@@ -1,0 +1,30 @@
+Counterfactual explanation for instance of class 'backdoor' (index 388):
+Original class: backdoor
+CF class:       worm
+
+Original class proba: 0.0004, 0.9566, 0.0008, 0.0006, 0.0010, 0.0014, 0.0073, 0.0319
+CF class proba:       0.0046, 0.3732, 0.0139, 0.0106, 0.0142, 0.0161, 0.0859, 0.4815
+
+Feature: bind (index 18)
+Original value: 1
+CF Value:       0
+
+Feature: copyfilea ntdelayexecution (index 55)
+Original value: 1
+CF Value:       0
+
+Feature: getsystemdirectorya (index 289)
+Original value: 1
+CF Value:       0
+
+Feature: internetopena (index 371)
+Original value: 1
+CF Value:       0
+
+Feature: ntdelayexecution copyfilea (index 589)
+Original value: 1
+CF Value:       0
+
+Feature: wsastartup (index 996)
+Original value: 1
+CF Value:       0

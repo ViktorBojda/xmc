@@ -1,0 +1,20 @@
+Anchors explanation for instance of class 'spyware', index 1087, mode 'general':
+Precision: 0.169
+Coverage: 0.1794
+Anchor:
+IF ntqueryvaluekey getfileattributesw <= 0.00
+AND ldrloaddll > 0.00
+AND ntclose > 0.00
+AND virtualalloc virtualfree <= 0.00
+AND lstrcmpa <= 0.00
+AND getlasterror <= 0.00
+AND getwindowrect <= 0.00
+AND deletefilew deletefilew <= 0.00
+AND ldrgetprocedureaddress regcreatekeyexw <= 0.00
+AND dispatchmessagea <= 0.00
+AND writeconsolea writeconsolea <= 0.00
+AND exitprocess <= 0.00
+AND freelibrary <= 0.00
+AND findwindowa socket <= 0.00
+AND ntclose ntclose > 0.00
+THEN PREDICT spyware

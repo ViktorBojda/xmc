@@ -1,0 +1,20 @@
+Anchors explanation for instance of class 'spyware', index 464, mode 'general':
+Precision: 0.145
+Coverage: 0.2688
+Anchor:
+IF tlssetvalue <= 0.00
+AND ntclose ntclose > 0.00
+AND showwindow <= 0.00
+AND closehandle <= 0.00
+AND deletefilew copyfilea <= 0.00
+AND ntdelayexecution __exception__ <= 0.00
+AND connect closesocket <= 0.00
+AND regclosekey gethostbyname <= 0.00
+AND socket connect <= 0.00
+AND ntclose > 0.00
+AND getstartupinfoa <= 0.00
+AND ntopenkey > 0.00
+AND setfocus <= 0.00
+AND closesocket connect <= 0.00
+AND recv <= 0.00
+THEN PREDICT spyware

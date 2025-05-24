@@ -1,0 +1,18 @@
+Anchors explanation for instance of class 'backdoor', index 266, mode 'general':
+Precision: 0.2542
+Coverage: 0.1411
+Anchor:
+IF deletefilea <= 0.00
+AND ntallocatevirtualmemory > 3.00
+AND cocreateinstance <= 0.00
+AND virtualalloc <= 0.00
+AND seterrormode ldrgetprocedureaddress <= 0.00
+AND heapfree <= 0.00
+AND getprocaddress <= 0.00
+AND localfree <= 0.00
+AND getfileinformationbyhandleex ntclose <= 0.00
+AND timegettime ntclose <= 0.00
+AND getfileattributesw ntcreatefile <= 0.00
+AND writeprocessmemory createremotethread <= 0.00
+AND regenumvaluew regenumvaluew <= 0.00
+THEN PREDICT backdoor

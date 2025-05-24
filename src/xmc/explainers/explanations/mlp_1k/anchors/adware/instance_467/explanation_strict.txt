@@ -1,0 +1,9 @@
+Anchors explanation for instance of class 'adware', index 467, mode 'strict':
+Precision: 0.9835
+Coverage: 0.0082
+Anchor:
+IF getdevicecaps > 0
+AND findwindowexa > 0
+AND regqueryvalueexa regsetvalueexa > 0
+AND getversion > 0
+THEN PREDICT adware

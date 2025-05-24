@@ -1,0 +1,34 @@
+Counterfactual explanation for instance of class 'worm' (index 654):
+Original class: worm
+CF class:       backdoor
+
+Original class proba: 0.0003, 0.1799, 0.0095, 0.0048, 0.0170, 0.0675, 0.0046, 0.7165
+CF class proba:       0.0004, 0.4354, 0.0132, 0.0051, 0.0202, 0.1072, 0.0063, 0.4123
+
+Feature: ldrloaddll (index 430)
+Original value: 12
+CF Value:       11
+
+Feature: ldrloaddll seterrormode (index 433)
+Original value: 1
+CF Value:       0
+
+Feature: ldrunloaddll (index 434)
+Original value: 6
+CF Value:       5
+
+Feature: loadresource getsystemmetrics (index 451)
+Original value: 1
+CF Value:       2
+
+Feature: ntallocatevirtualmemory getsystemmetrics (index 490)
+Original value: 3
+CF Value:       2
+
+Feature: ntclose regopenkeyexw (index 557)
+Original value: 3
+CF Value:       2
+
+Feature: ntcreatesection ntmapviewofsection (index 585)
+Original value: 2
+CF Value:       1

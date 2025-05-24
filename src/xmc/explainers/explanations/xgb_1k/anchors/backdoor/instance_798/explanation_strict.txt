@@ -1,0 +1,19 @@
+Anchors explanation for instance of class 'backdoor', index 798, mode 'strict':
+Precision: 0.2638
+Coverage: 0.0816
+Anchor:
+IF setendoffile <= 0.00
+AND ntdelayexecution > 0.00
+AND ldrgetprocedureaddress cocreateinstance <= 0.00
+AND getmodulefilenamew <= 0.00
+AND ldrloaddll ldrgetprocedureaddress > 0.00
+AND ldrloaddll > 0.00
+AND getprocessheap <= 0.00
+AND closesocket getsystemtimeasfiletime <= 0.00
+AND getprocaddress virtualprotect <= 0.00
+AND regopenkeyexa regenumvaluea <= 0.00
+AND getsystemtimeasfiletime regopenkeyexw <= 0.00
+AND getwindow <= 0.00
+AND loadlibrarya <= 0.00
+AND findfirstfilea <= 0.00
+THEN PREDICT backdoor

@@ -1,0 +1,18 @@
+Counterfactual explanation for instance of class 'downloader' (index 2375):
+Original class: downloader
+CF class:       virus
+
+Original class proba: 0.0008, 0.0055, 0.9724, 0.0010, 0.0010, 0.0041, 0.0065, 0.0087
+CF class proba:       0.0117, 0.0115, 0.3395, 0.0305, 0.0090, 0.1290, 0.4081, 0.0606
+
+Feature: getfiletype ntwritefile (index 240)
+Original value: 0
+CF Value:       7
+
+Feature: ntdelayexecution ntcreatefile (index 604)
+Original value: 3
+CF Value:       0
+
+Feature: wsastartup (index 996)
+Original value: 3
+CF Value:       0

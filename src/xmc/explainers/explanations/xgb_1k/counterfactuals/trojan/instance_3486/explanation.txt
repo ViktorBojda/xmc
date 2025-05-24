@@ -1,0 +1,38 @@
+Counterfactual explanation for instance of class 'trojan' (index 3486):
+Original class: trojan
+CF class:       virus
+
+Original class proba: 0.0009, 0.0006, 0.0002, 0.0001, 0.0002, 0.9921, 0.0023, 0.0036
+CF class proba:       0.0033, 0.0029, 0.0011, 0.0007, 0.0014, 0.4506, 0.5104, 0.0298
+
+Feature: atoi (index 16)
+Original value: 1
+CF Value:       0
+
+Feature: exitprocess (index 128)
+Original value: 1
+CF Value:       0
+
+Feature: getprocaddress (index 277)
+Original value: 1
+CF Value:       0
+
+Feature: getprocaddress virtualprotect (index 278)
+Original value: 1
+CF Value:       0
+
+Feature: loadlibrarya (index 443)
+Original value: 1
+CF Value:       0
+
+Feature: virtualalloc (index 978)
+Original value: 1
+CF Value:       0
+
+Feature: virtualprotect (index 981)
+Original value: 1
+CF Value:       0
+
+Feature: wsprintfa (index 999)
+Original value: 1
+CF Value:       0

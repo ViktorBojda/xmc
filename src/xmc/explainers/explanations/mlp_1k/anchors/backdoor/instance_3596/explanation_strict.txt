@@ -1,0 +1,19 @@
+Anchors explanation for instance of class 'backdoor', index 3596, mode 'strict':
+Precision: 0.6589
+Coverage: 0.0001
+Anchor:
+IF createthread ntclose > 0
+AND ntallocatevirtualmemory loadstringa > 0
+AND getforegroundwindow drawtextexw > 0
+AND regqueryvalueexw regclosekey > 0
+AND ldrgetprocedureaddress ldrgetprocedureaddress > 0
+AND loadresource ntclose > 0
+AND getsystemmetrics findresourceexw > 0
+AND ntqueryvaluekey ntclose > 0
+AND getvolumenameforvolumemountpointw <= 0
+AND drawtextexw getsystemmetrics > 0
+AND settimer <= 0
+AND getsystemmetrics drawtextexw > 0
+AND uuidcreate <= 0
+AND ldrgetdllhandle findresourceexw > 0
+THEN PREDICT backdoor

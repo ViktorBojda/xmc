@@ -1,0 +1,7 @@
+Anchors explanation for instance of class 'downloader', index 281, mode 'general':
+Precision: 0.9667
+Coverage: 0.0002
+Anchor:
+IF openservicea ldrgetprocedureaddress > 0
+AND deletefilew isdebuggerpresent > 0
+THEN PREDICT downloader

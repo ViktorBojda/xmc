@@ -1,0 +1,10 @@
+Counterfactual explanation for instance of class 'dropper' (index 272):
+Original class: dropper
+CF class:       backdoor
+
+Original class proba: 0.0000, 0.0000, 0.0000, 0.9944, 0.0056, 0.0000, 0.0000, 0.0000
+CF class proba:       0.0000, 0.4027, 0.0000, 0.3972, 0.1984, 0.0000, 0.0000, 0.0017
+
+Feature: wsastartup (index 996)
+Original value: 0
+CF Value:       87

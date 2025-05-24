@@ -1,0 +1,11 @@
+Anchors explanation for instance of class 'worm', index 760, mode 'strict':
+Precision: 1.0
+Coverage: 0.0004
+Anchor:
+IF getfiletype ntcreatefile > 0
+AND getfiletype > 0
+AND regopenkeyexa regsetvalueexa > 0
+AND regsetvalueexa regclosekey > 0
+AND ntcreatefile ntcreatefile > 0
+AND ntclose ntclose <= 0
+THEN PREDICT worm

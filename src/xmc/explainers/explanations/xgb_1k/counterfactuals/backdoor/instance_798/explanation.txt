@@ -1,0 +1,22 @@
+Counterfactual explanation for instance of class 'backdoor' (index 798):
+Original class: backdoor
+CF class:       virus
+
+Original class proba: 0.0069, 0.6789, 0.0351, 0.0404, 0.0130, 0.0214, 0.1737, 0.0305
+CF class proba:       0.0103, 0.3743, 0.0344, 0.0591, 0.0161, 0.0290, 0.4318, 0.0451
+
+Feature: getshortpathnamew (index 280)
+Original value: 1
+CF Value:       0
+
+Feature: ldrgetprocedureaddress ldrunloaddll (index 413)
+Original value: 1
+CF Value:       0
+
+Feature: ntquerysysteminformation (index 698)
+Original value: 1
+CF Value:       0
+
+Feature: regclosekey ldrgetprocedureaddress (index 781)
+Original value: 1
+CF Value:       0

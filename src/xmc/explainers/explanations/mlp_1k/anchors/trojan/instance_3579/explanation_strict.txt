@@ -1,0 +1,7 @@
+Anchors explanation for instance of class 'trojan', index 3579, mode 'strict':
+Precision: 0.9201
+Coverage: 0.0583
+Anchor:
+IF getconsolemode > 0
+AND virtualprotect > 0
+THEN PREDICT trojan

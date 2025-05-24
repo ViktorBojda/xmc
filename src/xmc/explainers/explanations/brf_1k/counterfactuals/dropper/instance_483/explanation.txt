@@ -1,0 +1,18 @@
+Counterfactual explanation for instance of class 'dropper' (index 483):
+Original class: dropper
+CF class:       trojan
+
+Original class proba: 0.0029, 0.0021, 0.0197, 0.7948, 0.0968, 0.0677, 0.0037, 0.0123
+CF class proba:       0.0151, 0.0849, 0.0273, 0.2056, 0.1014, 0.2485, 0.1860, 0.1313
+
+Feature: createthread (index 76)
+Original value: 0
+CF Value:       1
+
+Feature: getprocaddress (index 277)
+Original value: 0
+CF Value:       1
+
+Feature: wsastartup (index 996)
+Original value: 0
+CF Value:       1

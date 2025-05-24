@@ -1,0 +1,70 @@
+Counterfactual explanation for instance of class 'spyware' (index 253):
+Original class: spyware
+CF class:       trojan
+
+Original class proba: 0.0003, 0.0035, 0.0025, 0.0071, 0.9735, 0.0053, 0.0014, 0.0063
+CF class proba:       0.0050, 0.1451, 0.0293, 0.1914, 0.2271, 0.2529, 0.0368, 0.1124
+
+Feature: __exception__ (index 0)
+Original value: 1
+CF Value:       0
+
+Feature: getsystemdirectorya (index 289)
+Original value: 1
+CF Value:       0
+
+Feature: ldrgetdllhandle ldrgetdllhandle (index 395)
+Original value: 1
+CF Value:       0
+
+Feature: ldrgetprocedureaddress ntallocatevirtualmemory (index 415)
+Original value: 1
+CF Value:       0
+
+Feature: ntallocatevirtualmemory (index 486)
+Original value: 2
+CF Value:       1
+
+Feature: ntclose ntclose (index 532)
+Original value: 1
+CF Value:       0
+
+Feature: ntclose ntcreatefile (index 533)
+Original value: 3
+CF Value:       1
+
+Feature: ntcreatefile setfilepointer (index 578)
+Original value: 1
+CF Value:       0
+
+Feature: ntquerysysteminformation (index 698)
+Original value: 2
+CF Value:       1
+
+Feature: ntreadfile (index 707)
+Original value: 2
+CF Value:       1
+
+Feature: ntwritefile (index 728)
+Original value: 4
+CF Value:       3
+
+Feature: ntwritefile ntclose (index 729)
+Original value: 2
+CF Value:       1
+
+Feature: regclosekey (index 775)
+Original value: 1
+CF Value:       0
+
+Feature: regcreatekeyexa (index 801)
+Original value: 1
+CF Value:       0
+
+Feature: regsetvalueexa regclosekey (index 867)
+Original value: 1
+CF Value:       0
+
+Feature: setfilepointer (index 909)
+Original value: 1
+CF Value:       0

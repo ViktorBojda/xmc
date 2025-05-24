@@ -1,0 +1,10 @@
+Anchors explanation for instance of class 'backdoor', index 423, mode 'general':
+Precision: 0.823
+Coverage: 0.0222
+Anchor:
+IF raise > 0
+AND getprocaddress <= 0
+AND exitprocess <= 1
+AND loadlibrarya <= 0
+AND getsystemtimeasfiletime <= 0
+THEN PREDICT backdoor

@@ -1,0 +1,14 @@
+Counterfactual explanation for instance of class 'backdoor' (index 817):
+Original class: backdoor
+CF class:       trojan
+
+Original class proba: 0.0064, 0.5007, 0.0534, 0.0881, 0.0772, 0.1302, 0.0618, 0.0822
+CF class proba:       0.0166, 0.1386, 0.2264, 0.1163, 0.0715, 0.2943, 0.0789, 0.0574
+
+Feature: copyfilea (index 52)
+Original value: 1
+CF Value:       0
+
+Feature: getadaptersaddresses getadaptersaddresses (index 178)
+Original value: 0
+CF Value:       1

@@ -1,0 +1,110 @@
+Counterfactual explanation for instance of class 'backdoor' (index 162):
+Original class: backdoor
+CF class:       virus
+
+Original class proba: 0.0004, 0.9670, 0.0017, 0.0049, 0.0028, 0.0020, 0.0196, 0.0016
+CF class proba:       0.0093, 0.3371, 0.0382, 0.0943, 0.0779, 0.0241, 0.3705, 0.0486
+
+Feature: createremotethread (index 72)
+Original value: 1
+CF Value:       0
+
+Feature: createtoolhelp32snapshot process32firstw (index 84)
+Original value: 2
+CF Value:       1
+
+Feature: getfilesize (index 231)
+Original value: 1
+CF Value:       0
+
+Feature: getsysteminfo ldrloaddll (index 298)
+Original value: 1
+CF Value:       3
+
+Feature: ldrgetdllhandle ldrgetdllhandle (index 395)
+Original value: 3
+CF Value:       2
+
+Feature: ldrgetprocedureaddress (index 399)
+Original value: 205
+CF Value:       203
+
+Feature: ldrgetprocedureaddress ntallocatevirtualmemory (index 415)
+Original value: 2
+CF Value:       0
+
+Feature: ntallocatevirtualmemory ntprotectvirtualmemory (index 500)
+Original value: 4
+CF Value:       2
+
+Feature: ntclose ldrloaddll (index 527)
+Original value: 1
+CF Value:       2
+
+Feature: ntclose ldrunloaddll (index 528)
+Original value: 1
+CF Value:       0
+
+Feature: ntclose ntunmapviewofsection (index 553)
+Original value: 1
+CF Value:       5
+
+Feature: ntclose regopenkeyexa (index 556)
+Original value: 1
+CF Value:       0
+
+Feature: ntcreatefile (index 563)
+Original value: 1
+CF Value:       0
+
+Feature: ntcreatefile setfilepointer (index 578)
+Original value: 1
+CF Value:       0
+
+Feature: ntdelayexecution (index 586)
+Original value: 4
+CF Value:       1
+
+Feature: ntduplicateobject (index 618)
+Original value: 1
+CF Value:       0
+
+Feature: ntopenkey (index 642)
+Original value: 1
+CF Value:       0
+
+Feature: ntprotectvirtualmemory (index 671)
+Original value: 7
+CF Value:       6
+
+Feature: ntprotectvirtualmemory ntprotectvirtualmemory (index 675)
+Original value: 2
+CF Value:       1
+
+Feature: ntreadfile ntclose (index 709)
+Original value: 1
+CF Value:       0
+
+Feature: ntreadfile ntreadfile (index 711)
+Original value: 3
+CF Value:       1
+
+Feature: ntterminateprocess ntclose (index 723)
+Original value: 1
+CF Value:       4
+
+Feature: process32nextw process32nextw (index 764)
+Original value: 61
+CF Value:       59
+
+Feature: setfilepointer (index 909)
+Original value: 2
+CF Value:       1
+
+Feature: setfilepointer ntreadfile (index 911)
+Original value: 2
+CF Value:       1
+
+Feature: writeprocessmemory (index 992)
+Original value: 4
+CF Value:       7

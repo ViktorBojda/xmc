@@ -1,0 +1,20 @@
+Anchors explanation for instance of class 'dropper', index 3487, mode 'strict':
+Precision: 0.179
+Coverage: 0.1028
+Anchor:
+IF internetsetoptiona internetsetoptiona <= 0.00
+AND loadstringw > 0.00
+AND createtoolhelp32snapshot <= 0.00
+AND ischild <= 0.00
+AND screentoclient <= 0.00
+AND lstrcmpa <= 0.00
+AND lstrlenw <= 0.00
+AND setwindowlonga <= 0.00
+AND memcpy memset <= 0.00
+AND openservicea ldrgetprocedureaddress <= 0.00
+AND ntquerysysteminformation ntquerysysteminformation <= 0.00
+AND ntdelayexecution createthread <= 0.00
+AND regqueryvalueexa __exception__ <= 0.00
+AND regqueryinfokeya regclosekey <= 0.00
+AND createthread ntduplicateobject <= 0.00
+THEN PREDICT dropper

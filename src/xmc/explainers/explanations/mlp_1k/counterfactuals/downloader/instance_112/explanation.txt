@@ -1,0 +1,10 @@
+Counterfactual explanation for instance of class 'downloader' (index 112):
+Original class: downloader
+CF class:       worm
+
+Original class proba: 0.0005, 0.0478, 0.9067, 0.0065, 0.0039, 0.0020, 0.0021, 0.0305
+CF class proba:       0.0055, 0.1779, 0.1953, 0.2511, 0.0662, 0.0378, 0.0129, 0.2532
+
+Feature: getfiletype ntwritefile (index 240)
+Original value: 0
+CF Value:       31

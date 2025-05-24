@@ -1,0 +1,114 @@
+Counterfactual explanation for instance of class 'dropper' (index 2893):
+Original class: dropper
+CF class:       virus
+
+Original class proba: 0.0019, 0.0069, 0.0164, 0.9310, 0.0083, 0.0034, 0.0260, 0.0061
+CF class proba:       0.0187, 0.0462, 0.1303, 0.3339, 0.0538, 0.0204, 0.3542, 0.0425
+
+Feature: createprocessinternalw (index 70)
+Original value: 1
+CF Value:       0
+
+Feature: findfirstfileexw (index 133)
+Original value: 1
+CF Value:       0
+
+Feature: getfileattributesw (index 218)
+Original value: 1
+CF Value:       2
+
+Feature: getvolumenameforvolumemountpointw ntclose (index 337)
+Original value: 3
+CF Value:       2
+
+Feature: getvolumepathnamesforvolumenamew getvolumepathnamesforvolumenamew (index 339)
+Original value: 5
+CF Value:       0
+
+Feature: globalmemorystatusex (index 351)
+Original value: 1
+CF Value:       0
+
+Feature: ldrgetprocedureaddress getsystemwindowsdirectoryw (index 408)
+Original value: 1
+CF Value:       0
+
+Feature: ldrgetprocedureaddress ntduplicateobject (index 418)
+Original value: 1
+CF Value:       0
+
+Feature: ldrloaddll (index 430)
+Original value: 10
+CF Value:       9
+
+Feature: ntallocatevirtualmemory ldrgetprocedureaddress (index 492)
+Original value: 1
+CF Value:       0
+
+Feature: ntallocatevirtualmemory ntallocatevirtualmemory (index 495)
+Original value: 3
+CF Value:       4
+
+Feature: ntallocatevirtualmemory regopenkeyexw (index 504)
+Original value: 1
+CF Value:       2
+
+Feature: ntclose getvolumenameforvolumemountpointw (index 522)
+Original value: 2
+CF Value:       0
+
+Feature: ntclose ldrgetprocedureaddress (index 526)
+Original value: 3
+CF Value:       2
+
+Feature: ntclose ldrloaddll (index 527)
+Original value: 2
+CF Value:       4
+
+Feature: ntclose ntcreatefile (index 533)
+Original value: 1
+CF Value:       0
+
+Feature: ntcreatemutant (index 581)
+Original value: 2
+CF Value:       0
+
+Feature: ntmapviewofsection ntclose (index 634)
+Original value: 1
+CF Value:       0
+
+Feature: ntopenfile ntclose (index 638)
+Original value: 1
+CF Value:       0
+
+Feature: ntreadfile ntreadfile (index 711)
+Original value: 2
+CF Value:       0
+
+Feature: ntterminateprocess ntclose (index 723)
+Original value: 1
+CF Value:       0
+
+Feature: ntterminateprocess ntterminateprocess (index 724)
+Original value: 1
+CF Value:       0
+
+Feature: regclosekey ldrgetprocedureaddress (index 781)
+Original value: 1
+CF Value:       0
+
+Feature: regqueryvalueexa (index 853)
+Original value: 1
+CF Value:       2
+
+Feature: setfilepointer (index 909)
+Original value: 2
+CF Value:       0
+
+Feature: setfilepointer ntreadfile (index 911)
+Original value: 1
+CF Value:       0
+
+Feature: shellexecuteexw (index 936)
+Original value: 2
+CF Value:       0

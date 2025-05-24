@@ -1,0 +1,8 @@
+Anchors explanation for instance of class 'adware', index 2112, mode 'strict':
+Precision: 0.9382
+Coverage: 0.0065
+Anchor:
+IF releasedc > 0.00
+AND findresourcew loadresource > 0.00
+AND virtualalloc virtualfree > 0.00
+THEN PREDICT adware

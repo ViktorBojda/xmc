@@ -1,0 +1,20 @@
+Anchors explanation for instance of class 'spyware', index 399, mode 'general':
+Precision: 0.5547
+Coverage: 0.0001
+Anchor:
+IF getvolumenameforvolumemountpointw ntclose > 0
+AND getcursorpos drawtextexa > 0
+AND ntclose ntopenmutant > 0
+AND getprocaddress <= 0
+AND exitprocess <= 0
+AND getmodulehandlea <= 0
+AND getmodulehandlew <= 0
+AND loadlibrarya <= 0
+AND getaddrinfo <= 0
+AND heapalloc <= 0
+AND getcommandlinea <= 0
+AND lookupprivilegevaluew <= 0
+AND ntdelayexecution gethostbyname <= 0
+AND virtualprotect <= 0
+AND ntquerykey <= 0
+THEN PREDICT spyware

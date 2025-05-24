@@ -1,0 +1,10 @@
+Counterfactual explanation for instance of class 'spyware' (index 464):
+Original class: spyware
+CF class:       dropper
+
+Original class proba: 0.0016, 0.0632, 0.0177, 0.4028, 0.4042, 0.0882, 0.0138, 0.0084
+CF class proba:       0.0061, 0.0378, 0.0273, 0.4665, 0.2837, 0.1266, 0.0280, 0.0240
+
+Feature: ntwritefile ntclose (index 729)
+Original value: 0
+CF Value:       1

@@ -1,0 +1,42 @@
+Counterfactual explanation for instance of class 'trojan' (index 167):
+Original class: trojan
+CF class:       adware
+
+Original class proba: 0.0004, 0.0000, 0.0000, 0.0000, 0.0000, 0.9980, 0.0004, 0.0010
+CF class proba:       0.3367, 0.0151, 0.0457, 0.0606, 0.0362, 0.3215, 0.1528, 0.0315
+
+Feature: createthread (index 76)
+Original value: 0
+CF Value:       1
+
+Feature: createwindowexw (index 86)
+Original value: 0
+CF Value:       1
+
+Feature: getdc (index 209)
+Original value: 0
+CF Value:       1
+
+Feature: getprocaddress (index 277)
+Original value: 1
+CF Value:       2
+
+Feature: multibytetowidechar (index 485)
+Original value: 1
+CF Value:       0
+
+Feature: ntclose ntclose (index 532)
+Original value: 0
+CF Value:       2
+
+Feature: regclosekey regqueryvalueexa (index 799)
+Original value: 0
+CF Value:       1
+
+Feature: regopenkeyexa regsetvalueexa (index 837)
+Original value: 0
+CF Value:       1
+
+Feature: uuidcreate (index 975)
+Original value: 0
+CF Value:       2

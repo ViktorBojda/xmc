@@ -1,0 +1,10 @@
+Counterfactual explanation for instance of class 'worm' (index 3535):
+Original class: worm
+CF class:       virus
+
+Original class proba: 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0007, 0.1570, 0.8422
+CF class proba:       0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0003, 0.6083, 0.3914
+
+Feature: writeconsolew (index 989)
+Original value: 0
+CF Value:       20

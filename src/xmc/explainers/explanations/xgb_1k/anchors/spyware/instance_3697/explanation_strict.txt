@@ -1,0 +1,20 @@
+Anchors explanation for instance of class 'spyware', index 3697, mode 'strict':
+Precision: 0.1747
+Coverage: 0.2696
+Anchor:
+IF ntdelayexecution regcreatekeyexa <= 0.00
+AND ntclose > 0.00
+AND ldrunloaddll ldrloaddll <= 0.00
+AND ntdelayexecution ntquerydirectoryfile <= 0.00
+AND closesocket ntdelayexecution <= 0.00
+AND deletefilew ntdelayexecution <= 0.00
+AND __exception__ getfileattributesw <= 0.00
+AND gettickcount <= 0.00
+AND findresourceexw getcursorpos <= 0.00
+AND sendto <= 0.00
+AND connect connect <= 0.00
+AND widechartomultibyte <= 0.00
+AND memcpy memset <= 0.00
+AND ldrgetprocedureaddress internetgetconnectedstate <= 0.00
+AND isdebuggerpresent deletefilew <= 0.00
+THEN PREDICT spyware

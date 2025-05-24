@@ -1,0 +1,20 @@
+Anchors explanation for instance of class 'worm', index 429, mode 'strict':
+Precision: 0.2347
+Coverage: 0.0121
+Anchor:
+IF ntqueryattributesfile ntcreatefile > 0.00
+AND ldrgetprocedureaddress ldrgetprocedureaddress > 7.00
+AND getsystemmetrics ntclose <= 0.00
+AND internetcrackurla <= 0.00
+AND getfileversioninfosizew <= 0.00
+AND getstdhandle <= 0.00
+AND getcurrentthreadid <= 0.00
+AND getaddrinfo <= 0.00
+AND atoi <= 0.00
+AND loadlibrarya getprocaddress <= 0.00
+AND messageboxa <= 0.00
+AND lstrcmpa <= 0.00
+AND heaprealloc <= 0.00
+AND _cexit <= 0.00
+AND ntopenmutant ntopenmutant <= 0.00
+THEN PREDICT worm

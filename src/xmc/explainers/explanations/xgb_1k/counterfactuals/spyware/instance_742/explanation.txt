@@ -1,0 +1,30 @@
+Counterfactual explanation for instance of class 'spyware' (index 742):
+Original class: spyware
+CF class:       worm
+
+Original class proba: 0.0006, 0.0211, 0.0082, 0.0139, 0.5666, 0.1230, 0.0807, 0.1860
+CF class proba:       0.0011, 0.0360, 0.0140, 0.0208, 0.2844, 0.1889, 0.1304, 0.3244
+
+Feature: deletefilew ntclose (index 100)
+Original value: 1
+CF Value:       0
+
+Feature: ldrgetprocedureaddress findresourceexw (index 404)
+Original value: 2
+CF Value:       1
+
+Feature: ntclose deletefilew (index 512)
+Original value: 1
+CF Value:       0
+
+Feature: ntclose ntopenkey (index 543)
+Original value: 2
+CF Value:       1
+
+Feature: ntclose regopenkeyexw (index 557)
+Original value: 1
+CF Value:       0
+
+Feature: ntopenkey ntqueryvaluekey (index 646)
+Original value: 4
+CF Value:       3

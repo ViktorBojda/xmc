@@ -1,0 +1,20 @@
+Anchors explanation for instance of class 'adware', index 2360, mode 'strict':
+Precision: 0.1923
+Coverage: 0.0919
+Anchor:
+IF outputdebugstringa <= 0.00
+AND multibytetowidechar > 0.00
+AND getmodulehandlea getprocaddress <= 0.00
+AND winexec <= 0.00
+AND regclosekey regcreatekeyexw <= 0.00
+AND setwindowshookexa <= 0.00
+AND closehandle > 0.00
+AND getcurrentprocess > 0.00
+AND __getmainargs <= 0.00
+AND ntdeviceiocontrolfile ntclose <= 0.00
+AND getlasterror > 0.00
+AND regsetvalueexa regclosekey <= 0.00
+AND ntqueryattributesfile ntqueryattributesfile <= 0.00
+AND memcpy memset <= 0.00
+AND writefile > 0.00
+THEN PREDICT adware

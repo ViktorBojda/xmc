@@ -1,0 +1,20 @@
+Anchors explanation for instance of class 'dropper', index 780, mode 'general':
+Precision: 0.2156
+Coverage: 0.1756
+Anchor:
+IF getclientrect <= 0.00
+AND ntcreatefile > 0.00
+AND socket <= 0.00
+AND getstdhandle <= 0.00
+AND regqueryinfokeya <= 0.00
+AND __getmainargs <= 0.00
+AND closesocket <= 0.00
+AND ischild <= 0.00
+AND ntdelayexecution getsystemtimeasfiletime <= 0.00
+AND ntclose getcursorpos <= 0.00
+AND raiseexception <= 0.00
+AND createfilea <= 0.00
+AND getsystemtimeasfiletime ntdelayexecution <= 0.00
+AND loadlibrarya <= 0.00
+AND openservicea <= 0.00
+THEN PREDICT dropper

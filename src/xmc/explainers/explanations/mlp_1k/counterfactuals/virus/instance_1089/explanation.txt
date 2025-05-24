@@ -1,0 +1,22 @@
+Counterfactual explanation for instance of class 'virus' (index 1089):
+Original class: virus
+CF class:       worm
+
+Original class proba: 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 1.0000, 0.0000
+CF class proba:       0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.4379, 0.5621
+
+Feature: createthread (index 76)
+Original value: 6
+CF Value:       0
+
+Feature: getfiletype ntcreatefile (index 238)
+Original value: 0
+CF Value:       441
+
+Feature: writeconsolew (index 989)
+Original value: 143
+CF Value:       0
+
+Feature: wsastartup (index 996)
+Original value: 0
+CF Value:       84

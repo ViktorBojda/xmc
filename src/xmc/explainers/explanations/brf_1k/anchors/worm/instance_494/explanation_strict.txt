@@ -1,0 +1,20 @@
+Anchors explanation for instance of class 'worm', index 494, mode 'strict':
+Precision: 0.2244
+Coverage: 0.1694
+Anchor:
+IF ldrgetprocedureaddress internetgetconnectedstate <= 0.00
+AND ntfreevirtualmemory > 0.00
+AND getaddrinfo <= 0.00
+AND ntallocatevirtualmemory > 0.00
+AND regdeletevaluew <= 0.00
+AND findresourcea sizeofresource <= 0.00
+AND seterrormode seterrormode <= 0.00
+AND closehandle <= 0.00
+AND ntclose getforegroundwindow <= 0.00
+AND writeconsolea writeconsolea <= 0.00
+AND virtualprotect virtualalloc <= 0.00
+AND drawtextexa drawtextexa <= 0.00
+AND setbkcolor <= 0.00
+AND getmessagew <= 0.00
+AND ntenumeratevaluekey ntopenkey <= 0.00
+THEN PREDICT worm

@@ -1,0 +1,130 @@
+Counterfactual explanation for instance of class 'trojan' (index 344):
+Original class: trojan
+CF class:       worm
+
+Original class proba: 0.0006, 0.0001, 0.0002, 0.0002, 0.0002, 0.9979, 0.0002, 0.0005
+CF class proba:       0.1596, 0.0035, 0.0088, 0.0031, 0.0283, 0.2770, 0.1093, 0.4104
+
+Feature: exitprocess (index 128)
+Original value: 1
+CF Value:       0
+
+Feature: findclose (index 131)
+Original value: 1
+CF Value:       0
+
+Feature: findresourcea loadresource (index 147)
+Original value: 1
+CF Value:       0
+
+Feature: freelibrary (index 175)
+Original value: 1
+CF Value:       0
+
+Feature: getclassnamea (index 184)
+Original value: 1
+CF Value:       0
+
+Feature: getcurrentprocess (index 192)
+Original value: 1
+CF Value:       0
+
+Feature: getlasterror (index 263)
+Original value: 1
+CF Value:       0
+
+Feature: getmessagea (index 267)
+Original value: 1
+CF Value:       0
+
+Feature: getmodulehandlea getprocaddress (index 272)
+Original value: 1
+CF Value:       0
+
+Feature: getprocaddress (index 277)
+Original value: 1
+CF Value:       0
+
+Feature: gettickcount (index 330)
+Original value: 1
+CF Value:       0
+
+Feature: getwindowrect (index 343)
+Original value: 1
+CF Value:       0
+
+Feature: interlockeddecrement (index 361)
+Original value: 1
+CF Value:       0
+
+Feature: interlockedexchange (index 362)
+Original value: 1
+CF Value:       0
+
+Feature: interlockedincrement (index 363)
+Original value: 1
+CF Value:       0
+
+Feature: loadicona (index 442)
+Original value: 1
+CF Value:       0
+
+Feature: loadlibrarya (index 443)
+Original value: 1
+CF Value:       0
+
+Feature: multibytetowidechar (index 485)
+Original value: 1
+CF Value:       0
+
+Feature: postquitmessage (index 755)
+Original value: 1
+CF Value:       0
+
+Feature: regclosekey (index 775)
+Original value: 1
+CF Value:       0
+
+Feature: regsetvalueexa (index 866)
+Original value: 1
+CF Value:       0
+
+Feature: rtlunwind (index 874)
+Original value: 1
+CF Value:       0
+
+Feature: sendmessagea (index 886)
+Original value: 1
+CF Value:       0
+
+Feature: setfocus (index 920)
+Original value: 1
+CF Value:       0
+
+Feature: settextcolor (index 927)
+Original value: 1
+CF Value:       0
+
+Feature: settimer (index 928)
+Original value: 1
+CF Value:       0
+
+Feature: showwindow (index 940)
+Original value: 1
+CF Value:       0
+
+Feature: tlsalloc (index 965)
+Original value: 1
+CF Value:       0
+
+Feature: virtualalloc (index 978)
+Original value: 1
+CF Value:       0
+
+Feature: virtualfree (index 980)
+Original value: 1
+CF Value:       0
+
+Feature: widechartomultibyte (index 985)
+Original value: 1
+CF Value:       0

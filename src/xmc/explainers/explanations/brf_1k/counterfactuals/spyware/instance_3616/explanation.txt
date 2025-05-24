@@ -1,0 +1,10 @@
+Counterfactual explanation for instance of class 'spyware' (index 3616):
+Original class: spyware
+CF class:       trojan
+
+Original class proba: 0.0016, 0.0214, 0.0903, 0.1605, 0.2982, 0.1838, 0.0776, 0.1666
+CF class proba:       0.0008, 0.0937, 0.0501, 0.0911, 0.1381, 0.3295, 0.0858, 0.2108
+
+Feature: loadresource ntclose (index 454)
+Original value: 1
+CF Value:       2

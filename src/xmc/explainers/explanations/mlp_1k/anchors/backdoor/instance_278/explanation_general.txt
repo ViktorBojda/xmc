@@ -1,0 +1,20 @@
+Anchors explanation for instance of class 'backdoor', index 278, mode 'general':
+Precision: 0.6367
+Coverage: 0.0033
+Anchor:
+IF lookupprivilegevaluew ntclose > 0
+AND ntdelayexecution > 0
+AND ntopenkey ntclose <= 0
+AND ntclose getvolumenameforvolumemountpointw <= 0
+AND ldrloaddll ldrgetprocedureaddress > 0
+AND setfilepointer setfilepointer <= 0
+AND ntdelayexecution findfirstfileexw <= 0
+AND ldrgetdllhandle > 0
+AND writeprocessmemory createremotethread <= 0
+AND process32nextw ntopenprocess <= 0
+AND ntclose process32nextw <= 0
+AND getfileattributesw seterrormode <= 0
+AND ntdelayexecution enumwindows <= 0
+AND getfiletype setfilepointer <= 0
+AND ntduplicateobject regcreatekeyexw <= 0
+THEN PREDICT backdoor

@@ -1,0 +1,20 @@
+Anchors explanation for instance of class 'downloader', index 281, mode 'general':
+Precision: 0.4314
+Coverage: 0.0309
+Anchor:
+IF closesocket ldrgetdllhandle <= 0.00
+AND ldrunloaddll > 0.00
+AND ldrgetdllhandle ldrgetprocedureaddress > 0.00
+AND ldrgetdllhandle > 0.00
+AND globalmemorystatus <= 0.00
+AND virtualprotect <= 0.00
+AND ntclose ntclose > 0.00
+AND ldrloaddll ldrgetprocedureaddress > 0.00
+AND getcurrentthreadid <= 0.00
+AND ldrgetprocedureaddress ldrgetprocedureaddress > 0.00
+AND ntquerydirectoryfile ntclose <= 0.00
+AND ntclose > 13.00
+AND coinitializeex > 0.00
+AND readprocessmemory readprocessmemory > 0.00
+AND getprocaddress <= 0.00
+THEN PREDICT downloader

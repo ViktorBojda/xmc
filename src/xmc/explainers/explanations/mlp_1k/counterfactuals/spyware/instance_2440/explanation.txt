@@ -1,0 +1,14 @@
+Counterfactual explanation for instance of class 'spyware' (index 2440):
+Original class: spyware
+CF class:       downloader
+
+Original class proba: 0.0009, 0.0182, 0.0724, 0.0214, 0.8359, 0.0123, 0.0059, 0.0330
+CF class proba:       0.0046, 0.0353, 0.4384, 0.0389, 0.3271, 0.0516, 0.0181, 0.0861
+
+Feature: ldrgetprocedureaddress regclosekey (index 423)
+Original value: 0
+CF Value:       5
+
+Feature: setfilepointer setfilepointer (index 914)
+Original value: 29
+CF Value:       0

@@ -1,0 +1,20 @@
+Anchors explanation for instance of class 'worm', index 306, mode 'general':
+Precision: 0.7286
+Coverage: 0.0002
+Anchor:
+IF ntclose getvolumenameforvolumemountpointw > 0
+AND getprocaddress <= 0
+AND ldrgetprocedureaddress ldrgetprocedureaddress <= 0
+AND exitprocess <= 0
+AND getcurrentthreadid <= 0
+AND ntfreevirtualmemory <= 0
+AND getcommandlinea <= 0
+AND getversion <= 0
+AND getlasterror <= 0
+AND ntcreatefile <= 0
+AND getcommandlinew <= 0
+AND getcurrentprocessid <= 0
+AND getuserdefaultlcid <= 0
+AND getcurrentprocess <= 0
+AND getthreadlocale <= 0
+THEN PREDICT worm

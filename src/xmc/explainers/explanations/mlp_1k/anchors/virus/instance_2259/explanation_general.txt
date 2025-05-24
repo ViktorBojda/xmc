@@ -1,0 +1,8 @@
+Anchors explanation for instance of class 'virus', index 2259, mode 'general':
+Precision: 0.8299
+Coverage: 0.0119
+Anchor:
+IF getcurrentprocessid > 0
+AND getprocaddress <= 0
+AND regopenkeyexa <= 0
+THEN PREDICT virus

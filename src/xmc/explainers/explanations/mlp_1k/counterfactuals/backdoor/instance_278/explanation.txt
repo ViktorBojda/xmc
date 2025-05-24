@@ -1,0 +1,14 @@
+Counterfactual explanation for instance of class 'backdoor' (index 278):
+Original class: backdoor
+CF class:       downloader
+
+Original class proba: 0.0000, 0.9216, 0.0494, 0.0002, 0.0034, 0.0005, 0.0000, 0.0248
+CF class proba:       0.0007, 0.4167, 0.5394, 0.0033, 0.0052, 0.0004, 0.0000, 0.0343
+
+Feature: closesocket ntdelayexecution (index 29)
+Original value: 10
+CF Value:       0
+
+Feature: createdirectoryw (index 64)
+Original value: 0
+CF Value:       14

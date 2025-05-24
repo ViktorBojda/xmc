@@ -1,0 +1,9 @@
+Anchors explanation for instance of class 'virus', index 247, mode 'strict':
+Precision: 0.9213
+Coverage: 0.1864
+Anchor:
+IF ntqueryvaluekey <= 0
+AND getprocaddress <= 0
+AND ntclose <= 0
+AND exitprocess <= 0
+THEN PREDICT virus

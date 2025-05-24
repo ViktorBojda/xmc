@@ -1,0 +1,7 @@
+Anchors explanation for instance of class 'virus', index 1089, mode 'general':
+Precision: 0.9692
+Coverage: 0.0
+Anchor:
+IF writeconsolew writeconsolew > 0
+AND ntopenfile ntdelayexecution > 0
+THEN PREDICT virus

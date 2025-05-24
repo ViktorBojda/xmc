@@ -1,0 +1,20 @@
+Anchors explanation for instance of class 'dropper', index 3443, mode 'general':
+Precision: 0.2231
+Coverage: 0.1546
+Anchor:
+IF gethostbyname findwindowa <= 0.00
+AND ntqueryvaluekey ntclose > 0.00
+AND ntdeviceiocontrolfile ntclose <= 0.00
+AND getfileattributesw setfileattributesw <= 0.00
+AND getcommandlinea <= 0.00
+AND virtualalloc virtualfree <= 0.00
+AND regqueryvalueexa regopenkeyexa <= 0.00
+AND wsastartup <= 0.00
+AND getstartupinfow <= 0.00
+AND shutdown <= 0.00
+AND ntopenkey ntqueryvaluekey > 0.00
+AND waitforsingleobject <= 0.00
+AND ntcreatefile > 0.00
+AND ntqueryvaluekey > 0.00
+AND getprocaddress <= 0.00
+THEN PREDICT dropper

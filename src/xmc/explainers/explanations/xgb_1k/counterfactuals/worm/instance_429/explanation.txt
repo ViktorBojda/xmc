@@ -1,0 +1,42 @@
+Counterfactual explanation for instance of class 'worm' (index 429):
+Original class: worm
+CF class:       virus
+
+Original class proba: 0.0010, 0.0056, 0.0053, 0.0077, 0.0077, 0.0009, 0.0070, 0.9650
+CF class proba:       0.0194, 0.1768, 0.0374, 0.0725, 0.0643, 0.0089, 0.3482, 0.2726
+
+Feature: copyfilea (index 52)
+Original value: 1
+CF Value:       0
+
+Feature: createthread (index 76)
+Original value: 2
+CF Value:       0
+
+Feature: getcurrentprocess (index 192)
+Original value: 0
+CF Value:       1
+
+Feature: getuserdefaultlcid (index 332)
+Original value: 0
+CF Value:       2
+
+Feature: interlockedexchange (index 362)
+Original value: 0
+CF Value:       1
+
+Feature: isprocessorfeaturepresent (index 386)
+Original value: 0
+CF Value:       1
+
+Feature: raise (index 766)
+Original value: 0
+CF Value:       1
+
+Feature: sendmessagea (index 886)
+Original value: 0
+CF Value:       2
+
+Feature: virtualfree (index 980)
+Original value: 0
+CF Value:       1

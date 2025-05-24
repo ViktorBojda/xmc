@@ -1,0 +1,14 @@
+Counterfactual explanation for instance of class 'adware' (index 467):
+Original class: adware
+CF class:       downloader
+
+Original class proba: 0.3744, 0.0000, 0.3342, 0.0265, 0.0000, 0.2480, 0.0155, 0.0012
+CF class proba:       0.3484, 0.0001, 0.3540, 0.0401, 0.0001, 0.2366, 0.0184, 0.0024
+
+Feature: ntcreatefile setfilepointer (index 578)
+Original value: 0
+CF Value:       2
+
+Feature: openscmanagera (index 742)
+Original value: 0
+CF Value:       43

@@ -1,0 +1,14 @@
+Counterfactual explanation for instance of class 'downloader' (index 281):
+Original class: downloader
+CF class:       spyware
+
+Original class proba: 0.0000, 0.0001, 0.9970, 0.0000, 0.0002, 0.0017, 0.0000, 0.0009
+CF class proba:       0.0001, 0.0003, 0.3422, 0.1169, 0.3802, 0.1398, 0.0004, 0.0201
+
+Feature: ntcreatefile findresourcea (index 565)
+Original value: 0
+CF Value:       5
+
+Feature: ntwritefile ntclose (index 729)
+Original value: 0
+CF Value:       46

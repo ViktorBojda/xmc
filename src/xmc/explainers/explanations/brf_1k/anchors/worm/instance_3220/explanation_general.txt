@@ -1,0 +1,20 @@
+Anchors explanation for instance of class 'worm', index 3220, mode 'general':
+Precision: 0.2448
+Coverage: 0.0897
+Anchor:
+IF openservicea openservicea <= 0.00
+AND loadstringa > 0.00
+AND terminateprocess <= 0.00
+AND getparent <= 0.00
+AND getasynckeystate <= 0.00
+AND getcursorpos getsystemmetrics <= 0.00
+AND getaddrinfo <= 0.00
+AND memcpy memset <= 0.00
+AND getconsolecp <= 0.00
+AND getdlgitem <= 0.00
+AND iswindow <= 0.00
+AND dispatchmessagew <= 0.00
+AND findwindowa getforegroundwindow <= 0.00
+AND regopenkeyexa > 1.00
+AND outputdebugstringa <= 0.00
+THEN PREDICT worm

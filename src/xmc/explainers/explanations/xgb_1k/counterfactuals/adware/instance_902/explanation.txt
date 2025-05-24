@@ -1,0 +1,170 @@
+Counterfactual explanation for instance of class 'adware' (index 902):
+Original class: adware
+CF class:       dropper
+
+Original class proba: 0.9964, 0.0008, 0.0003, 0.0007, 0.0007, 0.0001, 0.0003, 0.0007
+CF class proba:       0.2855, 0.1518, 0.0176, 0.3980, 0.0389, 0.0061, 0.0247, 0.0774
+
+Feature: __exception__ (index 0)
+Original value: 7
+CF Value:       6
+
+Feature: closesocket ntclose (index 28)
+Original value: 2
+CF Value:       1
+
+Feature: closesocket socket (index 31)
+Original value: 4
+CF Value:       2
+
+Feature: createthread (index 76)
+Original value: 2
+CF Value:       3
+
+Feature: drawtextexw getsystemmetrics (index 114)
+Original value: 4
+CF Value:       2
+
+Feature: getfilesizeex ntreadfile (index 235)
+Original value: 1
+CF Value:       0
+
+Feature: getfiletype (index 236)
+Original value: 3
+CF Value:       1
+
+Feature: getfiletype getfiletype (index 237)
+Original value: 2
+CF Value:       3
+
+Feature: getsysteminfo ldrloaddll (index 298)
+Original value: 1
+CF Value:       2
+
+Feature: getsystemmetrics drawtextexa (index 301)
+Original value: 1
+CF Value:       0
+
+Feature: getsystemmetrics drawtextexw (index 302)
+Original value: 2
+CF Value:       1
+
+Feature: getsystemmetrics ldrloaddll (index 310)
+Original value: 1
+CF Value:       2
+
+Feature: getsystemtimeasfiletime getsystemtimeasfiletime (index 319)
+Original value: 1
+CF Value:       0
+
+Feature: gettemppathw (index 328)
+Original value: 2
+CF Value:       3
+
+Feature: getvolumenameforvolumemountpointw ntclose (index 337)
+Original value: 3
+CF Value:       1
+
+Feature: ldrgetdllhandle ldrgetdllhandle (index 395)
+Original value: 3
+CF Value:       1
+
+Feature: ldrgetprocedureaddress getsystemtimeasfiletime (index 407)
+Original value: 1
+CF Value:       2
+
+Feature: ldrgetprocedureaddress ldrunloaddll (index 413)
+Original value: 1
+CF Value:       0
+
+Feature: ldrgetprocedureaddress ntopenkey (index 419)
+Original value: 1
+CF Value:       0
+
+Feature: ldrgetprocedureaddress ntprotectvirtualmemory (index 421)
+Original value: 1
+CF Value:       0
+
+Feature: ldrloaddll seterrormode (index 433)
+Original value: 1
+CF Value:       0
+
+Feature: ldrunloaddll ntclose (index 437)
+Original value: 1
+CF Value:       0
+
+Feature: ntallocatevirtualmemory ldrgetdllhandle (index 491)
+Original value: 1
+CF Value:       0
+
+Feature: ntallocatevirtualmemory ntclose (index 496)
+Original value: 1
+CF Value:       2
+
+Feature: ntclose loadstringw (index 529)
+Original value: 1
+CF Value:       2
+
+Feature: ntfreevirtualmemory ntfreevirtualmemory (index 631)
+Original value: 10
+CF Value:       11
+
+Feature: ntopenkey ntclose (index 643)
+Original value: 1
+CF Value:       2
+
+Feature: ntopenmutant ntclose (index 655)
+Original value: 1
+CF Value:       0
+
+Feature: ntprotectvirtualmemory ntprotectvirtualmemory (index 675)
+Original value: 1
+CF Value:       0
+
+Feature: ntqueryvaluekey (index 700)
+Original value: 9
+CF Value:       10
+
+Feature: ntwritefile (index 728)
+Original value: 2
+CF Value:       1
+
+Feature: ntwritefile ntclose (index 729)
+Original value: 2
+CF Value:       1
+
+Feature: regclosekey ntallocatevirtualmemory (index 783)
+Original value: 3
+CF Value:       4
+
+Feature: regclosekey ntopenkey (index 789)
+Original value: 2
+CF Value:       0
+
+Feature: regenumvaluew regenumvaluew (index 828)
+Original value: 1
+CF Value:       0
+
+Feature: regopenkeyexa regopenkeyexa (index 834)
+Original value: 3
+CF Value:       0
+
+Feature: regopenkeyexa regqueryvalueexa (index 836)
+Original value: 1
+CF Value:       0
+
+Feature: regqueryvalueexa (index 853)
+Original value: 1
+CF Value:       0
+
+Feature: regqueryvalueexa regclosekey (index 856)
+Original value: 1
+CF Value:       0
+
+Feature: setfilepointer (index 909)
+Original value: 1
+CF Value:       2
+
+Feature: wsastartup (index 996)
+Original value: 1
+CF Value:       0

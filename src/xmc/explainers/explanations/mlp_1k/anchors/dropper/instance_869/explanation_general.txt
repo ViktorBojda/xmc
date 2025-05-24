@@ -1,0 +1,12 @@
+Anchors explanation for instance of class 'dropper', index 869, mode 'general':
+Precision: 0.4375
+Coverage: 0.0014
+Anchor:
+IF getfiletype setfilepointer > 0
+AND ntwritefile ntclose > 0
+AND regqueryvalueexa <= 0
+AND ntclose getcursorpos <= 0
+AND cryptacquirecontextw <= 0
+AND createdirectorya <= 0
+AND ntqueryvaluekey ntclose > 0
+THEN PREDICT dropper

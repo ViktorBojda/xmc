@@ -1,0 +1,14 @@
+Counterfactual explanation for instance of class 'adware' (index 389):
+Original class: adware
+CF class:       trojan
+
+Original class proba: 0.9928, 0.0000, 0.0000, 0.0000, 0.0000, 0.0072, 0.0000, 0.0000
+CF class proba:       0.4655, 0.0001, 0.0000, 0.0000, 0.0000, 0.5319, 0.0000, 0.0024
+
+Feature: cocreateinstance __exception__ (index 34)
+Original value: 0
+CF Value:       480
+
+Feature: getfiletype ntcreatefile (index 238)
+Original value: 0
+CF Value:       755

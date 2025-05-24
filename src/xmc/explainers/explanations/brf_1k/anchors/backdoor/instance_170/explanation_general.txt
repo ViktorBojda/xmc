@@ -1,0 +1,8 @@
+Anchors explanation for instance of class 'backdoor', index 170, mode 'general':
+Precision: 0.8859
+Coverage: 0.0049
+Anchor:
+IF ntquerysysteminformation > 0.00
+AND copyfilea ntdelayexecution > 0.00
+AND ntallocatevirtualmemory ldrgetdllhandle > 0.00
+THEN PREDICT backdoor

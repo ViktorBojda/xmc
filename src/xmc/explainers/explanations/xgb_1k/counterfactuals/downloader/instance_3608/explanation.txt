@@ -1,0 +1,346 @@
+Counterfactual explanation for instance of class 'downloader' (index 3608):
+Original class: downloader
+CF class:       backdoor
+
+Original class proba: 0.0008, 0.0015, 0.9926, 0.0008, 0.0026, 0.0007, 0.0004, 0.0006
+CF class proba:       0.0460, 0.2309, 0.2094, 0.0371, 0.0829, 0.0802, 0.1254, 0.1882
+
+Feature: __exception__ (index 0)
+Original value: 1
+CF Value:       5
+
+Feature: cocreateinstance cocreateinstance (index 35)
+Original value: 1
+CF Value:       0
+
+Feature: coinitializeex (index 40)
+Original value: 2
+CF Value:       0
+
+Feature: createthread (index 76)
+Original value: 1
+CF Value:       0
+
+Feature: findfirstfileexw findfirstfileexw (index 135)
+Original value: 3
+CF Value:       2
+
+Feature: findfirstfileexw ntclose (index 138)
+Original value: 2
+CF Value:       0
+
+Feature: getadaptersaddresses (index 177)
+Original value: 2
+CF Value:       1
+
+Feature: getadaptersaddresses getadaptersaddresses (index 178)
+Original value: 1
+CF Value:       0
+
+Feature: getaddrinfo (index 179)
+Original value: 4
+CF Value:       1
+
+Feature: getfiletype (index 236)
+Original value: 1
+CF Value:       8
+
+Feature: getfiletype ntreadfile (index 239)
+Original value: 1
+CF Value:       0
+
+Feature: getsysteminfo (index 295)
+Original value: 1
+CF Value:       0
+
+Feature: gettemppathw (index 328)
+Original value: 1
+CF Value:       0
+
+Feature: ldrgetdllhandle (index 393)
+Original value: 2
+CF Value:       1
+
+Feature: ldrgetdllhandle ldrgetprocedureaddress (index 396)
+Original value: 1
+CF Value:       0
+
+Feature: ldrgetprocedureaddress (index 399)
+Original value: 162
+CF Value:       161
+
+Feature: ldrgetprocedureaddress coinitializeex (index 402)
+Original value: 1
+CF Value:       0
+
+Feature: ldrgetprocedureaddress ldrgetdllhandle (index 410)
+Original value: 1
+CF Value:       0
+
+Feature: ldrgetprocedureaddress ldrgetprocedureaddress (index 411)
+Original value: 121
+CF Value:       120
+
+Feature: ldrgetprocedureaddress ldrloaddll (index 412)
+Original value: 8
+CF Value:       1
+
+Feature: ldrgetprocedureaddress ntallocatevirtualmemory (index 415)
+Original value: 2
+CF Value:       1
+
+Feature: ldrgetprocedureaddress ntduplicateobject (index 418)
+Original value: 2
+CF Value:       1
+
+Feature: ldrgetprocedureaddress ntopenkey (index 419)
+Original value: 2
+CF Value:       1
+
+Feature: ldrgetprocedureaddress regcreatekeyexa (index 424)
+Original value: 1
+CF Value:       4
+
+Feature: ldrgetprocedureaddress regopenkeyexa (index 426)
+Original value: 2
+CF Value:       4
+
+Feature: ldrgetprocedureaddress regopenkeyexw (index 427)
+Original value: 1
+CF Value:       0
+
+Feature: ldrgetprocedureaddress seterrormode (index 429)
+Original value: 2
+CF Value:       6
+
+Feature: ldrloaddll (index 430)
+Original value: 25
+CF Value:       21
+
+Feature: ldrloaddll ldrgetprocedureaddress (index 431)
+Original value: 23
+CF Value:       22
+
+Feature: ldrunloaddll (index 434)
+Original value: 7
+CF Value:       10
+
+Feature: ldrunloaddll ldrloaddll (index 435)
+Original value: 1
+CF Value:       5
+
+Feature: ldrunloaddll ldrunloaddll (index 436)
+Original value: 2
+CF Value:       0
+
+Feature: ldrunloaddll ntclose (index 437)
+Original value: 2
+CF Value:       8
+
+Feature: ntallocatevirtualmemory (index 486)
+Original value: 10
+CF Value:       9
+
+Feature: ntallocatevirtualmemory getsysteminfo (index 489)
+Original value: 1
+CF Value:       8
+
+Feature: ntallocatevirtualmemory ldrgetprocedureaddress (index 492)
+Original value: 1
+CF Value:       0
+
+Feature: ntallocatevirtualmemory ntclose (index 496)
+Original value: 1
+CF Value:       8
+
+Feature: ntallocatevirtualmemory ntfreevirtualmemory (index 498)
+Original value: 2
+CF Value:       1
+
+Feature: ntallocatevirtualmemory regopenkeyexa (index 503)
+Original value: 1
+CF Value:       4
+
+Feature: ntclose ldrgetprocedureaddress (index 526)
+Original value: 1
+CF Value:       0
+
+Feature: ntclose ldrloaddll (index 527)
+Original value: 1
+CF Value:       0
+
+Feature: ntclose ntallocatevirtualmemory (index 531)
+Original value: 1
+CF Value:       0
+
+Feature: ntclose ntclose (index 532)
+Original value: 12
+CF Value:       17
+
+Feature: ntclose ntcreatefile (index 533)
+Original value: 2
+CF Value:       0
+
+Feature: ntclose ntduplicateobject (index 538)
+Original value: 1
+CF Value:       5
+
+Feature: ntcreatefile (index 563)
+Original value: 2
+CF Value:       5
+
+Feature: ntcreatefile getfiletype (index 569)
+Original value: 1
+CF Value:       2
+
+Feature: ntcreatefile ntclose (index 570)
+Original value: 1
+CF Value:       0
+
+Feature: ntcreatemutant (index 581)
+Original value: 2
+CF Value:       5
+
+Feature: ntcreatemutant ntclose (index 582)
+Original value: 1
+CF Value:       0
+
+Feature: ntdelayexecution (index 586)
+Original value: 1
+CF Value:       0
+
+Feature: ntduplicateobject (index 618)
+Original value: 6
+CF Value:       7
+
+Feature: ntduplicateobject ntallocatevirtualmemory (index 619)
+Original value: 1
+CF Value:       0
+
+Feature: ntduplicateobject ntclose (index 620)
+Original value: 2
+CF Value:       1
+
+Feature: ntfreevirtualmemory (index 626)
+Original value: 4
+CF Value:       7
+
+Feature: ntfreevirtualmemory ntallocatevirtualmemory (index 628)
+Original value: 2
+CF Value:       6
+
+Feature: ntfreevirtualmemory ntfreevirtualmemory (index 631)
+Original value: 1
+CF Value:       4
+
+Feature: ntopenkey (index 642)
+Original value: 6
+CF Value:       2
+
+Feature: ntopenmutant (index 654)
+Original value: 1
+CF Value:       4
+
+Feature: ntopensection (index 666)
+Original value: 1
+CF Value:       0
+
+Feature: ntreadfile (index 707)
+Original value: 1
+CF Value:       0
+
+Feature: ntreadfile ntclose (index 709)
+Original value: 1
+CF Value:       0
+
+Feature: openscmanagera (index 742)
+Original value: 2
+CF Value:       1
+
+Feature: openscmanagera openservicea (index 743)
+Original value: 1
+CF Value:       0
+
+Feature: openservicea ldrgetprocedureaddress (index 747)
+Original value: 2
+CF Value:       0
+
+Feature: readprocessmemory ldrloaddll (index 770)
+Original value: 2
+CF Value:       6
+
+Feature: regclosekey ldrgetprocedureaddress (index 781)
+Original value: 2
+CF Value:       5
+
+Feature: regclosekey ldrloaddll (index 782)
+Original value: 2
+CF Value:       1
+
+Feature: regclosekey ntallocatevirtualmemory (index 783)
+Original value: 1
+CF Value:       2
+
+Feature: regclosekey regclosekey (index 791)
+Original value: 16
+CF Value:       17
+
+Feature: regclosekey regcreatekeyexa (index 792)
+Original value: 3
+CF Value:       8
+
+Feature: regclosekey regcreatekeyexw (index 793)
+Original value: 3
+CF Value:       1
+
+Feature: regclosekey regopenkeyexw (index 798)
+Original value: 10
+CF Value:       7
+
+Feature: regclosekey regqueryvalueexw (index 800)
+Original value: 1
+CF Value:       4
+
+Feature: regcreatekeyexa regqueryvalueexa (index 803)
+Original value: 2
+CF Value:       0
+
+Feature: regopenkeyexa regcreatekeyexa (index 832)
+Original value: 3
+CF Value:       6
+
+Feature: regopenkeyexw ldrgetprocedureaddress (index 841)
+Original value: 1
+CF Value:       8
+
+Feature: regopenkeyexw regqueryvalueexw (index 848)
+Original value: 24
+CF Value:       19
+
+Feature: regqueryvalueexa regclosekey (index 856)
+Original value: 4
+CF Value:       7
+
+Feature: regqueryvalueexa regqueryvalueexa (index 858)
+Original value: 40
+CF Value:       36
+
+Feature: regsetvalueexa regsetvalueexa (index 869)
+Original value: 14
+CF Value:       17
+
+Feature: regsetvalueexw (index 870)
+Original value: 2
+CF Value:       0
+
+Feature: seterrormode (index 894)
+Original value: 4
+CF Value:       7
+
+Feature: seterrormode seterrormode (index 900)
+Original value: 1
+CF Value:       6
+
+Feature: shgetfolderpathw (index 938)
+Original value: 1
+CF Value:       0

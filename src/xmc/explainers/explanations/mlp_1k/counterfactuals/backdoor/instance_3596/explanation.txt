@@ -1,0 +1,14 @@
+Counterfactual explanation for instance of class 'backdoor' (index 3596):
+Original class: backdoor
+CF class:       spyware
+
+Original class proba: 0.0000, 0.9997, 0.0000, 0.0000, 0.0003, 0.0000, 0.0000, 0.0000
+CF class proba:       0.0000, 0.4757, 0.0000, 0.0000, 0.5212, 0.0000, 0.0021, 0.0010
+
+Feature: findfirstfileexw ntopenfile (index 141)
+Original value: 0
+CF Value:       74
+
+Feature: wsastartup (index 996)
+Original value: 2
+CF Value:       0

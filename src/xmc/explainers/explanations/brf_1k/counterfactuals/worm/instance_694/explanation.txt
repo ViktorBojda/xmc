@@ -1,0 +1,18 @@
+Counterfactual explanation for instance of class 'worm' (index 694):
+Original class: worm
+CF class:       trojan
+
+Original class proba: 0.0000, 0.0060, 0.0147, 0.0156, 0.0381, 0.0169, 0.0203, 0.8883
+CF class proba:       0.0358, 0.0401, 0.2160, 0.0392, 0.1699, 0.2585, 0.0259, 0.2146
+
+Feature: copyfilea (index 52)
+Original value: 1
+CF Value:       0
+
+Feature: getadaptersaddresses getadaptersaddresses (index 178)
+Original value: 0
+CF Value:       1
+
+Feature: wsastartup (index 996)
+Original value: 0
+CF Value:       1

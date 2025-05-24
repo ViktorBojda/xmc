@@ -1,0 +1,18 @@
+Counterfactual explanation for instance of class 'trojan' (index 843):
+Original class: trojan
+CF class:       backdoor
+
+Original class proba: 0.0006, 0.0888, 0.0007, 0.0004, 0.0005, 0.9079, 0.0004, 0.0007
+CF class proba:       0.0014, 0.5730, 0.0042, 0.0009, 0.0010, 0.4163, 0.0012, 0.0020
+
+Feature: atoi (index 16)
+Original value: 1
+CF Value:       0
+
+Feature: getprocaddress (index 277)
+Original value: 1
+CF Value:       0
+
+Feature: regclosekey (index 775)
+Original value: 1
+CF Value:       0

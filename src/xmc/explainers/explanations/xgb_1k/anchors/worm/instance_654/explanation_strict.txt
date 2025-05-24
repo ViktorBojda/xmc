@@ -1,0 +1,20 @@
+Anchors explanation for instance of class 'worm', index 654, mode 'strict':
+Precision: 0.2333
+Coverage: 0.1365
+Anchor:
+IF enumwindows getcursorpos <= 0.00
+AND regopenkeyexa > 1.00
+AND seterrormode seterrormode <= 0.00
+AND bitblt <= 0.00
+AND getkeystate getcursorpos <= 0.00
+AND memset <= 0.00
+AND shutdown <= 0.00
+AND getmodulefilenamew <= 0.00
+AND getlocaltime <= 0.00
+AND getexitcodeprocess <= 0.00
+AND lcmapstringw <= 0.00
+AND drawtextexw ntdelayexecution <= 0.00
+AND __exception__ getsysteminfo <= 0.00
+AND getkeyboardstate <= 0.00
+AND deletefilew getsystemdirectorya <= 0.00
+THEN PREDICT worm

@@ -1,0 +1,78 @@
+Counterfactual explanation for instance of class 'dropper' (index 3443):
+Original class: dropper
+CF class:       trojan
+
+Original class proba: 0.0044, 0.0159, 0.0037, 0.9009, 0.0199, 0.0296, 0.0068, 0.0189
+CF class proba:       0.0143, 0.0755, 0.0426, 0.2093, 0.1512, 0.3236, 0.0407, 0.1427
+
+Feature: getsystemdirectorya (index 289)
+Original value: 1
+CF Value:       3
+
+Feature: ldrgetprocedureaddress regopenkeyexa (index 426)
+Original value: 1
+CF Value:       0
+
+Feature: ldrunloaddll (index 434)
+Original value: 1
+CF Value:       0
+
+Feature: loadstringa (index 457)
+Original value: 32
+CF Value:       31
+
+Feature: loadstringa ntallocatevirtualmemory (index 460)
+Original value: 1
+CF Value:       0
+
+Feature: ntallocatevirtualmemory getsystemmetrics (index 490)
+Original value: 1
+CF Value:       2
+
+Feature: ntallocatevirtualmemory loadstringa (index 494)
+Original value: 1
+CF Value:       0
+
+Feature: ntallocatevirtualmemory ntcreatefile (index 497)
+Original value: 1
+CF Value:       0
+
+Feature: ntclose ldrunloaddll (index 528)
+Original value: 1
+CF Value:       0
+
+Feature: ntclose ntfreevirtualmemory (index 540)
+Original value: 1
+CF Value:       0
+
+Feature: ntclose ntqueryattributesfile (index 548)
+Original value: 1
+CF Value:       0
+
+Feature: ntcreatefile (index 563)
+Original value: 4
+CF Value:       0
+
+Feature: ntcreatefile ntwritefile (index 576)
+Original value: 3
+CF Value:       0
+
+Feature: ntcreatefile setfilepointer (index 578)
+Original value: 1
+CF Value:       0
+
+Feature: ntopenkey (index 642)
+Original value: 3
+CF Value:       1
+
+Feature: ntresumethread (index 715)
+Original value: 3
+CF Value:       1
+
+Feature: ntterminateprocess ntterminateprocess (index 724)
+Original value: 1
+CF Value:       0
+
+Feature: regopenkeyexa (index 830)
+Original value: 1
+CF Value:       0

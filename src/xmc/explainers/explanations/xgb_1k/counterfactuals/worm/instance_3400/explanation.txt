@@ -1,0 +1,266 @@
+Counterfactual explanation for instance of class 'worm' (index 3400):
+Original class: worm
+CF class:       dropper
+
+Original class proba: 0.0012, 0.0062, 0.0059, 0.0130, 0.0131, 0.0026, 0.0138, 0.9441
+CF class proba:       0.0267, 0.0507, 0.0458, 0.2956, 0.0913, 0.0130, 0.2056, 0.2713
+
+Feature: __exception__ __exception__ (index 1)
+Original value: 18
+CF Value:       20
+
+Feature: __exception__ ntcreatefile (index 8)
+Original value: 1
+CF Value:       7
+
+Feature: createprocessinternalw (index 70)
+Original value: 1
+CF Value:       0
+
+Feature: deletefilew (index 94)
+Original value: 1
+CF Value:       5
+
+Feature: findfirstfileexw ntquerydirectoryfile (index 142)
+Original value: 1
+CF Value:       0
+
+Feature: getcursorpos (index 196)
+Original value: 1
+CF Value:       2
+
+Feature: getfilesize (index 231)
+Original value: 2
+CF Value:       5
+
+Feature: getfiletype ntcreatefile (index 238)
+Original value: 1
+CF Value:       0
+
+Feature: getshortpathnamew (index 280)
+Original value: 2
+CF Value:       4
+
+Feature: getsystemdirectoryw (index 291)
+Original value: 3
+CF Value:       0
+
+Feature: getsystemmetrics findresourceexw (index 304)
+Original value: 1
+CF Value:       0
+
+Feature: getsystemmetrics ldrloaddll (index 310)
+Original value: 2
+CF Value:       7
+
+Feature: getsystemwindowsdirectoryw createactctxw (index 324)
+Original value: 1
+CF Value:       0
+
+Feature: getsystemwindowsdirectoryw getsystemwindowsdirectoryw (index 325)
+Original value: 3
+CF Value:       0
+
+Feature: gettemppathw (index 328)
+Original value: 1
+CF Value:       0
+
+Feature: ldrgetdllhandle ldrgetdllhandle (index 395)
+Original value: 1
+CF Value:       0
+
+Feature: ldrgetprocedureaddress ldrloaddll (index 412)
+Original value: 3
+CF Value:       0
+
+Feature: ldrgetprocedureaddress regqueryvalueexw (index 428)
+Original value: 1
+CF Value:       3
+
+Feature: ntallocatevirtualmemory getfiletype (index 488)
+Original value: 1
+CF Value:       0
+
+Feature: ntallocatevirtualmemory getsystemmetrics (index 490)
+Original value: 3
+CF Value:       4
+
+Feature: ntallocatevirtualmemory ntprotectvirtualmemory (index 500)
+Original value: 3
+CF Value:       0
+
+Feature: ntallocatevirtualmemory seterrormode (index 505)
+Original value: 1
+CF Value:       0
+
+Feature: ntclose deletefilew (index 512)
+Original value: 1
+CF Value:       0
+
+Feature: ntclose getcursorpos (index 516)
+Original value: 1
+CF Value:       0
+
+Feature: ntclose ldrgetdllhandle (index 525)
+Original value: 1
+CF Value:       0
+
+Feature: ntclose ntterminateprocess (index 552)
+Original value: 1
+CF Value:       0
+
+Feature: ntcreatefile getfiletype (index 569)
+Original value: 3
+CF Value:       0
+
+Feature: ntcreatefile ntcreatesection (index 572)
+Original value: 1
+CF Value:       0
+
+Feature: ntcreatefile ntreadfile (index 575)
+Original value: 1
+CF Value:       0
+
+Feature: ntcreatefile setfilepointer (index 578)
+Original value: 1
+CF Value:       0
+
+Feature: ntcreatemutant ntclose (index 582)
+Original value: 1
+CF Value:       5
+
+Feature: ntdelayexecution (index 586)
+Original value: 1
+CF Value:       4
+
+Feature: ntduplicateobject (index 618)
+Original value: 4
+CF Value:       0
+
+Feature: ntfreevirtualmemory ntdelayexecution (index 630)
+Original value: 1
+CF Value:       3
+
+Feature: ntfreevirtualmemory ntfreevirtualmemory (index 631)
+Original value: 4
+CF Value:       3
+
+Feature: ntmapviewofsection (index 632)
+Original value: 6
+CF Value:       3
+
+Feature: ntmapviewofsection ntclose (index 634)
+Original value: 2
+CF Value:       4
+
+Feature: ntopenkey ntclose (index 643)
+Original value: 7
+CF Value:       3
+
+Feature: ntqueryinformationfile (index 689)
+Original value: 1
+CF Value:       0
+
+Feature: ntquerysysteminformation (index 698)
+Original value: 1
+CF Value:       0
+
+Feature: ntqueryvaluekey getfileattributesw (index 701)
+Original value: 4
+CF Value:       11
+
+Feature: ntqueryvaluekey ntclose (index 702)
+Original value: 8
+CF Value:       6
+
+Feature: ntqueryvaluekey ntqueryvaluekey (index 705)
+Original value: 1
+CF Value:       2
+
+Feature: ntreadfile ntclose (index 709)
+Original value: 1
+CF Value:       0
+
+Feature: ntterminateprocess ntclose (index 723)
+Original value: 1
+CF Value:       4
+
+Feature: ntterminateprocess ntterminateprocess (index 724)
+Original value: 1
+CF Value:       3
+
+Feature: ntwritefile (index 728)
+Original value: 1
+CF Value:       0
+
+Feature: ntwritefile ntclose (index 729)
+Original value: 1
+CF Value:       0
+
+Feature: regclosekey __exception__ (index 776)
+Original value: 1
+CF Value:       0
+
+Feature: regclosekey ldrgetprocedureaddress (index 781)
+Original value: 1
+CF Value:       0
+
+Feature: regclosekey ldrloaddll (index 782)
+Original value: 1
+CF Value:       0
+
+Feature: regclosekey ntclose (index 784)
+Original value: 1
+CF Value:       4
+
+Feature: regclosekey ntopenfile (index 788)
+Original value: 2
+CF Value:       3
+
+Feature: regclosekey ntopenkey (index 789)
+Original value: 3
+CF Value:       2
+
+Feature: regcreatekeyexa (index 801)
+Original value: 1
+CF Value:       0
+
+Feature: regenumkeyw regopenkeyexw (index 821)
+Original value: 1
+CF Value:       0
+
+Feature: regopenkeyexa (index 830)
+Original value: 10
+CF Value:       9
+
+Feature: regopenkeyexa regclosekey (index 831)
+Original value: 1
+CF Value:       6
+
+Feature: regopenkeyexa regopenkeyexa (index 834)
+Original value: 3
+CF Value:       0
+
+Feature: regopenkeyexa regqueryvalueexa (index 836)
+Original value: 2
+CF Value:       0
+
+Feature: regopenkeyexw ldrloaddll (index 842)
+Original value: 1
+CF Value:       0
+
+Feature: regsetvalueexa (index 866)
+Original value: 1
+CF Value:       0
+
+Feature: searchpathw (index 876)
+Original value: 1
+CF Value:       0
+
+Feature: seterrormode (index 894)
+Original value: 1
+CF Value:       0
+
+Feature: seterrormode loadstringa (index 898)
+Original value: 1
+CF Value:       0

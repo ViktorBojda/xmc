@@ -1,0 +1,20 @@
+Anchors explanation for instance of class 'dropper', index 160, mode 'general':
+Precision: 0.1916
+Coverage: 0.1038
+Anchor:
+IF ntallocatevirtualmemory getsystemmetrics <= 0.00
+AND ntcreatefile > 0.00
+AND ntopenkey > 0.00
+AND ntclose > 0.00
+AND ntqueryvaluekey > 0.00
+AND getcurrentprocessid <= 0.00
+AND regcreatekeyexw <= 0.00
+AND getmodulehandlea <= 0.00
+AND tlssetvalue <= 0.00
+AND setfileattributesw __exception__ <= 0.00
+AND rtlunwind <= 0.00
+AND ntopenkey ntqueryvaluekey > 0.00
+AND freeenvironmentstringsw <= 0.00
+AND regqueryvalueexa regopenkeyexa <= 0.00
+AND getexitcodeprocess <= 0.00
+THEN PREDICT dropper

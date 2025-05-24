@@ -1,0 +1,10 @@
+Counterfactual explanation for instance of class 'trojan' (index 427):
+Original class: trojan
+CF class:       virus
+
+Original class proba: 0.0023, 0.0013, 0.0009, 0.0002, 0.0033, 0.7612, 0.1739, 0.0570
+CF class proba:       0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 1.0000, 0.0000
+
+Feature: getthreadlocale (index 329)
+Original value: 0
+CF Value:       1

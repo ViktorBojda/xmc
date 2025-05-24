@@ -1,0 +1,70 @@
+Counterfactual explanation for instance of class 'trojan' (index 491):
+Original class: trojan
+CF class:       adware
+
+Original class proba: 0.1153, 0.0173, 0.0055, 0.0032, 0.0026, 0.7791, 0.0167, 0.0601
+CF class proba:       0.4120, 0.0124, 0.0117, 0.0045, 0.0034, 0.3956, 0.0458, 0.1147
+
+Feature: createtoolhelp32snapshot (index 83)
+Original value: 1
+CF Value:       0
+
+Feature: entercriticalsection (index 122)
+Original value: 1
+CF Value:       0
+
+Feature: getcommandlinea (index 186)
+Original value: 1
+CF Value:       2
+
+Feature: getcurrentprocess (index 192)
+Original value: 1
+CF Value:       0
+
+Feature: getcurrentthreadid (index 195)
+Original value: 1
+CF Value:       0
+
+Feature: getmodulehandlea (index 271)
+Original value: 1
+CF Value:       0
+
+Feature: getprocaddress (index 277)
+Original value: 1
+CF Value:       0
+
+Feature: getstdhandle (index 285)
+Original value: 1
+CF Value:       0
+
+Feature: loadlibrarya (index 443)
+Original value: 1
+CF Value:       0
+
+Feature: readprocessmemory (index 769)
+Original value: 1
+CF Value:       0
+
+Feature: setfilepointer (index 909)
+Original value: 1
+CF Value:       0
+
+Feature: setunhandledexceptionfilter (index 929)
+Original value: 1
+CF Value:       0
+
+Feature: sizeofresource (index 943)
+Original value: 1
+CF Value:       2
+
+Feature: waitforsingleobject (index 984)
+Original value: 1
+CF Value:       2
+
+Feature: widechartomultibyte (index 985)
+Original value: 1
+CF Value:       0
+
+Feature: writeprocessmemory (index 992)
+Original value: 1
+CF Value:       0

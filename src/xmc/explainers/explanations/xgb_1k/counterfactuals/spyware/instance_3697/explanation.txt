@@ -1,0 +1,38 @@
+Counterfactual explanation for instance of class 'spyware' (index 3697):
+Original class: spyware
+CF class:       worm
+
+Original class proba: 0.0015, 0.0254, 0.0165, 0.0017, 0.8794, 0.0008, 0.0034, 0.0713
+CF class proba:       0.0047, 0.0710, 0.1007, 0.0049, 0.3814, 0.0030, 0.0123, 0.4221
+
+Feature: createthread (index 76)
+Original value: 1
+CF Value:       0
+
+Feature: drawtextexw drawtextexw (index 112)
+Original value: 1
+CF Value:       0
+
+Feature: getsystemdirectorya (index 289)
+Original value: 1
+CF Value:       0
+
+Feature: getsystemmetrics findresourcea (index 303)
+Original value: 1
+CF Value:       0
+
+Feature: loadresource ldrgetdllhandle (index 452)
+Original value: 1
+CF Value:       0
+
+Feature: ntcreatefile (index 563)
+Original value: 2
+CF Value:       0
+
+Feature: ntopenkey ntqueryvaluekey (index 646)
+Original value: 4
+CF Value:       3
+
+Feature: regclosekey regopenkeyexa (index 797)
+Original value: 1
+CF Value:       0

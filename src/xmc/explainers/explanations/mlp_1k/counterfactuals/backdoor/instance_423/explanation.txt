@@ -1,0 +1,14 @@
+Counterfactual explanation for instance of class 'backdoor' (index 423):
+Original class: backdoor
+CF class:       worm
+
+Original class proba: 0.0000, 1.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000
+CF class proba:       0.0000, 0.3247, 0.0000, 0.0000, 0.3075, 0.0001, 0.0000, 0.3678
+
+Feature: createthread createthread (index 77)
+Original value: 0
+CF Value:       121
+
+Feature: findfirstfileexw ntopenfile (index 141)
+Original value: 0
+CF Value:       51

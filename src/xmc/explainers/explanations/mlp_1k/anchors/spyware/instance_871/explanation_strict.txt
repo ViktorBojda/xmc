@@ -1,0 +1,20 @@
+Anchors explanation for instance of class 'spyware', index 871, mode 'strict':
+Precision: 0.2067
+Coverage: 0.0228
+Anchor:
+IF ldrgetprocedureaddress ldrgetprocedureaddress > 0
+AND ntreadfile setfilepointer > 0
+AND ntopenkey ntqueryvaluekey > 0
+AND ntclose ntclose > 0
+AND releasedc <= 0
+AND virtualprotect <= 0
+AND internetopena <= 0
+AND deleteobject <= 0
+AND ntclose setfileattributesw <= 0
+AND setwindowlonga <= 0
+AND ntopenkey > 0
+AND ntclose > 0
+AND translatemessage <= 0
+AND setlasterror <= 0
+AND getprocaddress <= 0
+THEN PREDICT spyware

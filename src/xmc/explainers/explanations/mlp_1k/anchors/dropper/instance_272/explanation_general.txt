@@ -1,0 +1,17 @@
+Anchors explanation for instance of class 'dropper', index 272, mode 'general':
+Precision: 0.8057
+Coverage: 0.0012
+Anchor:
+IF ntclose ntmapviewofsection > 0
+AND ntcreatefile ntwritefile > 0
+AND regqueryvalueexa <= 0
+AND getcursorpos ntclose <= 0
+AND openservicea <= 0
+AND getsysteminfo ntallocatevirtualmemory <= 0
+AND deletefilew getsystemdirectorya <= 0
+AND virtualalloc <= 0
+AND ntdelayexecution findfirstfileexw <= 0
+AND findwindowa ntopenprocess <= 0
+AND getsystemmetrics getcursorpos <= 0
+AND ldrgetprocedureaddress findresourceexw <= 0
+THEN PREDICT dropper

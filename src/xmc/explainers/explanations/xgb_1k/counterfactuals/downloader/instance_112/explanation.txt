@@ -1,0 +1,46 @@
+Counterfactual explanation for instance of class 'downloader' (index 112):
+Original class: downloader
+CF class:       trojan
+
+Original class proba: 0.0016, 0.0196, 0.9077, 0.0113, 0.0071, 0.0156, 0.0074, 0.0297
+CF class proba:       0.0061, 0.0242, 0.2271, 0.0273, 0.0237, 0.3595, 0.0606, 0.2716
+
+Feature: ntallocatevirtualmemory (index 486)
+Original value: 1
+CF Value:       0
+
+Feature: ntclose (index 507)
+Original value: 7
+CF Value:       1
+
+Feature: ntclose ntclose (index 532)
+Original value: 4
+CF Value:       0
+
+Feature: ntclose ntdelayexecution (index 536)
+Original value: 1
+CF Value:       0
+
+Feature: ntclose ntduplicateobject (index 538)
+Original value: 1
+CF Value:       0
+
+Feature: ntcreatemutant (index 581)
+Original value: 1
+CF Value:       0
+
+Feature: ntdelayexecution (index 586)
+Original value: 2
+CF Value:       0
+
+Feature: ntduplicateobject (index 618)
+Original value: 2
+CF Value:       0
+
+Feature: ntduplicateobject ntclose (index 620)
+Original value: 2
+CF Value:       0
+
+Feature: wsastartup (index 996)
+Original value: 1
+CF Value:       0

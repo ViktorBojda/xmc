@@ -1,0 +1,9 @@
+Anchors explanation for instance of class 'virus', index 1035, mode 'general':
+Precision: 0.8837
+Coverage: 0.1936
+Anchor:
+IF getmodulefilenamew <= 0.00
+AND getprocaddress <= 0.00
+AND ntclose ntclose <= 0.00
+AND closehandle <= 0.00
+THEN PREDICT virus

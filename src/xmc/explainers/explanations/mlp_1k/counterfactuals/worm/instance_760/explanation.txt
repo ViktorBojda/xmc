@@ -1,0 +1,18 @@
+Counterfactual explanation for instance of class 'worm' (index 760):
+Original class: worm
+CF class:       dropper
+
+Original class proba: 0.0000, 0.0001, 0.0000, 0.0001, 0.0001, 0.0000, 0.0025, 0.9971
+CF class proba:       0.0008, 0.0561, 0.0001, 0.4543, 0.0138, 0.0060, 0.0219, 0.4469
+
+Feature: findresourcea loadresource (index 147)
+Original value: 0
+CF Value:       17
+
+Feature: getfiletype ntcreatefile (index 238)
+Original value: 65
+CF Value:       0
+
+Feature: ntcreatefile setfilepointer (index 578)
+Original value: 0
+CF Value:       2

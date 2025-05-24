@@ -1,0 +1,19 @@
+Anchors explanation for instance of class 'adware', index 500, mode 'general':
+Precision: 0.1985
+Coverage: 0.0028
+Anchor:
+IF ldrgetprocedureaddress ldrgetprocedureaddress <= 7.00
+AND multibytetowidechar > 0.00
+AND setfileinformationbyhandle > 0.00
+AND getfileattributesw ntqueryvaluekey <= 0.00
+AND tlsgetvalue > 0.00
+AND rtlunwind > 0.00
+AND getacp > 0.00
+AND setlasterror > 0.00
+AND virtualprotect virtualalloc <= 0.00
+AND regopenkeyexw regdeletevaluew <= 0.00
+AND getstdhandle > 0.00
+AND getcurrentprocess > 0.00
+AND widechartomultibyte > 0.00
+AND tlssetvalue > 0.00
+THEN PREDICT adware

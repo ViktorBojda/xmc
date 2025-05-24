@@ -1,0 +1,10 @@
+Counterfactual explanation for instance of class 'virus' (index 575):
+Original class: virus
+CF class:       trojan
+
+Original class proba: 0.0013, 0.0014, 0.0007, 0.0003, 0.0008, 0.1213, 0.8509, 0.0232
+CF class proba:       0.0026, 0.0021, 0.0011, 0.0005, 0.0011, 0.7960, 0.1700, 0.0268
+
+Feature: getprocaddress (index 277)
+Original value: 0
+CF Value:       1

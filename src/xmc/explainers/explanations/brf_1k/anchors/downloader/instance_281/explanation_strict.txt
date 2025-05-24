@@ -1,0 +1,20 @@
+Anchors explanation for instance of class 'downloader', index 281, mode 'strict':
+Precision: 0.2407
+Coverage: 0.0586
+Anchor:
+IF heapcreate <= 0.00
+AND regcreatekeyexa > 0.00
+AND virtualfree <= 0.00
+AND globalmemorystatus <= 0.00
+AND getdesktopwindow <= 0.00
+AND getsysteminfo getsysteminfo <= 0.00
+AND localalloc <= 0.00
+AND coinitialize <= 0.00
+AND createthread > 0.00
+AND getwindow <= 0.00
+AND writeconsolea <= 0.00
+AND setfilepointer setendoffile <= 0.00
+AND virtualalloc virtualfree <= 0.00
+AND regclosekey > 0.00
+AND virtualalloc <= 0.00
+THEN PREDICT downloader

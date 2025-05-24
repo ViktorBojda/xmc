@@ -1,0 +1,10 @@
+Counterfactual explanation for instance of class 'backdoor' (index 266):
+Original class: backdoor
+CF class:       worm
+
+Original class proba: 0.0021, 0.5059, 0.0541, 0.0153, 0.0692, 0.0530, 0.0226, 0.2776
+CF class proba:       0.0031, 0.3204, 0.0800, 0.0308, 0.1008, 0.0823, 0.0438, 0.3388
+
+Feature: wsastartup (index 996)
+Original value: 1
+CF Value:       0

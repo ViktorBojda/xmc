@@ -1,0 +1,14 @@
+Counterfactual explanation for instance of class 'virus' (index 245):
+Original class: virus
+CF class:       trojan
+
+Original class proba: 0.0005, 0.0006, 0.0005, 0.0001, 0.0003, 0.0341, 0.9542, 0.0097
+CF class proba:       0.0025, 0.0022, 0.0018, 0.0005, 0.0010, 0.8918, 0.0689, 0.0312
+
+Feature: getdesktopwindow (index 210)
+Original value: 1
+CF Value:       0
+
+Feature: getprocaddress (index 277)
+Original value: 0
+CF Value:       1

@@ -1,0 +1,14 @@
+Counterfactual explanation for instance of class 'downloader' (index 581):
+Original class: downloader
+CF class:       dropper
+
+Original class proba: 0.0800, 0.1250, 0.5150, 0.0300, 0.1600, 0.0200, 0.0100, 0.0600
+CF class proba:       0.1052, 0.0700, 0.2102, 0.2346, 0.1650, 0.0450, 0.0600, 0.1100
+
+Feature: ntwritefile ntclose (index 729)
+Original value: 0
+CF Value:       1
+
+Feature: wsastartup (index 996)
+Original value: 1
+CF Value:       0

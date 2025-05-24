@@ -1,0 +1,18 @@
+Counterfactual explanation for instance of class 'worm' (index 555):
+Original class: worm
+CF class:       trojan
+
+Original class proba: 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 1.0000
+CF class proba:       0.0000, 0.0000, 0.0000, 0.0001, 0.0000, 0.6134, 0.0000, 0.3864
+
+Feature: ntallocatevirtualmemory ldrgetdllhandle (index 491)
+Original value: 0
+CF Value:       181
+
+Feature: ntcreatefile setfilepointer (index 578)
+Original value: 0
+CF Value:       63
+
+Feature: ntfreevirtualmemory ldrloaddll (index 627)
+Original value: 0
+CF Value:       64

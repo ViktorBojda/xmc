@@ -1,0 +1,46 @@
+Counterfactual explanation for instance of class 'spyware' (index 1166):
+Original class: spyware
+CF class:       worm
+
+Original class proba: 0.0020, 0.0286, 0.0201, 0.0607, 0.7875, 0.0590, 0.0044, 0.0377
+CF class proba:       0.0075, 0.1166, 0.0732, 0.1720, 0.2079, 0.1582, 0.0195, 0.2452
+
+Feature: findresourcea loadresource (index 147)
+Original value: 2
+CF Value:       1
+
+Feature: getsystemdirectorya (index 289)
+Original value: 1
+CF Value:       0
+
+Feature: loadresource sizeofresource (index 456)
+Original value: 2
+CF Value:       1
+
+Feature: ntallocatevirtualmemory ntallocatevirtualmemory (index 495)
+Original value: 2
+CF Value:       1
+
+Feature: ntclose createtoolhelp32snapshot (index 511)
+Original value: 1
+CF Value:       0
+
+Feature: ntclose ntclose (index 532)
+Original value: 1
+CF Value:       0
+
+Feature: ntclose ntopenkey (index 543)
+Original value: 1
+CF Value:       0
+
+Feature: ntcreatefile ntcreatefile (index 571)
+Original value: 1
+CF Value:       0
+
+Feature: ntfreevirtualmemory (index 626)
+Original value: 5
+CF Value:       4
+
+Feature: ntfreevirtualmemory ntfreevirtualmemory (index 631)
+Original value: 1
+CF Value:       0

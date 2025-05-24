@@ -1,0 +1,18 @@
+Counterfactual explanation for instance of class 'backdoor' (index 3384):
+Original class: backdoor
+CF class:       trojan
+
+Original class proba: 0.0003, 0.9933, 0.0002, 0.0001, 0.0003, 0.0036, 0.0010, 0.0013
+CF class proba:       0.0092, 0.3877, 0.0044, 0.0017, 0.0094, 0.4496, 0.0794, 0.0585
+
+Feature: getsystemdirectorya (index 289)
+Original value: 1
+CF Value:       0
+
+Feature: openmutexa (index 741)
+Original value: 1
+CF Value:       0
+
+Feature: winexec (index 986)
+Original value: 1
+CF Value:       0

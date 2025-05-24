@@ -1,0 +1,14 @@
+Counterfactual explanation for instance of class 'downloader' (index 971):
+Original class: downloader
+CF class:       dropper
+
+Original class proba: 0.0000, 0.0001, 0.9983, 0.0006, 0.0002, 0.0000, 0.0002, 0.0006
+CF class proba:       0.0001, 0.0010, 0.2299, 0.7153, 0.0423, 0.0000, 0.0008, 0.0107
+
+Feature: getfiletype ntwritefile (index 240)
+Original value: 0
+CF Value:       14
+
+Feature: ntcreatefile findresourcea (index 565)
+Original value: 0
+CF Value:       4

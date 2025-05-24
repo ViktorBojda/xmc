@@ -1,0 +1,12 @@
+Anchors explanation for instance of class 'adware', index 389, mode 'general':
+Precision: 0.9738
+Coverage: 0.0009
+Anchor:
+IF getcurrentprocessid getcurrentthreadid > 0
+AND setfileinformationbyhandle > 0
+AND isprocessorfeaturepresent > 0
+AND loadlibrarya <= 0
+AND regclosekey <= 0
+AND createsolidbrush <= 0
+AND endpaint > 0
+THEN PREDICT adware

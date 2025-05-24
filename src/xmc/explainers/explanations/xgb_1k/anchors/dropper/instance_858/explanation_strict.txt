@@ -1,0 +1,20 @@
+Anchors explanation for instance of class 'dropper', index 858, mode 'strict':
+Precision: 0.2107
+Coverage: 0.049
+Anchor:
+IF ntwritefile > 0.00
+AND ntcreatefile > 0.00
+AND regclosekey regcreatekeyexw <= 0.00
+AND messageboxa <= 0.00
+AND tlsgetvalue <= 0.00
+AND findfirstfileexw ntopenfile <= 0.00
+AND gethostbyname <= 0.00
+AND ntclose ntclose > 0.00
+AND regdeletekeya <= 0.00
+AND interlockeddecrement <= 0.00
+AND getdc <= 0.00
+AND urldownloadtofilew <= 0.00
+AND getfiletype ntcreatefile <= 0.00
+AND getoemcp <= 0.00
+AND localfree <= 0.00
+THEN PREDICT dropper

@@ -1,0 +1,30 @@
+Counterfactual explanation for instance of class 'adware' (index 187):
+Original class: adware
+CF class:       dropper
+
+Original class proba: 1.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000
+CF class proba:       0.1800, 0.1050, 0.0650, 0.2850, 0.1800, 0.0550, 0.0400, 0.0900
+
+Feature: closesocket socket (index 31)
+Original value: 4
+CF Value:       2
+
+Feature: connect (index 45)
+Original value: 3
+CF Value:       1
+
+Feature: copyfilea ntdelayexecution (index 55)
+Original value: 0
+CF Value:       1
+
+Feature: ldrgetprocedureaddress ntprotectvirtualmemory (index 421)
+Original value: 1
+CF Value:       0
+
+Feature: ntprotectvirtualmemory ntprotectvirtualmemory (index 675)
+Original value: 1
+CF Value:       0
+
+Feature: wsastartup (index 996)
+Original value: 1
+CF Value:       0

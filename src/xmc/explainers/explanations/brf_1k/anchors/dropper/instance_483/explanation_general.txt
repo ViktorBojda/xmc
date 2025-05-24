@@ -1,0 +1,19 @@
+Anchors explanation for instance of class 'dropper', index 483, mode 'general':
+Precision: 0.1906
+Coverage: 0.181
+Anchor:
+IF createprocessa <= 0.00
+AND ntclose > 0.00
+AND readprocessmemory readprocessmemory <= 0.00
+AND ldrgetprocedureaddress getsysteminfo <= 0.00
+AND ntcreatefile > 0.00
+AND readfile <= 0.00
+AND loadlibrarya <= 0.00
+AND coinitialize <= 0.00
+AND ntdeviceiocontrolfile ntclose <= 0.00
+AND closehandle <= 0.00
+AND setfileattributesw setfileattributesw <= 0.00
+AND createthread createthread <= 0.00
+AND createfilew <= 0.00
+AND postquitmessage <= 0.00
+THEN PREDICT dropper

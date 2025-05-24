@@ -1,0 +1,20 @@
+Anchors explanation for instance of class 'dropper', index 3296, mode 'strict':
+Precision: 0.7606
+Coverage: 0.0001
+Anchor:
+IF ntclose ntmapviewofsection > 0
+AND regenumkeyw regenumkeyw > 0
+AND getvolumenameforvolumemountpointw ntclose > 0
+AND getprocaddress <= 0
+AND exitprocess <= 0
+AND regcreatekeyexa <= 0
+AND getfilesize <= 0
+AND getcurrentprocessid <= 0
+AND regclosekey ntallocatevirtualmemory <= 0
+AND enablewindow <= 0
+AND regenumvaluew <= 0
+AND memset <= 0
+AND createthread ntclose <= 0
+AND getsysteminfo getsysteminfo <= 0
+AND loadstringw ntopensection <= 0
+THEN PREDICT dropper

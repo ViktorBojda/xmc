@@ -1,0 +1,10 @@
+Counterfactual explanation for instance of class 'trojan' (index 738):
+Original class: trojan
+CF class:       adware
+
+Original class proba: 0.0001, 0.0001, 0.0000, 0.0000, 0.0000, 0.9990, 0.0002, 0.0006
+CF class proba:       0.5850, 0.0000, 0.0000, 0.0000, 0.0000, 0.4149, 0.0000, 0.0001
+
+Feature: uuidcreate (index 975)
+Original value: 0
+CF Value:       1

@@ -1,0 +1,162 @@
+Counterfactual explanation for instance of class 'dropper' (index 576):
+Original class: dropper
+CF class:       spyware
+
+Original class proba: 0.0017, 0.0061, 0.0025, 0.9311, 0.0220, 0.0118, 0.0142, 0.0105
+CF class proba:       0.0079, 0.0232, 0.0166, 0.3685, 0.4076, 0.0485, 0.0885, 0.0392
+
+Feature: couninitialize (index 57)
+Original value: 1
+CF Value:       0
+
+Feature: findfirstfileexw (index 133)
+Original value: 2
+CF Value:       1
+
+Feature: getfileattributesw seterrormode (index 227)
+Original value: 1
+CF Value:       0
+
+Feature: getfilesize (index 231)
+Original value: 1
+CF Value:       6
+
+Feature: getsystemdirectoryw (index 291)
+Original value: 1
+CF Value:       2
+
+Feature: getvolumenameforvolumemountpointw ntclose (index 337)
+Original value: 3
+CF Value:       2
+
+Feature: getvolumepathnamesforvolumenamew getvolumepathnamesforvolumenamew (index 339)
+Original value: 5
+CF Value:       4
+
+Feature: ldrgetprocedureaddress getsystemwindowsdirectoryw (index 408)
+Original value: 1
+CF Value:       2
+
+Feature: ldrgetprocedureaddress ntallocatevirtualmemory (index 415)
+Original value: 1
+CF Value:       0
+
+Feature: ldrgetprocedureaddress ntclose (index 416)
+Original value: 1
+CF Value:       0
+
+Feature: ldrgetprocedureaddress ntduplicateobject (index 418)
+Original value: 1
+CF Value:       0
+
+Feature: ldrgetprocedureaddress regopenkeyexa (index 426)
+Original value: 1
+CF Value:       0
+
+Feature: ldrunloaddll ntopenkey (index 438)
+Original value: 1
+CF Value:       0
+
+Feature: ntallocatevirtualmemory ntclose (index 496)
+Original value: 2
+CF Value:       3
+
+Feature: ntclose ldrloaddll (index 527)
+Original value: 2
+CF Value:       0
+
+Feature: ntclose ntallocatevirtualmemory (index 531)
+Original value: 1
+CF Value:       0
+
+Feature: ntclose ntcreatefile (index 533)
+Original value: 2
+CF Value:       1
+
+Feature: ntclose ntunmapviewofsection (index 553)
+Original value: 2
+CF Value:       4
+
+Feature: ntclose regopenkeyexw (index 557)
+Original value: 4
+CF Value:       2
+
+Feature: ntcreatefile getfilesize (index 567)
+Original value: 1
+CF Value:       3
+
+Feature: ntcreatemutant (index 581)
+Original value: 2
+CF Value:       1
+
+Feature: ntmapviewofsection (index 632)
+Original value: 1
+CF Value:       2
+
+Feature: ntmapviewofsection ntclose (index 634)
+Original value: 1
+CF Value:       0
+
+Feature: ntqueryattributesfile (index 677)
+Original value: 4
+CF Value:       1
+
+Feature: ntqueryvaluekey ntclose (index 702)
+Original value: 7
+CF Value:       8
+
+Feature: ntreadfile ntreadfile (index 711)
+Original value: 2
+CF Value:       1
+
+Feature: ntreadfile setfilepointer (index 713)
+Original value: 2
+CF Value:       3
+
+Feature: ntterminateprocess ntclose (index 723)
+Original value: 1
+CF Value:       0
+
+Feature: ntterminateprocess ntterminateprocess (index 724)
+Original value: 1
+CF Value:       0
+
+Feature: ntwritefile ntclose (index 729)
+Original value: 2
+CF Value:       4
+
+Feature: regclosekey ntclose (index 784)
+Original value: 1
+CF Value:       0
+
+Feature: regclosekey ntopenkey (index 789)
+Original value: 1
+CF Value:       4
+
+Feature: regclosekey regopenkeyexw (index 798)
+Original value: 5
+CF Value:       4
+
+Feature: regenumkeyw regopenkeyexw (index 821)
+Original value: 1
+CF Value:       0
+
+Feature: regopenkeyexa (index 830)
+Original value: 4
+CF Value:       2
+
+Feature: regopenkeyexa regopenkeyexa (index 834)
+Original value: 1
+CF Value:       0
+
+Feature: regqueryvalueexa (index 853)
+Original value: 1
+CF Value:       3
+
+Feature: regqueryvalueexa regclosekey (index 856)
+Original value: 1
+CF Value:       4
+
+Feature: shellexecuteexw (index 936)
+Original value: 2
+CF Value:       1

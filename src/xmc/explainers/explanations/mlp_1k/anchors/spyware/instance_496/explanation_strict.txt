@@ -1,0 +1,20 @@
+Anchors explanation for instance of class 'spyware', index 496, mode 'strict':
+Precision: 0.6266
+Coverage: 0.0033
+Anchor:
+IF ntopenprocess ntallocatevirtualmemory > 0
+AND ntclose ntclose > 0
+AND regcreatekeyexw <= 0
+AND ntopenkey > 0
+AND gethostbyname <= 0
+AND regenumkeyw regopenkeyexw <= 0
+AND findfirstfileexw ntallocatevirtualmemory <= 0
+AND regqueryinfokeyw <= 0
+AND regenumkeyexa regopenkeyexa <= 0
+AND ntclose socket <= 0
+AND select recv <= 0
+AND ntopenprocess lookupprivilegevaluew <= 0
+AND getshortpathnamew findfirstfileexw <= 0
+AND accept <= 0
+AND ntallocatevirtualmemory ntquerydirectoryfile <= 0
+THEN PREDICT spyware

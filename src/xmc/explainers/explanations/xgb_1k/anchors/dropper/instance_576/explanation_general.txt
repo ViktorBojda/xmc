@@ -1,0 +1,18 @@
+Anchors explanation for instance of class 'dropper', index 576, mode 'general':
+Precision: 0.2057
+Coverage: 0.1978
+Anchor:
+IF ntcreatefile > 0.00
+AND ntclose > 0.00
+AND regqueryvalueexa ldrloaddll <= 0.00
+AND copyfilea ntdelayexecution <= 0.00
+AND ntquerydirectoryfile ntopenfile <= 0.00
+AND writeconsolew <= 0.00
+AND getcursorpos enumwindows <= 0.00
+AND gethostbyname socket <= 0.00
+AND regqueryinfokeya <= 0.00
+AND select closesocket <= 0.00
+AND setlasterror <= 0.00
+AND ntqueryinformationfile ntqueryinformationfile <= 0.00
+AND enumwindows enumwindows <= 0.00
+THEN PREDICT dropper

@@ -1,0 +1,20 @@
+Anchors explanation for instance of class 'dropper', index 3064, mode 'general':
+Precision: 0.1787
+Coverage: 0.01
+Anchor:
+IF ntopensection ntopensection > 0.00
+AND ntclose > 0.00
+AND virtualfree <= 0.00
+AND ntqueryvaluekey ntclose > 0.00
+AND destroywindow <= 0.00
+AND closesocket <= 0.00
+AND createfilew <= 0.00
+AND ntopenfile ntdelayexecution <= 0.00
+AND waitforsingleobject <= 0.00
+AND ntqueryvaluekey > 0.00
+AND getstringtypew <= 0.00
+AND createthread createthread <= 0.00
+AND defwindowproca <= 0.00
+AND lstrcmpa <= 0.00
+AND getversionexa <= 0.00
+THEN PREDICT dropper

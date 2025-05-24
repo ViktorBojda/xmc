@@ -1,0 +1,118 @@
+Counterfactual explanation for instance of class 'virus' (index 447):
+Original class: virus
+CF class:       spyware
+
+Original class proba: 0.0012, 0.0095, 0.0065, 0.0010, 0.0067, 0.0082, 0.9592, 0.0076
+CF class proba:       0.0101, 0.0812, 0.0723, 0.0160, 0.3572, 0.0758, 0.2966, 0.0908
+
+Feature: createthread (index 76)
+Original value: 1
+CF Value:       0
+
+Feature: getsystemtimeasfiletime (index 316)
+Original value: 2
+CF Value:       0
+
+Feature: globalmemorystatusex (index 351)
+Original value: 1
+CF Value:       5
+
+Feature: ldrgetdllhandle (index 393)
+Original value: 2
+CF Value:       0
+
+Feature: ldrgetdllhandle ldrgetdllhandle (index 395)
+Original value: 1
+CF Value:       0
+
+Feature: ldrloaddll (index 430)
+Original value: 1
+CF Value:       5
+
+Feature: ldrunloaddll (index 434)
+Original value: 1
+CF Value:       5
+
+Feature: ldrunloaddll ntopenkey (index 438)
+Original value: 1
+CF Value:       0
+
+Feature: ntclose ldrloaddll (index 527)
+Original value: 1
+CF Value:       0
+
+Feature: ntclose ntclose (index 532)
+Original value: 12
+CF Value:       7
+
+Feature: ntclose ntopenkey (index 543)
+Original value: 2
+CF Value:       4
+
+Feature: ntclose ntterminateprocess (index 552)
+Original value: 1
+CF Value:       0
+
+Feature: ntclose regopenkeyexw (index 557)
+Original value: 1
+CF Value:       0
+
+Feature: ntduplicateobject (index 618)
+Original value: 2
+CF Value:       4
+
+Feature: ntopenkey (index 642)
+Original value: 6
+CF Value:       3
+
+Feature: ntopenkey ntopenkey (index 644)
+Original value: 1
+CF Value:       0
+
+Feature: ntopenkey ntqueryvaluekey (index 646)
+Original value: 5
+CF Value:       4
+
+Feature: ntquerysysteminformation (index 698)
+Original value: 1
+CF Value:       2
+
+Feature: ntqueryvaluekey (index 700)
+Original value: 5
+CF Value:       0
+
+Feature: ntterminateprocess ntclose (index 723)
+Original value: 1
+CF Value:       2
+
+Feature: ntterminateprocess ntterminateprocess (index 724)
+Original value: 1
+CF Value:       0
+
+Feature: regclosekey ntopenkey (index 789)
+Original value: 1
+CF Value:       4
+
+Feature: regcreatekeyexa (index 801)
+Original value: 1
+CF Value:       5
+
+Feature: regopenkeyexa (index 830)
+Original value: 1
+CF Value:       5
+
+Feature: regopenkeyexa regqueryvalueexa (index 836)
+Original value: 1
+CF Value:       3
+
+Feature: regopenkeyexw (index 838)
+Original value: 1
+CF Value:       0
+
+Feature: regqueryvalueexa (index 853)
+Original value: 1
+CF Value:       5
+
+Feature: regqueryvalueexa regclosekey (index 856)
+Original value: 1
+CF Value:       3
