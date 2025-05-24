@@ -238,17 +238,11 @@ class BaseMalwareClassifier(ABC):
             CV = "Cross Validation"
             TRAIN = "Train & Evaluate"
             EXPLAIN = "Explain"
-            TUNE = "Tune"  # TODO: temporary
 
         print("Choose which classifier method(s) to run, options are:")
         method_names, display_names = prompt_options(
             RunMethod._value2member_map_, multi_select=True
         )
-        if RunMethod.TUNE in method_names:
-            print(f"Running {RunMethod.TUNE} method...")
-            instance = cls()
-            instance._tune_hyperparameters()
-            return
         if RunMethod.CV in method_names or RunMethod.TRAIN in method_names:
             instance = cls()
             X, y = instance.load_and_transform_data()
