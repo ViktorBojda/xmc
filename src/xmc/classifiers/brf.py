@@ -60,7 +60,6 @@ class MalwareClassifierBRF(BaseMalwareClassifier):
         self,
         max_features: int = 1_000,
         ngram_range: tuple[int, int] = (1, 2),
-        use_scaler: bool = False,  # counterfactuals work better with scaler
         n_estimators: int = 200,
         max_depth: int = 27,
         min_samples_split: int = 2,
@@ -73,9 +72,7 @@ class MalwareClassifierBRF(BaseMalwareClassifier):
         n_jobs: int = -1,
     ):
         super().__init__(
-            max_features=max_features,
-            ngram_range=ngram_range,
-            use_scaler=use_scaler,
+            max_features=max_features, ngram_range=ngram_range, use_scaler=False
         )
         self.classifier = BalancedRandomForestClassifier(
             n_estimators=n_estimators,
